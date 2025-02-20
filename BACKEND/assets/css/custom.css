@@ -1,0 +1,11 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/* CLASS: TOGGLE BUTTONS, ID = TOGGLENUMBER.$KEY */
+.container {
+    /* width x height */
+    aspect-ratio: 1871 / 1600;
+    width: 50px;
+}

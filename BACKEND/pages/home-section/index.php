@@ -2,36 +2,42 @@
 require_once '../../elements/functions.php';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
+require_once '../../class/Pagination.php';
 // two levels up
-$htmlData = '';
-$initServer = [
-    'server' => 'localhost',
-    'username' => 'root',
-    'password' => '',
-    'database' => 'hai_phong_culture_database',
-    'table' => 'home_section'
-];
 
 $user = new Database($initServer);
 $getAll = 'SELECT * FROM ' . $user->getTable();
 $allElemenets = $user->recordQueryResult($getAll);
-foreach ($allElemenets as $key => $value) {
-    $htmlData .= '
-        <tr class="align-middle">
-            <td>' . $value['id'] . '</td>
-            <td>' . $value['name'] . '</td>
-            <td>' . $value['image'] . '</td>
-            <td>' . $value['url'] . '</td>
-            <td>' . $value['status'] . '</td>
-            <td>' . $value['order'] . '</td>
-            <td>' . $value['created_at'] . '</td>
-            <td>' . $value['updated_at'] . '</td>
-            <td>
-                <a href="edit.php?id=' . $value['id'] . '" class="btn btn-sm btn-primary">Edit</a>
-                <a href="delete.php?id=' . $value['id'] . '" class="btn btn-sm btn-danger" type="button">Delete</a>
-            </td>
-        </tr>';
+if (!empty($allElemenets)) {
+    // foreach ($allElemenets as $key => $value) {
+    //     $htmlData .= '
+    //         <tr class="align-middle">
+    //             <td>' . $value['id'] . '</td>
+    //             <td>' . $value['name'] . '</td>
+    //             <td>' . $value['image'] . '</td>
+    //             <td>' . $value['url'] . '</td>
+    //             <td>
+    //                 <input class="form-check-input" type="checkbox" role="switch" id="input-status-' . $value['id'] . '">
+    //                 ' . $value['status'] . '
+    //             </td>
+    //             <td>' . $value['order'] . '</td>
+    //             <td>' . $value['created_at'] . '</td>
+    //             <td>' . $value['updated_at'] . '</td>
+    //             <td>
+    //                 <a href="edit.php?id=' . $value['id'] . '" class="btn btn-sm btn-primary">Edit</a>
+    //                 <a href="delete.php?id=' . $value['id'] . '" class="btn btn-sm btn-danger" type="button">Delete</a>
+    //             </td>
+    //         </tr>';
+    // }
+    $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+    $totalItems = count($allElemenets);
+    $totalItemsPerPages = 2;
+    $pageRange = 4;
+    $totalPages = floor($totalItems / $totalItemsPerPages) + ($totalItems % $totalItemsPerPages !== 0);
+    $newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage);
+    
 }
+
 ?>
 
 <!doctype html>
@@ -77,10 +83,10 @@ foreach ($allElemenets as $key => $value) {
             <div class="app-content">
                 <div class="container-fluid">
                     <!-- Filter & Search -->
-                    <form action="" class="mb-3">
+                    <form action="">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title fw-bold">Tim kiem</h3>
+                                <h3 class="card-title fw-bold">Search</h3>
                             </div>
                             <div class="card-body">
                                 <div class="d-flex gap-3">
@@ -121,7 +127,7 @@ foreach ($allElemenets as $key => $value) {
                         </div>
                     </form>
                     <!-- List Items -->
-                    <div class="card">
+                    <div class="card mt-3">
                         <div class="card-body p-0">
                             <table class="table table-striped">
                                 <thead>

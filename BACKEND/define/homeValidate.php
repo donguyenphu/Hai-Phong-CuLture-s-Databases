@@ -1,12 +1,4 @@
 <?php
-    $initServer =[
-        'server' => 'localhost',
-        'username' => 'root',
-        'password' => '',
-        'database' => 'hai_phong_culture_database',
-        'table' => 'home_section'
-    ];
-    define("DATABASE_INFO", $initServer);
     $RulesHomeSection = array(
         'name' => array(
             'type' => 'string',
@@ -23,7 +15,7 @@
         ),
         'image' => array(
             'type' => 'image',
-            'max_bytes' =>  20*1024*1024,
+            'max_bytes' =>  2*1024*1024,
             'extensions' => array() 
         )
     );
