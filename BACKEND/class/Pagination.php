@@ -17,55 +17,53 @@ class Pagination
     public function showPagination()
     {
         $paginaionHTML = '';
-        $start     = '<li>Start</li>';
-        $prev     = '<li>Previous</li>';
+        $start     = '<li class="page-item"><a class="page-link" href="#">Start</a></li>';
+        $prev     = '<li class="page-item"><a class="page-link" href="#">«</a></li>';
         if ($this->currentPage > 1) {
-            $start     = '<li><a href="?page=1">Start</a></li>';
-            $prev     = '<li><a href="?page=' . ($this->currentPage - 1) . '">Previous</a></li>';
+            $start     = '<li class="page-item"><a  class="page-link" href="?page=1">Start</a></li>';
+            $prev     = '<li class="page-item"><a  class="page-link" href="?page='.($this->currentPage - 1).'">«</a></li>';
         }
-
-        $next     = '<li>Next</li>';
-        $end     = '<li>End</li>';
+        $next     = '<li class="page-item"><a class="page-link" href="#">»</a></li>';
+        $end     = '<li class="page-item"><a class="page-link" href="#">End</a></li>';
         if ($this->currentPage < $this->totalPages) {
-            $next     = '<li><a href="?page=' . ($this->currentPage + 1) . '">Next</a></li>';
-            $end     = '<li><a href="?page=' . $this->totalPages . '">End</a></li>';
+            $next     = '<li class="page-item"><a class="page-link" href="'.($this -> currentPage + 1).'">»</a></li>';
+            $end     = '<li class="page-item"><a class="page-link" href="index.php?page='.$this -> totalPages.'">End</a></li>';
         }
 
-        if ($this->pageRange < $this->totalPages) {
-            if ($this->currentPage == 1) {
-                $startPage     = 1;
-                $endPage     = $this->pageRange;
-            } else if ($this->currentPage == $this->totalPages) {
-                $startPage        = $this->totalPages - $this->pageRange + 1;
-                $endPage        = $this->totalPages;
-            } else {
-                $startPage        = $this->currentPage - ($this->pageRange - 1) / 2;
-                $endPage        = $this->currentPage + ($this->pageRange - 1) / 2;
+        $startRender = $this -> currentPage - floor(($this -> pageRange - 1)/2); 
 
-                if ($startPage < 1) {
-                    $endPage    = $endPage + 1;
-                    $startPage = 1;
-                }
+        $endRender = $this -> currentPage + $this -> pageRange - ($this -> currentPage - $startRender + 1);
 
-                if ($endPage > $this->totalPages) {
-                    $endPage    = $this->totalPages;
-                    $startPage     = $endPage - $this->pageRange + 1;
-                }
+        if ($this -> totalPages <= $this -> pageRange) {
+            $startRender = 1;
+            $endRender = $this -> totalPages;
+        }
+        else {
+            // the first half
+            if ($this -> currentPage - floor(($this -> pageRange - 1)/2) <= 1) {
+                $startRender = 1;
+                $endRender = $this -> currentPage + $this -> pageRange - ($this -> currentPage - $startRender + 1);
             }
-        } else {
-            $startPage        = 1;
-            $endPage        = $this->totalPages;
+            // minus the first half
+            if ($this -> currentPage + $this -> pageRange - ($this -> currentPage - $startRender + 1) >= $this -> totalPages) {
+                $endRender = $this -> totalPages;
+                $startRender = $this -> totalPages - $this -> pageRange + 1;
+            }	
         }
+
         $listPages = '';
-        for ($i = $startPage; $i <= $endPage; $i++) {
+
+        for ($i = $startRender; $i <= $endRender; $i++) {
             if ($i == $this->currentPage) {
-                $listPages .= '<li class="active">' . $i . '</a>';
+                $listPages.='<li class="page-item active"><a class="page-link" href="index.php?page='.$i.'">' . $i . '</a></li>';
             } else {
-                $listPages .= '<li><a href="?page=' . $i . '">' . $i . '</a>';
+                $listPages.='<li class="page-item"><a class="page-link" href="index.php?page='.$i.'">' . $i . '</a></li>';
             }
         }
-        $paginationHTML = '<ul class="pagination">' . $start . $prev . $listPages . $next . $end . '</ul>';
-        return $paginaionHTML;
+
+        $paginationHTML = '<ul class="pagination pagination-sm m-0 float-end">' . $start . $prev . $listPages . $next . $end . '</ul>';
+
+        return $paginationHTML;
     }
     public function totalItems() {
         return $this -> totalItems;

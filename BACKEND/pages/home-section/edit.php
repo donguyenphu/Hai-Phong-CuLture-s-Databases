@@ -64,12 +64,9 @@ if (isset($_POST['name']) && isset($_POST['imageLink']) && isset($_POST['url']))
     }
     $middle = substr($middle, 1);
     $queryUpdate .= $middle . " WHERE `id` = " . "'" . $id . "'";
-    echo $queryUpdate . '</br>';
-    // die();
     $arr = $user->query($queryUpdate);
     header("Location: index.php");
     exit();
-    /// UPDATE `home_section` SET `name` = 'bro', SET `image` = 'BucTuongHaiPhong.jpg', SET `url` = './index.php' WHERE `id` = '1'
   }
 }
 ?>

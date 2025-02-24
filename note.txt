@@ -1,6 +1,6 @@
 Tao class HomeSection de thuc cac cong viec lien quan den HomeSection (tham khao FAQManagement)
 Kiem tra du lieu hop le phai su dung class Validate co san trong khoa hoc
-Phan trang du lieu -> Pagination (bo sung sau)
+Phan trang du lieu -> Pagination (bo sung sau) (DONE)
 
 $query = "SELECT * FROM `home_section`"
 

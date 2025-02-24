@@ -5,37 +5,55 @@ require_once '../../define/databaseConfig.php';
 require_once '../../class/Pagination.php';
 // two levels up
 
-$user = new Database($initServer);
-$getAll = 'SELECT * FROM ' . $user->getTable();
-$allElemenets = $user->recordQueryResult($getAll);
+$Databases = new Database($initServer);
+$getAll = 'SELECT * FROM ' . $Databases->getTable();
+$allElemenets = $Databases->recordQueryResult($getAll);
+
+// PAGINATION AREA
+$currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+$totalItems = count($allElemenets);
+
+$totalItemsPerPages = 2;
+$pageRange = 4;
+$totalPages = floor($totalItems / $totalItemsPerPages) + ($totalItems % $totalItemsPerPages !== 0);
+
+$newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage);
+
 if (!empty($allElemenets)) {
-    // foreach ($allElemenets as $key => $value) {
-    //     $htmlData .= '
-    //         <tr class="align-middle">
-    //             <td>' . $value['id'] . '</td>
-    //             <td>' . $value['name'] . '</td>
-    //             <td>' . $value['image'] . '</td>
-    //             <td>' . $value['url'] . '</td>
-    //             <td>
-    //                 <input class="form-check-input" type="checkbox" role="switch" id="input-status-' . $value['id'] . '">
-    //                 ' . $value['status'] . '
-    //             </td>
-    //             <td>' . $value['order'] . '</td>
-    //             <td>' . $value['created_at'] . '</td>
-    //             <td>' . $value['updated_at'] . '</td>
-    //             <td>
-    //                 <a href="edit.php?id=' . $value['id'] . '" class="btn btn-sm btn-primary">Edit</a>
-    //                 <a href="delete.php?id=' . $value['id'] . '" class="btn btn-sm btn-danger" type="button">Delete</a>
-    //             </td>
-    //         </tr>';
-    // }
-    $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
-    $totalItems = count($allElemenets);
-    $totalItemsPerPages = 2;
-    $pageRange = 4;
-    $totalPages = floor($totalItems / $totalItemsPerPages) + ($totalItems % $totalItemsPerPages !== 0);
-    $newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage);
-    
+
+    // RENDER ELEMENTS
+    // select from limit
+    $startElement = ($currentPage - 1) * $totalItemsPerPages;
+    $htmlData = '';
+    $selectQuery = [];
+    $selectQuery[] = 'SELECT *';
+    $selectQuery[] = 'FROM ' . '`' . $Databases->getTable() . '`';
+    $selectQuery[] = 'LIMIT ' . $startElement . ', ' . $totalItemsPerPages;
+    $selectQuery = implode(" ", $selectQuery);
+
+    $arrayRender = $Databases->recordQueryResult($selectQuery);
+    if (!empty($arrayRender)) {
+        foreach ($arrayRender as $key => $value) {
+            $htmlData .= '
+                    <tr class="align-middle">
+                         <td>' . $value['id'] . '</td>
+                         <td>' . $value['name'] . '</td>
+                         <td>' . $value['image'] . '</td>
+                         <td>' . $value['url'] . '</td>
+                         <td>
+                             <input class="form-check-input" type="checkbox" role="switch" id="input-status-' . $value['id'] . '" '.($value['status'] ? 'checked' : '').'>
+                             ' . $value['status'] . '
+                         </td>
+                         <td>' . $value['order'] . '</td>
+                         <td>' . $value['created_at'] . '</td>
+                         <td>' . $value['updated_at'] . '</td>
+                         <td>
+                             <a href="edit.php?id=' . $value['id'] . '" class="btn btn-sm btn-primary">Edit</a>
+                             <a href="delete.php?id=' . $value['id'] . '" class="btn btn-sm btn-danger" type="button">Delete</a>
+                         </td>
+                     </tr>';
+        }
+    }
 }
 
 ?>
@@ -164,13 +182,16 @@ if (!empty($allElemenets)) {
                             </table>
                         </div>
                         <div class="card-footer clearfix">
-                            <ul class="pagination pagination-sm m-0 float-end">
+                            <!-- <ul class="pagination pagination-sm m-0 float-end">
                                 <li class="page-item"><a class="page-link" href="#">«</a></li>
                                 <li class="page-item"><a class="page-link" href="#">1</a></li>
                                 <li class="page-item"><a class="page-link" href="#">2</a></li>
                                 <li class="page-item"><a class="page-link" href="#">3</a></li>
                                 <li class="page-item"><a class="page-link" href="#">»</a></li>
-                            </ul>
+                            </ul> -->
+                            <?php
+                                echo $newPaginationClass -> showPagination();
+                            ?>
                         </div>
                     </div>
                 </div>
