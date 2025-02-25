@@ -1,74 +1,65 @@
 <?php
-require_once '../../elements/functions.php';
-require_once '../../class/Database.php';
-require_once '../../define/databaseConfig.php';
-$id = '';
-$name = '';
-$imageLink = '';
-$url = '';
-$created_at = '';
-$updated_at = '';
-$errorName = '';
-$errorImageLink = '';
-$errorFile = '';
-$errorOrder = '';
-$status = 0;
-if (isset($_POST['name']) && isset($_POST['imageLink']) && isset($_POST['url'])) {
-  if (isset($_GET['id'])) {
-    $id = $_GET['id'];
-  }
-  $name = $_POST['name'];
-  $imageLink = $_POST['imageLink'];
-  $url = $_POST['url'];
-  $status = isset($_POST['status']) ? 1 : 0;
-  if (!checkNameLength($name)) {
-    if (!strlen(trim($name))) {
-      $errorName = '<strong class="text-danger">Please fill your name</strong>';
-    } else {
-      $errorName = '<strong class="text-danger">Your name has an invalid length</strong>';
+  require_once '../../elements/functions.php';
+  require_once '../../class/Database.php';
+  require_once '../../define/databaseConfig.php';
+  require_once '../../class/Validate.php';
+  $id = '';
+  $name = '';
+  $imageLink = '';
+  $url = '';
+  $created_at = '';
+  $updated_at = '';
+  $errorName = '';
+  $errorImageLink = '';
+  $errorFile = '';
+  $errorOrder = '';
+  $status = 0;
+  $errorFix = '';
+  if (isset($_POST['submit'])) {
+    if (isset($_GET['id'])) {
+      $id = $_GET['id'];
     }
-  }
-  if (!checkAttachedLink($url)) {
-    if (!strlen(trim($url))) {
-      $errorURL = '<strong class="text-danger">Please fill the attached link</strong>';
-    } else {
-      $errorURL = '<strong class="text-danger">Your URL has an invalid length</strong>';
-    }
-  }
-  if (!checkImageLink(trim($imageLink))) {
-    if (!strlen(trim($imageLink))) {
-      $errorImageLink = '<strong class="text-danger">Please fill the image link</strong>';
-    } else {
-      $errorImageLink = '<strong class="text-danger">Your image link has an invalid length</strong>';
-    }
-  }
 
-  if ($errorName == '' && $errorURL == '' && $errorImageLink == '') {
-    $initServer = [
-      'server' => 'localhost',
-      'username' => 'root',
-      'password' => '',
-      'database' => 'hai_phong_culture_database',
-      'table' => 'home_section'
-    ];
-    $user = new Database($initServer);
-    $modify = [
-      'name' => $name,
-      'image' => $imageLink,
-      'url' => $url
-    ];
-    $queryUpdate = "UPDATE " . "`" . $user->getTable() . "` SET";
-    $middle = '';
-    foreach ($modify as $key => $value) {
-      $middle .= ", " . "`" . $key . "`" . " = " . "'" . $value . "'";
+    // create validate -> add rule -> run -> return Results -> Errors
+
+    $Validate = new Validate($_POST);
+    $Validate ->addAllRules(RULE_HOME_SECTION);
+    $Validate -> run();
+    $Validate -> returnResults();
+    $Validate -> returnErrors();
+    $name = $_POST['name'];
+    $imageLink = $_POST['imageLink'];
+    $url = $_POST['url'];
+    $status = isset($_POST['status']) ? 1 : 0;
+    if (!count($errorEnd)) {
+      $initServer = [
+        'server' => 'localhost',
+        'username' => 'root',
+        'password' => '',
+        'database' => 'hai_phong_culture_database',
+        'table' => 'home_section'
+      ];
+      $InfoStorage = new Database($initServer);
+      $getAll = 'SELECT * FROM ' . $InfoStorage->getTable();
+      $allElemenets = $InfoStorage->recordQueryResult($getAll);
+      $data = [
+        'name' => trim($_POST['name']),
+        'image' => trim($_POST['image']),
+        'url' => trim($_POST['file']),
+        'order' => trim($_POST['order']),
+        'status' => $_POST['status'],
+        'id' => count($allElemenets) + 1
+      ];
+      $InfoStorage->update($data, RULE_HOME_SECTION);
+      header("Location: index.php");
+      exit();
     }
-    $middle = substr($middle, 1);
-    $queryUpdate .= $middle . " WHERE `id` = " . "'" . $id . "'";
-    $arr = $user->query($queryUpdate);
-    header("Location: index.php");
-    exit();
+    $errorFix .= '<div class="alert alert-danger" role="alert">';
+    foreach ($errorEnd as $element => $value) {
+      $errorFix .= '<li>' . '<strong>' . ucfirst($element) . '</strong>' . ' : ' . $value . '</li>';
+    }
+    $errorFix .= '</div>'; 
   }
-}
 ?>
 
 <!doctype html>
@@ -120,44 +111,47 @@ if (isset($_POST['name']) && isset($_POST['imageLink']) && isset($_POST['url']))
           <form action="" method="POST">
             <!--begin::Body-->
             <!-- id, name, image, url, status, order, created_at, updated_at -->
+            <!-- if !isset on status => off , isset => on -->
             <div class="card-body">
+              <?php
+              if ($errorFix !== '') {
+                echo $errorFix;
+              }
+              ?>
+              <!-- NAME -->
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Name</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="" name="name">
-                <?php
-                echo $errorName;
-                ?>
+                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php if (isset($_POST['name'])) echo trim($_POST['name']); ?>" name="name">
               </div>
+              <!-- ORDER -->
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Order</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="" name="order">
-                <?php
-                echo $errorOrder;
-                ?>
+                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php if (isset($_POST['order'])) echo trim($_POST['order']); ?>" name="order">
               </div>
+              <!-- FILE ATTACHED -->
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">File attached</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="" name="url">
-                <?php
-                echo $errorFile;
-                ?>
+                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php if (isset($_POST['file'])) echo trim($_POST['file']); ?>" name="file">
               </div>
+              <!-- STATUS -->
               <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="status">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="status" <?php if (isset($_POST['status'])) echo $_POST['status'] ? 'checked' : ''; ?>>
                 <label class="form-check-label" for="exampleCheck1">Status:</label>
               </div>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
+              </div>
+              <!-- IMAGE FILE -->
               <div class="input-group mb-3">
-                <input type="file" class="form-control" id="inputGroupFile02" name="imageLink">
+                <input type="file" class="form-control" id="inputGroupFile02" name="image" value="<?php if (isset($_POST['image'])) echo $_POST['image']; ?>">
                 <label class="input-group-text" for="inputGroupFile02">Upload</label>
-                <?php
-                echo $errorImageLink;
-                ?>
               </div>
             </div>
             <!--end::Body-->
             <!--begin::Footer-->
             <div class="card-footer">
-              <button type="submit" class="btn btn-primary" name="submit">Submit</button>
+              <input type="submit" class="btn btn-primary" name="submit" value="Submit">
               <a type="button" class="btn btn-warning" href="./index.php">Cancel</a>
             </div>
             <!--end::Footer-->
@@ -170,9 +164,6 @@ if (isset($_POST['name']) && isset($_POST['imageLink']) && isset($_POST['url']))
 
     <?php require_once '../../elements/footer.php'; ?>
   </div>
-  <!--end::App Wrapper-->
-  <!--begin::Script-->
-  <!--begin::Third Party Plugin(OverlayScrollbars)-->
   <?php require_once '../../elements/script.php'; ?>
 </body>
 <!--end::Body-->

@@ -106,21 +106,21 @@ if (isset($_POST['submit'])) {
               <!-- NAME -->
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Name</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="" name="name">
+                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php if (isset($_POST['name'])) echo trim($_POST['name']); ?>" name="name">
               </div>
               <!-- ORDER -->
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Order</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="" name="order">
+                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php if (isset($_POST['order'])) echo trim($_POST['order']); ?>" name="order">
               </div>
               <!-- FILE ATTACHED -->
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">File attached</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="" name="file">
+                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php if (isset($_POST['file'])) echo trim($_POST['file']); ?>" name="file">
               </div>
               <!-- STATUS -->
               <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="status">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="status" <?php if (isset($_POST['status'])) echo $_POST['status'] ? 'checked' : ''; ?>>
                 <label class="form-check-label" for="exampleCheck1">Status:</label>
               </div>
               <div class="form-check form-switch">
@@ -129,7 +129,7 @@ if (isset($_POST['submit'])) {
               </div>
               <!-- IMAGE FILE -->
               <div class="input-group mb-3">
-                <input type="file" class="form-control" id="inputGroupFile02" name="image">
+                <input type="file" class="form-control" id="inputGroupFile02" name="image" value="<?php if (isset($_POST['image'])) echo $_POST['image']; ?>">
                 <label class="input-group-text" for="inputGroupFile02">Upload</label>
               </div>
             </div>
