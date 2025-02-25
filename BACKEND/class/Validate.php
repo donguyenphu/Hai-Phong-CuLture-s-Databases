@@ -8,6 +8,7 @@ class Validate
     public function __construct($inputData)
     {
         $this->sources = $inputData;
+        $this->sources["image"] = $_FILES["image"];
     }
     public function addAllRules($rules)
     {
@@ -145,20 +146,14 @@ class Validate
     }
 
     public function validateImage($element, $max_bytes, $extensions) {
-        $extensions_file = pathinfo($this->sources[$element], PATHINFO_EXTENSION);
-        $bytes = filesize($this->sources[$element]);
-        if ($bytes <= $max_bytes && in_array($extensions_file, $extensions)) {
-            echo '<pre style="color: red;font-weight:bold">';
-            print_r($extensions);
-            echo '</pre>';
-            echo $extensions_file.'</br>';
-            echo $bytes.'</br>';
-            echo 111;
-            die();
-            return;
+        $extensions_file = pathinfo($this->sources[$element]["name"], PATHINFO_EXTENSION);
+        // echo $extensions_file.'</br>';
+        $bytes = $_FILES[$element]["size"];
+        if (!in_array($extensions_file, $extensions)) {
+            $this->errors[$element] .= 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' as Image (extension) </br>';
         }
-        else {
-            $this->errors[$element] = 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' as Image';
+        if ($bytes > $max_bytes) {
+            $this->errors[$element] .= 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' as Image (filesize) </br>';
         }
     }
 }

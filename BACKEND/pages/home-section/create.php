@@ -16,7 +16,13 @@ $errorOrder = '';
 $errorFix = '';
 $status = 0;
 if (isset($_POST['submit'])) {
-
+  // echo '<pre style="color: red;font-weight:bold">';
+  // print_r($_POST);
+  // echo '</pre>';
+  // echo '<pre style="color: red;font-weight:bold">';
+  // print_r($_FILES);
+  // echo '</pre>';
+  // die();
   $validate = new Validate($_POST);
   $validate->addAllRules(RULE_HOME_SECTION);
   $validate->run();
@@ -93,7 +99,7 @@ if (isset($_POST['submit'])) {
             <div class="card-title"><strong class="text-default">Home section - Add</strong></div>
           </div>
           <!-- FORM STARTS -->
-          <form action="" method="POST">
+          <form action="" method="POST" enctype="multipart/form-data">
             <!--begin::Body-->
             <!-- id, name, image, url, status, order, created_at, updated_at -->
             <!-- if !isset on status => off , isset => on -->
@@ -123,14 +129,15 @@ if (isset($_POST['submit'])) {
                 <input type="checkbox" class="form-check-input" id="exampleCheck1" name="status" <?php if (isset($_POST['status'])) echo $_POST['status'] ? 'checked' : ''; ?>>
                 <label class="form-check-label" for="exampleCheck1">Status:</label>
               </div>
+              <!-- STATUS (LATER) -->
               <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                 <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
               </div>
-              <!-- IMAGE FILE -->
+             
               <div class="input-group mb-3">
-                <input type="file" class="form-control" id="inputGroupFile02" name="image" value="<?php if (isset($_POST['image'])) echo $_POST['image']; ?>">
-                <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                  <input type="file" class="form-control" id="inputGroupFile02" name="image" value="<?php if (isset($_POST['image'])) echo $_POST['image']; ?>">
+                  <label class="input-group-text" for="inputGroupFile02">Upload</label>
               </div>
             </div>
             <!--end::Body-->
@@ -141,6 +148,7 @@ if (isset($_POST['submit'])) {
             </div>
             <!--end::Footer-->
           </form>
+           <!-- IMAGE FILE -->
           <!-- FORM ENDS -->
         </div>
       </div>
