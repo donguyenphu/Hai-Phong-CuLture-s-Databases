@@ -3,34 +3,38 @@
   require_once '../../class/Database.php';
   require_once '../../define/databaseConfig.php';
   require_once '../../class/Validate.php';
-  $id = '';
-  $name = '';
-  $imageLink = '';
-  $url = '';
-  $created_at = '';
-  $updated_at = '';
-  $errorName = '';
-  $errorImageLink = '';
-  $errorFile = '';
-  $errorOrder = '';
-  $status = 0;
+  require_once '../../define/homeValidate.php';
+  $id = 1;
   $errorFix = '';
+  if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+  }
+
+  $InfoStorage = new Database($initServer);
+  $queryGetInitialValue = 'SELECT * FROM '.$InfoStorage->getTable()." WHERE id = ".$id;
+  $arrayGetInitialValue = $InfoStorage->recordQueryResult($queryGetInitialValue);
+
   if (isset($_POST['submit'])) {
-    if (isset($_GET['id'])) {
-      $id = $_GET['id'];
+    $_POST = array_merge($_POST, $_FILES);
+
+    if (!isset($_POST["image"]["name"])) {
+      $_POST["image"]["name"] = $_POST["imageName"]; 
     }
 
     // create validate -> add rule -> run -> return Results -> Errors
-
     $Validate = new Validate($_POST);
     $Validate ->addAllRules(RULE_HOME_SECTION);
     $Validate -> run();
-    $Validate -> returnResults();
-    $Validate -> returnErrors();
-    $name = $_POST['name'];
-    $imageLink = $_POST['imageLink'];
-    $url = $_POST['url'];
-    $status = isset($_POST['status']) ? 1 : 0;
+    $resultEnd = $Validate->returnResults();
+    $errorEnd = $Validate->returnErrors();
+
+    $arrayGetInitialValue[0]["name"] = trim($_POST['name']);
+    $arrayGetInitialValue[0]["id"] = trim($_POST['id']);
+    $arrayGetInitialValue[0]["image"] = trim((isset($_POST['image']["name"]) ? $_POST["image"]["name"] : $_POST["imageName"]));
+    $arrayGetInitialValue[0]["url"] = trim($_POST['file']);
+    $arrayGetInitialValue[0]["order"] = trim($_POST['order']);
+    $arrayGetInitialValue[0]["status"] = (isset($_POST['status']) ? 1 : 0);
+
     if (!count($errorEnd)) {
       $initServer = [
         'server' => 'localhost',
@@ -39,18 +43,20 @@
         'database' => 'hai_phong_culture_database',
         'table' => 'home_section'
       ];
-      $InfoStorage = new Database($initServer);
       $getAll = 'SELECT * FROM ' . $InfoStorage->getTable();
       $allElemenets = $InfoStorage->recordQueryResult($getAll);
+
       $data = [
+        'id' => trim($_POST['id']),
         'name' => trim($_POST['name']),
-        'image' => trim($_POST['image']),
+        'image' => trim(!empty($_POST['image']["name"]) ? $_POST['image']['name'] : $_POST['imageName']),
         'url' => trim($_POST['file']),
         'order' => trim($_POST['order']),
-        'status' => $_POST['status'],
-        'id' => count($allElemenets) + 1
+        'status' => (isset($_POST['status']) ? 1 : 0),
+        'updated_at' => date("H:i:s A")
       ];
-      $InfoStorage->update($data, RULE_HOME_SECTION);
+      
+      $tmp = $InfoStorage->updateOnlyOneId($data, $id);
       header("Location: index.php");
       exit();
     }
@@ -108,7 +114,7 @@
           </div>
           <!--end::Header-->
           <!--begin::Form-->
-          <form action="" method="POST">
+          <form action="" method="POST" enctype="multipart/form-data">
             <!--begin::Body-->
             <!-- id, name, image, url, status, order, created_at, updated_at -->
             <!-- if !isset on status => off , isset => on -->
@@ -121,31 +127,42 @@
               <!-- NAME -->
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Name</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php if (isset($_POST['name'])) echo trim($_POST['name']); ?>" name="name">
+                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo $arrayGetInitialValue[0]["name"]; ?>" name="name">
               </div>
               <!-- ORDER -->
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Order</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php if (isset($_POST['order'])) echo trim($_POST['order']); ?>" name="order">
+                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo $arrayGetInitialValue[0]["order"]; ?>" name="order">
+              </div>
+              <!-- ID -->
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Id</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo $arrayGetInitialValue[0]["id"]; ?>" name="id">
               </div>
               <!-- FILE ATTACHED -->
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">File attached</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php if (isset($_POST['file'])) echo trim($_POST['file']); ?>" name="file">
+                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo $arrayGetInitialValue[0]["url"]; ?>" name="file">
               </div>
               <!-- STATUS -->
               <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="status" <?php if (isset($_POST['status'])) echo $_POST['status'] ? 'checked' : ''; ?>>
+                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="status" <?php echo $arrayGetInitialValue[0]["status"] ? 'checked' : ''; ?>>
                 <label class="form-check-label" for="exampleCheck1">Status:</label>
               </div>
-              <div class="form-check form-switch">
+              <!-- STATUS (LATER) -->
+              <div class="form-check form-switch mb-3">
                 <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                 <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
               </div>
-              <!-- IMAGE FILE -->
+              <!-- IMAGE NAME UPLOAD -->
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Name</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo $arrayGetInitialValue[0]["image"]; ?>" name="imageName">
+              </div>
+              <!-- IMAGE UPLOAD -->
               <div class="input-group mb-3">
-                <input type="file" class="form-control" id="inputGroupFile02" name="image" value="<?php if (isset($_POST['image'])) echo $_POST['image']; ?>">
-                <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                  <input type="file" class="form-control" id="inputGroupFile02" name="image">
+                  <label class="input-group-text" for="inputGroupFile02">Upload</label>
               </div>
             </div>
             <!--end::Body-->

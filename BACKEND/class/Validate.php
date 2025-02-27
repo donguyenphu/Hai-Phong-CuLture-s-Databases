@@ -8,7 +8,6 @@ class Validate
     public function __construct($inputData)
     {
         $this->sources = $inputData;
-        $this->sources["image"] = $_FILES["image"];
     }
     public function addAllRules($rules)
     {
@@ -131,6 +130,8 @@ class Validate
             return;
         } else if ($extensions == 'html') {
             return;
+        } else if ($extensions == 'com') {
+            return;
         }
         $this->errors[$element] = 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' as URL';
         // if (!filter_var($this->sources[$element], FILTER_VALIDATE_URL)) {
@@ -147,13 +148,16 @@ class Validate
 
     public function validateImage($element, $max_bytes, $extensions) {
         $extensions_file = pathinfo($this->sources[$element]["name"], PATHINFO_EXTENSION);
-        // echo $extensions_file.'</br>';
-        $bytes = $_FILES[$element]["size"];
+        $bytes = $this->sources[$element]["size"];
+        $fullErrors = '';
         if (!in_array($extensions_file, $extensions)) {
-            $this->errors[$element] .= 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' as Image (extension) </br>';
+            $fullErrors .= 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element]["name"] . '</b>' . ' as Image (extension) </br>';
         }
         if ($bytes > $max_bytes) {
-            $this->errors[$element] .= 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' as Image (filesize) </br>';
+            $fullErrors .= 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element]["name"] . '</b>' . ' as Image (filesize) </br>';
+        }
+        if ($fullErrors !== '') {
+            $this->sources[$element] = $fullErrors;
         }
     }
 }

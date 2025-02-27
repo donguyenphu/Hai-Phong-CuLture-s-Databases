@@ -5,7 +5,7 @@
         protected $databaseName;
         protected $table;
         protected $resultQuery;
-
+        protected array $IDs;
         // init & connect database
         public function __construct($initServer)
         {
@@ -90,16 +90,24 @@
         {
             $newAssign = $this -> createAssignUpdate($data);
             $newCondition = $this -> createConditionUpdate($condition);
-            $stringToQuery = "UPDATE `".$this -> table."` SET".$newAssign."WHERE ".$newCondition."";
+            $stringToQuery = "UPDATE `".$this->table."` SET".$newAssign."WHERE ".$newCondition."";
             $result = mysqli_query($this -> connect, $stringToQuery);
-            return "UPDATE `group` SET".$newAssign."WHERE ".$newCondition."";
+            return "UPDATE `".$this->table."` SET ".$newAssign."WHERE ".$newCondition."";
+        }
+        // UPDATE ONLY ONE ID
+        public function updateOnlyOneId($data, $preId) 
+        {
+            $newAssign = $this -> createAssignUpdate($data);
+            $stringToQuery = "UPDATE `".$this->table."` SET ".$newAssign."WHERE `id` = ".$preId;
+            $result =$this -> query($stringToQuery);
+            return "UPDATE `".$this->table."` SET ".$newAssign."WHERE `id` = ".$data['preId'];
         }
         public function createAssignUpdate($data) 
         {
             $outputQuery = "";
             if (!empty($data)) {
                 foreach ($data as $key => $value) {
-                    $outputQuery .= " , "."`$key` = "."'$value' ";
+                    $outputQuery .= " , "."`$key` ="." "."'$value' ";
                 }
             }
             return substr($outputQuery, 2);
@@ -110,8 +118,9 @@
             // an array of arrays (column, new_value, relate_next_value)
             $resultConditionString = '';
             if (!empty($condition)) {
+                die();
                 foreach($condition as $value) {
-                    $merge[] = "`".$value[0]."` = '".$value[1]."'";
+                    $merge[] = " `".$value[0]."` = '".$value[1]."'";
                     if (count($value) > 2) $merge[] = $value[2];
                 }
                 $resultConditionString = implode(" ",$merge);

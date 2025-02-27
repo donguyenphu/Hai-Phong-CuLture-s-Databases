@@ -20,13 +20,13 @@ class Pagination
         $start     = '<li class="page-item"><a class="page-link" href="#">Start</a></li>';
         $prev     = '<li class="page-item"><a class="page-link" href="#">«</a></li>';
         if ($this->currentPage > 1) {
-            $start     = '<li class="page-item"><a  class="page-link" href="?page=1">Start</a></li>';
+            $start     = '<li class="page-item"><a  class="page-link" href="index.php?page=1">Start</a></li>';
             $prev     = '<li class="page-item"><a  class="page-link" href="?page='.($this->currentPage - 1).'">«</a></li>';
         }
         $next     = '<li class="page-item"><a class="page-link" href="#">»</a></li>';
         $end     = '<li class="page-item"><a class="page-link" href="#">End</a></li>';
         if ($this->currentPage < $this->totalPages) {
-            $next     = '<li class="page-item"><a class="page-link" href="'.($this -> currentPage + 1).'">»</a></li>';
+            $next     = '<li class="page-item"><a class="page-link" href="index.php?page='.($this -> currentPage + 1).'">»</a></li>';
             $end     = '<li class="page-item"><a class="page-link" href="index.php?page='.$this -> totalPages.'">End</a></li>';
         }
 

@@ -4,31 +4,16 @@ require_once '../../elements/functions.php';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
 require_once '../../class/Validate.php';
-$name = '';
-$imageLink = '';
-$url = '';
-$created_at = '';
-$updated_at = '';
-$errorName = '';
-$errorImageLink = '';
-$errorFile = '';
-$errorOrder = '';
+require_once '../../define/homeValidate.php';
 $errorFix = '';
-$status = 0;
 if (isset($_POST['submit'])) {
-  // echo '<pre style="color: red;font-weight:bold">';
-  // print_r($_POST);
-  // echo '</pre>';
-  // echo '<pre style="color: red;font-weight:bold">';
-  // print_r($_FILES);
-  // echo '</pre>';
-  // die();
-  $validate = new Validate($_POST);
+  $_POST = array_merge($_POST, $_FILES);
+  $validate = new Validate(array_merge($_POST, $_FILES));
   $validate->addAllRules(RULE_HOME_SECTION);
   $validate->run();
   $resultEnd = $validate->returnResults();
   $errorEnd = $validate->returnErrors();
-
+  $currentDate = date("H:i:s A");
   if (!count($errorEnd)) {
     $initServer = [
       'server' => 'localhost',
@@ -41,12 +26,13 @@ if (isset($_POST['submit'])) {
     $getAll = 'SELECT * FROM ' . $InfoStorage->getTable();
     $allElemenets = $InfoStorage->recordQueryResult($getAll);
     $data = [
-      'name' => trim($_POST['name']),
-      'image' => trim($_POST['image']),
-      'url' => trim($_POST['file']),
-      'order' => trim($_POST['order']),
+      'id' => $_POST['id'] = trim($_POST['id']),
+      'name' => $_POST['name'] = trim($_POST['name']),
+      'image' => $_POST['image']["name"] = trim($_POST['image']["name"]),
+      'url' => $_POST['file'] = trim($_POST['file']),
+      'order' => $_POST['order'] = trim($_POST['order']),
       'status' => $_POST['status'],
-      'id' => count($allElemenets) + 1
+      'created_at' => $currentDate
     ];
     $InfoStorage->insert($data, 'single');
     header("Location: index.php");
@@ -119,6 +105,11 @@ if (isset($_POST['submit'])) {
                 <label for="exampleInputEmail1" class="form-label">Order</label>
                 <input type="text" class="form-control" id="exampleInputEmail1" value="<?php if (isset($_POST['order'])) echo trim($_POST['order']); ?>" name="order">
               </div>
+              <!-- ID -->
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Id</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php if (isset($_POST['id'])) echo trim($_POST['id']); ?>" name="id">
+              </div>
               <!-- FILE ATTACHED -->
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">File attached</label>
@@ -134,10 +125,10 @@ if (isset($_POST['submit'])) {
                 <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                 <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
               </div>
-             
+              <!-- IMAGE UPLOAD -->
               <div class="input-group mb-3">
-                  <input type="file" class="form-control" id="inputGroupFile02" name="image" value="<?php if (isset($_POST['image'])) echo $_POST['image']; ?>">
-                  <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                <input type="file" class="form-control" id="inputGroupFile02" name="image" value="<?php if (isset($_POST['image'])) echo $_POST['image']; ?>">
+                <label class="input-group-text" for="inputGroupFile02">Upload</label>
               </div>
             </div>
             <!--end::Body-->
@@ -148,7 +139,6 @@ if (isset($_POST['submit'])) {
             </div>
             <!--end::Footer-->
           </form>
-           <!-- IMAGE FILE -->
           <!-- FORM ENDS -->
         </div>
       </div>

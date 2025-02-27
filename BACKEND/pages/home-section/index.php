@@ -2,7 +2,8 @@
 require_once '../../elements/functions.php';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
-require_once '../../class/Pagination.php';
+require_once '../../class/Validate.php';
+require_once '../../define/homeValidate.php';
 // two levels up
 
 $Databases = new Database($initServer);
@@ -41,7 +42,7 @@ if (!empty($allElemenets)) {
                          <td>' . $value['image'] . '</td>
                          <td>' . $value['url'] . '</td>
                          <td>
-                             <input class="form-check-input" type="checkbox" role="switch" id="input-status-' . $value['id'] . '" '.($value['status'] ? 'checked' : '').'>
+                             <input class="form-check-input" type="checkbox" role="switch" id="input-status-' . $value['id'] . '" ' . ($value['status'] ? 'checked' : '') . '>
                              ' . $value['status'] . '
                          </td>
                          <td>' . $value['order'] . '</td>
@@ -190,7 +191,7 @@ if (!empty($allElemenets)) {
                                 <li class="page-item"><a class="page-link" href="#">»</a></li>
                             </ul> -->
                             <?php
-                                echo $newPaginationClass -> showPagination();
+                            echo $newPaginationClass->showPagination();
                             ?>
                         </div>
                     </div>

@@ -16,7 +16,7 @@
         'image' => array(
             'type' => 'image',
             'max_bytes' =>  2*1024*1024,
-            'extensions' => array('jpg','png','jpeg') 
+            'extensions' => array('png','jpeg','jpg','jfif','webp')  
         )
     );
     define("RULE_HOME_SECTION", $RulesHomeSection)
