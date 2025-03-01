@@ -1,10 +1,11 @@
+<!-- DATABASE - HOME_SECTION - DELETE -->
 <?php
 require_once '../../elements/functions.php';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
 require_once '../../class/Validate.php';
 require_once '../../define/homeValidate.php';
-$id = 1;
+require_once '../../class/Pagination.php';
 if (isset($_GET['id'])) {
   $id = $_GET['id'];
   $database = 'hai_phong_culture_database';

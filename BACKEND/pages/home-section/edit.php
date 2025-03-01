@@ -1,71 +1,71 @@
+<!-- DATABASE - HOME_SECTION - EDTI -->
 <?php
-  require_once '../../elements/functions.php';
-  require_once '../../class/Database.php';
-  require_once '../../define/databaseConfig.php';
-  require_once '../../class/Validate.php';
-  require_once '../../define/homeValidate.php';
-  $id = 1;
-  $errorFix = '';
-  if (isset($_GET['id'])) {
-    $id = $_GET['id'];
+require_once '../../elements/functions.php';
+require_once '../../class/Database.php';
+require_once '../../define/databaseConfig.php';
+require_once '../../class/Validate.php';
+require_once '../../define/homeValidate.php';
+require_once '../../class/Pagination.php';
+$id = 1;
+$errorFix = '';
+if (isset($_GET['id'])) {
+  $id = $_GET['id'];
+}
+
+$infoStorage = new Database($initServer);
+$queryGetInitialValue = 'SELECT * FROM ' . $infoStorage->getTable() . " WHERE id = " . $id;
+$arrayGetInitialValue = $infoStorage->recordQueryResult($queryGetInitialValue);
+
+if (isset($_POST['submit'])) {
+  $_POST = array_merge($_POST, $_FILES);
+
+  $rule = RULE_HOME_SECTION;
+  // unset rules area
+  unset($rule['image']);
+  // create validate -> add rule -> run -> return Results -> Errors
+  $Validate = new Validate($_POST);
+  $Validate->addAllRules($rule);
+  $Validate->run();
+  $resultEnd = $Validate->returnResults();
+  $errorEnd = $Validate->returnErrors();
+
+  $arrayGetInitialValue[0]["name"] = trim($_POST['name']);
+  $arrayGetInitialValue[0]["image"] = trim(!empty($_POST['image']['name']) ? $_POST['image']['name'] : $arrayGetInitialValue[0]["image"]);
+  $arrayGetInitialValue[0]["url"] = trim($_POST['file']);
+  $arrayGetInitialValue[0]["order"] = trim($_POST['order']);
+  $arrayGetInitialValue[0]["status"] = (isset($_POST['status']) ? 1 : $arrayGetInitialValue[0]["status"]);
+
+  if (!count($errorEnd)) {
+    $initServer = [
+      'server' => 'localhost',
+      'username' => 'root',
+      'password' => '',
+      'database' => 'hai_phong_culture_database',
+      'table' => 'home_section'
+    ];
+    $getAll = 'SELECT * FROM ' . $infoStorage->getTable();
+    $allElemenets = $infoStorage->recordQueryResult($getAll);
+
+    $data = [
+      'id' => $id,
+      'name' => $arrayGetInitialValue[0]["name"],
+      'image' => $arrayGetInitialValue[0]["image"],
+      'url' => $arrayGetInitialValue[0]["url"],
+      'order' => $arrayGetInitialValue[0]["order"],
+      'status' => $arrayGetInitialValue[0]["status"],
+      'updated_at' => date("Y-m-d H:i:s")
+    ];
+
+    $tmp = $infoStorage->updateOnlyOneId($data);
+    header("Location: index.php");
+    exit();
   }
-
-  $InfoStorage = new Database($initServer);
-  $queryGetInitialValue = 'SELECT * FROM '.$InfoStorage->getTable()." WHERE id = ".$id;
-  $arrayGetInitialValue = $InfoStorage->recordQueryResult($queryGetInitialValue);
-
-  if (isset($_POST['submit'])) {
-    $_POST = array_merge($_POST, $_FILES);
-
-    if (!isset($_POST["image"]["name"])) {
-      $_POST["image"]["name"] = $_POST["imageName"]; 
-    }
-
-    // create validate -> add rule -> run -> return Results -> Errors
-    $Validate = new Validate($_POST);
-    $Validate ->addAllRules(RULE_HOME_SECTION);
-    $Validate -> run();
-    $resultEnd = $Validate->returnResults();
-    $errorEnd = $Validate->returnErrors();
-
-    $arrayGetInitialValue[0]["name"] = trim($_POST['name']);
-    $arrayGetInitialValue[0]["id"] = trim($_POST['id']);
-    $arrayGetInitialValue[0]["image"] = trim((isset($_POST['image']["name"]) ? $_POST["image"]["name"] : $_POST["imageName"]));
-    $arrayGetInitialValue[0]["url"] = trim($_POST['file']);
-    $arrayGetInitialValue[0]["order"] = trim($_POST['order']);
-    $arrayGetInitialValue[0]["status"] = (isset($_POST['status']) ? 1 : 0);
-
-    if (!count($errorEnd)) {
-      $initServer = [
-        'server' => 'localhost',
-        'username' => 'root',
-        'password' => '',
-        'database' => 'hai_phong_culture_database',
-        'table' => 'home_section'
-      ];
-      $getAll = 'SELECT * FROM ' . $InfoStorage->getTable();
-      $allElemenets = $InfoStorage->recordQueryResult($getAll);
-
-      $data = [
-        'id' => trim($_POST['id']),
-        'name' => trim($_POST['name']),
-        'image' => trim(!empty($_POST['image']["name"]) ? $_POST['image']['name'] : $_POST['imageName']),
-        'url' => trim($_POST['file']),
-        'order' => trim($_POST['order']),
-        'status' => (isset($_POST['status']) ? 1 : 0),
-        'updated_at' => date("H:i:s A")
-      ];
-      
-      $tmp = $InfoStorage->updateOnlyOneId($data, $id);
-      header("Location: index.php");
-      exit();
-    }
-    $errorFix .= '<div class="alert alert-danger" role="alert">';
-    foreach ($errorEnd as $element => $value) {
-      $errorFix .= '<li>' . '<strong>' . ucfirst($element) . '</strong>' . ' : ' . $value . '</li>';
-    }
-    $errorFix .= '</div>'; 
+  $errorFix .= '<div class="alert alert-danger" role="alert">';
+  foreach ($errorEnd as $element => $value) {
+    $errorFix .= '<li>' . '<strong>' . ucfirst($element) . '</strong>' . ' : ' . $value . '</li>';
   }
+  $errorFix .= '</div>';
+}
 ?>
 
 <!doctype html>
@@ -83,11 +83,6 @@
     <!--end::Header-->
     <!--begin::Sidebar-->
     <?php require_once '../../elements/sidebar.php'; ?>
-
-
-
-
-
     <main class="app-main">
       <!--begin::App Content Header-->
       <div class="app-content-header">
@@ -134,35 +129,20 @@
                 <label for="exampleInputEmail1" class="form-label">Order</label>
                 <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo $arrayGetInitialValue[0]["order"]; ?>" name="order">
               </div>
-              <!-- ID -->
-              <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Id</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo $arrayGetInitialValue[0]["id"]; ?>" name="id">
-              </div>
               <!-- FILE ATTACHED -->
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">File attached</label>
                 <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo $arrayGetInitialValue[0]["url"]; ?>" name="file">
               </div>
               <!-- STATUS -->
-              <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="status" <?php echo $arrayGetInitialValue[0]["status"] ? 'checked' : ''; ?>>
-                <label class="form-check-label" for="exampleCheck1">Status:</label>
-              </div>
-              <!-- STATUS (LATER) -->
               <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" <?php echo $arrayGetInitialValue[0]["status"] ? 'checked' : ''; ?> name="status" >
                 <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
-              </div>
-              <!-- IMAGE NAME UPLOAD -->
-              <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Name</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo $arrayGetInitialValue[0]["image"]; ?>" name="imageName">
               </div>
               <!-- IMAGE UPLOAD -->
               <div class="input-group mb-3">
-                  <input type="file" class="form-control" id="inputGroupFile02" name="image">
-                  <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                <input type="file" class="form-control" id="inputGroupFile02" name="image">
+                <label class="input-group-text" for="inputGroupFile02">Upload</label>
               </div>
             </div>
             <!--end::Body-->
@@ -176,7 +156,6 @@
           <!--end::Form-->
         </div>
       </div>
-
     </main>
 
     <?php require_once '../../elements/footer.php'; ?>
@@ -184,5 +163,4 @@
   <?php require_once '../../elements/script.php'; ?>
 </body>
 <!--end::Body-->
-
 </html>

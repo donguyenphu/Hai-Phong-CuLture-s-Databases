@@ -1,9 +1,11 @@
+<!-- DATABASE - HOME_SECTION - INDEX -->
 <?php
 require_once '../../elements/functions.php';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
 require_once '../../class/Validate.php';
 require_once '../../define/homeValidate.php';
+require_once '../../class/Pagination.php';
 // two levels up
 
 $Databases = new Database($initServer);
@@ -14,7 +16,7 @@ $allElemenets = $Databases->recordQueryResult($getAll);
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
 $totalItems = count($allElemenets);
 
-$totalItemsPerPages = 2;
+$totalItemsPerPages = 10;
 $pageRange = 4;
 $totalPages = floor($totalItems / $totalItemsPerPages) + ($totalItems % $totalItemsPerPages !== 0);
 
@@ -66,7 +68,7 @@ if (!empty($allElemenets)) {
     <?php require_once '../../elements/head.php'; ?>
 </head>
 
-<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+<body class="layout-fixed sidebar-expand-lg sidebar-mini sidebar-collapse bg-body-tertiary app-loaded">
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
         <?php require_once '../../elements/navbar.php'; ?>

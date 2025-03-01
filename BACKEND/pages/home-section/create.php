@@ -1,40 +1,36 @@
-<!-- DATABASE - ADD -->
+<!-- DATABASE - HOME_SECTION - ADD -->
 <?php
 require_once '../../elements/functions.php';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
 require_once '../../class/Validate.php';
 require_once '../../define/homeValidate.php';
+require_once '../../class/Pagination.php';
 $errorFix = '';
 if (isset($_POST['submit'])) {
-  $_POST = array_merge($_POST, $_FILES);
-  $validate = new Validate(array_merge($_POST, $_FILES));
-  $validate->addAllRules(RULE_HOME_SECTION);
+  $arrayMerge = array_merge($_POST, $_FILES);
+  $validate = new Validate($arrayMerge);
+  $rule = RULE_HOME_SECTION;
+  // unset area
+  unset($rule['order']);
+  unset($rule['image']);
+  // validate process area
+  $validate->addAllRules($rule);
   $validate->run();
   $resultEnd = $validate->returnResults();
   $errorEnd = $validate->returnErrors();
-  $currentDate = date("H:i:s A");
   if (!count($errorEnd)) {
-    $initServer = [
-      'server' => 'localhost',
-      'username' => 'root',
-      'password' => '',
-      'database' => 'hai_phong_culture_database',
-      'table' => 'home_section'
-    ];
-    $InfoStorage = new Database($initServer);
-    $getAll = 'SELECT * FROM ' . $InfoStorage->getTable();
-    $allElemenets = $InfoStorage->recordQueryResult($getAll);
+    $getAll = 'SELECT * FROM ' . $infoStorage->getTable();
+    $allElemenets = $infoStorage->recordQueryResult($getAll);
     $data = [
-      'id' => $_POST['id'] = trim($_POST['id']),
-      'name' => $_POST['name'] = trim($_POST['name']),
-      'image' => $_POST['image']["name"] = trim($_POST['image']["name"]),
-      'url' => $_POST['file'] = trim($_POST['file']),
-      'order' => $_POST['order'] = trim($_POST['order']),
-      'status' => $_POST['status'],
-      'created_at' => $currentDate
+      'name' => trim($arrayMerge['name']),
+      'image' => trim($arrayMerge['image']["name"]),
+      'url' => trim($arrayMerge['file']),
+      'order' => count($allElemenets) + 1,
+      'status' => ($arrayMerge['status'] == "on" ? 1 : 0),
+      'created_at' => date("Y-m-d H:i:s")
     ];
-    $InfoStorage->insert($data, 'single');
+    $infoStorage->insert($data, 'single');
     header("Location: index.php");
     exit();
   }
@@ -97,33 +93,18 @@ if (isset($_POST['submit'])) {
               ?>
               <!-- NAME -->
               <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Name</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php if (isset($_POST['name'])) echo trim($_POST['name']); ?>" name="name">
-              </div>
-              <!-- ORDER -->
-              <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Order</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php if (isset($_POST['order'])) echo trim($_POST['order']); ?>" name="order">
-              </div>
-              <!-- ID -->
-              <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Id</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php if (isset($_POST['id'])) echo trim($_POST['id']); ?>" name="id">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" value="<?php if (isset($_POST['name'])) echo trim($_POST['name']); ?>" name="name">
               </div>
               <!-- FILE ATTACHED -->
               <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">File attached</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php if (isset($_POST['file'])) echo trim($_POST['file']); ?>" name="file">
+                <label class="form-label">File attached</label>
+                <input type="text" class="form-control" value="<?php if (isset($_POST['file'])) echo trim($_POST['file']); ?>" name="file">
               </div>
               <!-- STATUS -->
-              <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1" name="status" <?php if (isset($_POST['status'])) echo $_POST['status'] ? 'checked' : ''; ?>>
-                <label class="form-check-label" for="exampleCheck1">Status:</label>
-              </div>
-              <!-- STATUS (LATER) -->
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
+                <label class="form-check-label" for="switch-status">Status: </label>
+                <input class="form-check-input" type="checkbox" role="switch" id="switch-status" name="status" <?php if (isset($_POST['status'])) echo $_POST['status'] ? 'checked' : ''; ?>>
               </div>
               <!-- IMAGE UPLOAD -->
               <div class="input-group mb-3">

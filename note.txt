@@ -1,5 +1,5 @@
 Tao class HomeSection de thuc cac cong viec lien quan den HomeSection (tham khao FAQManagement)
-Kiem tra du lieu hop le phai su dung class Validate co san trong khoa hoc
+Kiem tra du lieu hop le phai su dung class Validate co san trong khoa hoc (DONE)
 Phan trang du lieu -> Pagination (bo sung sau) (DONE)
 
 $query = "SELECT * FROM `home_section`"
@@ -19,3 +19,16 @@ if (!empty($arrWhereCondition)) {
     $queryWhere = implode(' AND ', $arrWhereCondition);
     $query .= "WHERE " . $queryWhere;
 }
+
+
+
+Thêm mới
+1. có nội dung + có hình ảnh
+2. có nội dung + chưa có hình ảnh
+
+true -> bắt buộc nhập và phải đúng extension + size
+false -> không bắt buộc nhập, nếu có nhập thì kiểm tra extension + size
+
+-CHỈNH SỬA PHẦN CREATE - IMG (DONE)
+-SEARCH 
+-CHUYỂN ĐỔI NHANH STATUS Ở INDEX

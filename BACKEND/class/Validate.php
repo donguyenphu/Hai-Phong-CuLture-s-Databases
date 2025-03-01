@@ -76,8 +76,7 @@ class Validate
                 $this->validateURLCustom($element);
             } else if ($value['type'] == 'int') {
                 $this->validateInt($element, $value['min'], $value['max']);
-            }
-            else if ($value['type'] == 'image') {
+            } else if ($value['type'] == 'image') {
                 $this->validateImage($element, $value['max_bytes'], $value['extensions']);
             }
             if (!array_key_exists($element, $this->errors)) $this->result[$element] = $this->sources[$element];
@@ -122,7 +121,8 @@ class Validate
     // goole.com, zendvn.com -> validateURL
     // goole.com, index.php -> validateURLCustom
 
-    public function validateURLCustom($element) {
+    public function validateURLCustom($element)
+    {
         $extensions = pathinfo($this->sources[$element], PATHINFO_EXTENSION);
         if (filter_var($this->sources[$element], FILTER_VALIDATE_URL)) {
             return;
@@ -146,18 +146,24 @@ class Validate
         }
     }
 
-    public function validateImage($element, $max_bytes, $extensions) {
+    public function validateImage($element, $max_bytes, $extensions)
+    {
         $extensions_file = pathinfo($this->sources[$element]["name"], PATHINFO_EXTENSION);
         $bytes = $this->sources[$element]["size"];
         $fullErrors = '';
-        if (!in_array($extensions_file, $extensions)) {
-            $fullErrors .= 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element]["name"] . '</b>' . ' as Image (extension) </br>';
+        if (intval($this->sources[$element]['size']) == 0) {
+            $fullErrors .= 'Please upload an image' . '</br>';
         }
-        if ($bytes > $max_bytes) {
-            $fullErrors .= 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element]["name"] . '</b>' . ' as Image (filesize) </br>';
+        else {
+            if (!in_array($extensions_file, $extensions)) {
+                $fullErrors .= 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element]["name"] . '</b>' . ' as Image (extension) </br>';
+            }
+            if ($bytes > $max_bytes) {
+                $fullErrors .= 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element]["name"] . '</b>' . ' as Image (filesize) </br>';
+            }
         }
         if ($fullErrors !== '') {
-            $this->sources[$element] = $fullErrors;
+            $this->errors[$element] = $fullErrors;
         }
     }
 }
