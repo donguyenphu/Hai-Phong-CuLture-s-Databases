@@ -12,6 +12,7 @@ $Databases = new Database($initServer);
 $getAll = 'SELECT * FROM ' . $Databases->getTable();
 $allElemenets = $Databases->recordQueryResult($getAll);
 $arrayRender = $allElemenets;
+$htmlData = '';
 // PAGINATION AREA
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
 $totalItems = count($allElemenets);
@@ -23,8 +24,32 @@ $totalPages = floor($totalItems / $totalItemsPerPages) + ($totalItems % $totalIt
 $newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage);
 // SEARCH AREA
 // FIRST: ASSIGN THE ALLELEMENTS ARRAY AS FULL ARRAY -> SEARCH PROCESS -> ASSIGN THE SEARCH 
-
-
+if (isset($_GET['submit'])) {
+    $querySearch = [];
+    $querySearch []= 'SELECT * ';
+    $querySearch []= 'FROM `'.$Databases -> getTable().'` WHERE';
+    if (intval($_GET['search']['status']) == 2) {
+        $querySearch[] = '`status` = 0 AND `status` = 1';
+    } 
+    if (intval($_GET['search']['status']) < 2) {
+        $querySearch[] = '`status` = '.$_GET['search']['status'];
+    }
+    if (!empty($_GET['search']['name'])) {
+        $querySearch []= 'AND `name` LIKE "%'.$_GET['search']['name'].'%"';
+    }
+    if (!empty($_GET['search']['url'])) {
+        $querySearch []= 'AND `url` LIKE "%'.$_GET['search']['url'].'%"';
+    }
+    if (!empty($_GET['search']['created_at']['start'])) {
+        $querySearch []= 'AND `created_at` >= '.$_GET['search']['created_at']['start'];
+    }
+    if (!empty($_GET['search']['created_at']['end'])) {
+        $querySearch []= 'AND `created_at` <= '.$_GET['search']['created_at']['end'];
+    }
+    $querySearch = implode(' ', $querySearch);
+    echo $querySearch.'</br>';
+    $allElemenets = $Databases -> recordQueryResult($querySearch);
+}
 if (!empty($allElemenets)) {
 
     // RENDER ELEMENTS
@@ -145,7 +170,7 @@ if (!empty($allElemenets)) {
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <button class="btn btn-info" type="submit">Search</button>
+                                <button class="btn btn-info" type="submit" name = "submit">Search</button>
                                 <button class="btn btn-warning" type="submit">Clear</button>
                             </div>
                         </div>
