@@ -11,7 +11,7 @@ require_once '../../class/Pagination.php';
 $Databases = new Database($initServer);
 $getAll = 'SELECT * FROM ' . $Databases->getTable();
 $allElemenets = $Databases->recordQueryResult($getAll);
-
+$arrayRender = $allElemenets;
 // PAGINATION AREA
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
 $totalItems = count($allElemenets);
@@ -21,6 +21,9 @@ $pageRange = 4;
 $totalPages = floor($totalItems / $totalItemsPerPages) + ($totalItems % $totalItemsPerPages !== 0);
 
 $newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage);
+// SEARCH AREA
+// FIRST: ASSIGN THE ALLELEMENTS ARRAY AS FULL ARRAY -> SEARCH PROCESS -> ASSIGN THE SEARCH 
+
 
 if (!empty($allElemenets)) {
 
@@ -104,7 +107,7 @@ if (!empty($allElemenets)) {
             <div class="app-content">
                 <div class="container-fluid">
                     <!-- Filter & Search -->
-                    <form action="">
+                    <form action="" method = "GET">
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title fw-bold">Search</h3>
@@ -123,7 +126,7 @@ if (!empty($allElemenets)) {
                                         <label for="validationCustom04" class="form-label">Status</label>
                                         <select class="form-select" name="search[status]" id="validationCustom04" required="">
                                             <!-- <option selected="" disabled="" value="">Choose...</option> -->
-                                            <option value="all">Both</option>
+                                            <option value="2">Both</option>
                                             <option value="1">Yes</option>
                                             <option value="0">No</option>
                                         </select>
