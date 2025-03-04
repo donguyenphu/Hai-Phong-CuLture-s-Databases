@@ -7,53 +7,57 @@ require_once '../../class/Validate.php';
 require_once '../../define/homeValidate.php';
 require_once '../../class/Pagination.php';
 // two levels up
-
+$totalItemsPerPages = 2;
+$pageRange = 4; /// How many pages are rendered and displayed
 $Databases = new Database($initServer);
 $getAll = 'SELECT * FROM ' . $Databases->getTable();
-$allElemenets = $Databases->recordQueryResult($getAll);
-$arrayRender = $allElemenets;
+$fullArray = $Databases->recordQueryResult($getAll);
+$allElemenets = $fullArray;
+// $arrayRender = $allElemenets;
 $htmlData = '';
 // PAGINATION AREA
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
-$totalItems = count($allElemenets);
 
-$totalItemsPerPages = 10;
-$pageRange = 4;
-$totalPages = floor($totalItems / $totalItemsPerPages) + ($totalItems % $totalItemsPerPages !== 0);
 
-$newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage);
 // SEARCH AREA
 // FIRST: ASSIGN THE ALLELEMENTS ARRAY AS FULL ARRAY -> SEARCH PROCESS -> ASSIGN THE SEARCH 
+$querySearch = [];
+$querySearch[] = 'SELECT * ';
+$querySearch[] = 'FROM `' . $Databases->getTable() . '`';
 if (isset($_GET['submit'])) {
-    $querySearch = [];
-    $querySearch []= 'SELECT * ';
-    $querySearch []= 'FROM `'.$Databases -> getTable().'` WHERE';
-    if (intval($_GET['search']['status']) == 2) {
-        $querySearch[] = '`status` = 0 AND `status` = 1';
-    } 
+    $queryWhere = [];
     if (intval($_GET['search']['status']) < 2) {
-        $querySearch[] = '`status` = '.$_GET['search']['status'];
+        $queryWhere[] = '`status` = ' . $_GET['search']['status'];
     }
     if (!empty($_GET['search']['name'])) {
-        $querySearch []= 'AND `name` LIKE "%'.$_GET['search']['name'].'%"';
+        $queryWhere[] = '`name` LIKE "%' . $_GET['search']['name'] . '%"';
     }
     if (!empty($_GET['search']['url'])) {
-        $querySearch []= 'AND `url` LIKE "%'.$_GET['search']['url'].'%"';
+        $queryWhere[] = '`url` LIKE "%' . $_GET['search']['url'] . '%"';
     }
     if (!empty($_GET['search']['created_at']['start'])) {
-        $querySearch []= 'AND `created_at` >= '.$_GET['search']['created_at']['start'];
+        $queryWhere[] = '`created_at` >= ' . $_GET['search']['created_at']['start'];
     }
     if (!empty($_GET['search']['created_at']['end'])) {
-        $querySearch []= 'AND `created_at` <= '.$_GET['search']['created_at']['end'];
+        $queryWhere[] = '`created_at` <= ' . $_GET['search']['created_at']['end'];
     }
-    $querySearch = implode(' ', $querySearch);
-    echo $querySearch.'</br>';
-    $allElemenets = $Databases -> recordQueryResult($querySearch);
+    if (!empty($queryWhere)) {
+        $querySearch[] = 'WHERE ' . implode(' AND ', $queryWhere);
+    }
 }
+$querySearch = implode(' ', $querySearch);
+$allElemenets = $Databases->recordQueryResult($querySearch);
+$totalItems = count($allElemenets);
+$totalPages = floor($totalItems / $totalItemsPerPages) + ($totalItems % $totalItemsPerPages !== 0);
+$newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage);
+$startElement = ($currentPage - 1) * $totalItemsPerPages;
+// insert left
+
 if (!empty($allElemenets)) {
 
     // RENDER ELEMENTS
     // select from limit
+    if (count($allElemenets) != count($fullArray)) $totalItemsPerPages = 1;
     $startElement = ($currentPage - 1) * $totalItemsPerPages;
     $htmlData = '';
     $selectQuery = [];
@@ -62,9 +66,10 @@ if (!empty($allElemenets)) {
     $selectQuery[] = 'LIMIT ' . $startElement . ', ' . $totalItemsPerPages;
     $selectQuery = implode(" ", $selectQuery);
 
-    $arrayRender = $Databases->recordQueryResult($selectQuery);
-    if (!empty($arrayRender)) {
-        foreach ($arrayRender as $key => $value) {
+    $allElemenets = $Databases -> recordQueryResult($selectQuery);
+    
+    if (!empty($allElemenets)) {
+        foreach ($allElemenets as $key => $value) {
             $htmlData .= '
                     <tr class="align-middle">
                          <td>' . $value['id'] . '</td>
@@ -86,7 +91,6 @@ if (!empty($allElemenets)) {
         }
     }
 }
-
 ?>
 
 <!doctype html>
@@ -132,7 +136,7 @@ if (!empty($allElemenets)) {
             <div class="app-content">
                 <div class="container-fluid">
                     <!-- Filter & Search -->
-                    <form action="" method = "GET">
+                    <form action="" method="GET">
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title fw-bold">Search</h3>
@@ -170,7 +174,7 @@ if (!empty($allElemenets)) {
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <button class="btn btn-info" type="submit" name = "submit">Search</button>
+                                <button class="btn btn-info" type="submit" name="submit">Search</button>
                                 <button class="btn btn-warning" type="submit">Clear</button>
                             </div>
                         </div>
