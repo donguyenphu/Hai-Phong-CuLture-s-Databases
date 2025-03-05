@@ -15,7 +15,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- Dumping structure for table hai_phong_culture_database.cuisine
-DROP TABLE IF EXISTS `cuisine`;
 CREATE TABLE IF NOT EXISTS `cuisine` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -36,7 +35,6 @@ INSERT INTO `cuisine` (`id`, `name`, `image`, `description`, `status`, `order`, 
 	(5, 'Coconut', NULL, 'abc', 0, 1, '2025-01-27 21:54:52', NULL, NULL);
 
 -- Dumping structure for table hai_phong_culture_database.cuisine_address
-DROP TABLE IF EXISTS `cuisine_address`;
 CREATE TABLE IF NOT EXISTS `cuisine_address` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -58,7 +56,6 @@ INSERT INTO `cuisine_address` (`id`, `name`, `google_map`, `status`, `order`, `c
 	(2, 'ádasd', '', 0, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 5);
 
 -- Dumping structure for table hai_phong_culture_database.cuisine_ingredient
-DROP TABLE IF EXISTS `cuisine_ingredient`;
 CREATE TABLE IF NOT EXISTS `cuisine_ingredient` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` int(11) NOT NULL,
@@ -74,7 +71,6 @@ CREATE TABLE IF NOT EXISTS `cuisine_ingredient` (
 DELETE FROM `cuisine_ingredient`;
 
 -- Dumping structure for table hai_phong_culture_database.cuisine_ingredient_detail
-DROP TABLE IF EXISTS `cuisine_ingredient_detail`;
 CREATE TABLE IF NOT EXISTS `cuisine_ingredient_detail` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -90,7 +86,6 @@ CREATE TABLE IF NOT EXISTS `cuisine_ingredient_detail` (
 DELETE FROM `cuisine_ingredient_detail`;
 
 -- Dumping structure for table hai_phong_culture_database.home_section
-DROP TABLE IF EXISTS `home_section`;
 CREATE TABLE IF NOT EXISTS `home_section` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -102,23 +97,26 @@ CREATE TABLE IF NOT EXISTS `home_section` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=253 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table hai_phong_culture_database.home_section: ~8 rows (approximately)
+-- Dumping data for table hai_phong_culture_database.home_section: ~13 rows (approximately)
 DELETE FROM `home_section`;
 INSERT INTO `home_section` (`id`, `name`, `image`, `url`, `status`, `order`, `created_at`, `updated_at`) VALUES
-	(1, 'Home', '	./image/HaiPhong.jpg', './index.php', 1, 1, '2025-01-09 09:51:50', NULL),
-	(2, 'History', './image/HaiPhongHistory.jpg', './history.php', 1, 2, '2025-01-16 09:53:09', NULL),
-	(3, 'Culture', './image/HaiPhongCulture.jpg', './culture.php', 0, 3, '2025-02-01 09:53:14', NULL),
-	(4, 'Travel', './image/HaiPhongTravel.jpg', './travel.php', 1, 4, '2025-02-02 09:53:17', NULL),
-	(5, 'Cuisines', './image/HaiPhongCuisines.jpg', './cuisine.php', 0, 5, '2025-02-04 09:53:20', NULL),
-	(6, 'People', './image/HaiPhongPeople.jpg', './people.php', 1, 6, '2025-02-09 09:53:22', NULL),
-	(7, 'dophu', 'BU.jpg', './index.php', 0, 11, NULL, NULL),
-	(8, 'dophu', 'BU.jpg', './index.php', 0, 11, NULL, NULL),
-	(9, 'dophu', 'BU.jpg', './index.php', 0, 11, NULL, NULL);
+	(4, 'Travel', './image/HaiPhongTravel.jpg', './travel.php', 1, 4, '2025-02-02 09:53:17', '2025-03-01 03:13:49'),
+	(5, 'Cuisines', './image/HaiPhongCuisines.jpg', './cuisine.php', 0, 5, '2025-02-04 09:53:20', '2025-03-01 03:13:52'),
+	(6, 'People', './image/HaiPhongPeople.jpg', './people.php', 1, 6, '2025-02-09 09:53:22', '2025-03-01 03:13:55'),
+	(7, 'dophu3', 'DoSon2.jpg', './index.php', 0, 1, '2025-02-27 07:44:15', '2025-03-05 00:26:32'),
+	(241, 'dophu3', 'DoSon4.png', './indexx.php', 0, 1, '2025-02-27 08:26:11', '2025-03-05 00:26:08'),
+	(242, 'bro', 'DoSon.jpg', './indexx.php', 0, 27, '2025-02-27 08:28:57', '2025-03-01 03:15:57'),
+	(243, 'bro', 'CatBaLobster.jpg', './indexx.php', 0, 28, '2025-02-27 08:31:04', '2025-03-01 03:16:28'),
+	(244, 'dophu', 'HaiPhongLogo.png', './indexx.php', 0, 1, '2025-02-27 08:34:29', '2025-03-05 00:34:21'),
+	(245, 'Blake Grimes', 'CatBaIsland4.jpg', 'index.php', 1, 12, '2025-03-01 02:34:47', '2025-03-01 03:17:00'),
+	(246, 'History', 'HaiPhongHistory.jpg', './history.php', 1, 3, '2025-03-01 03:15:06', '2025-03-04 05:25:28'),
+	(247, 'Home', 'HaiPhongPeople.jpg', './index.php', 1, 1, '2025-03-04 05:17:07', '2025-03-04 05:22:36'),
+	(248, 'Contact', 'Contact.jpg', 'contact.php', 1, 7, '2025-03-04 05:23:40', '2025-03-04 05:23:59'),
+	(249, 'Culture', 'lanHaBay.jpg', 'culture.php', 1, 2, '2025-03-04 05:25:09', '2025-03-04 05:25:18');
 
 -- Dumping structure for table hai_phong_culture_database.travel
-DROP TABLE IF EXISTS `travel`;
 CREATE TABLE IF NOT EXISTS `travel` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -134,7 +132,6 @@ CREATE TABLE IF NOT EXISTS `travel` (
 DELETE FROM `travel`;
 
 -- Dumping structure for table hai_phong_culture_database.travel_location_info
-DROP TABLE IF EXISTS `travel_location_info`;
 CREATE TABLE IF NOT EXISTS `travel_location_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -151,7 +148,6 @@ CREATE TABLE IF NOT EXISTS `travel_location_info` (
 DELETE FROM `travel_location_info`;
 
 -- Dumping structure for table hai_phong_culture_database.travel_overall_image
-DROP TABLE IF EXISTS `travel_overall_image`;
 CREATE TABLE IF NOT EXISTS `travel_overall_image` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `image_link` varchar(255) NOT NULL,

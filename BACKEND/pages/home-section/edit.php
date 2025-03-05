@@ -33,8 +33,7 @@ if (isset($_POST['submit'])) {
   $arrayGetInitialValue[0]["image"] = trim(!empty($_POST['image']['name']) ? $_POST['image']['name'] : $arrayGetInitialValue[0]["image"]);
   $arrayGetInitialValue[0]["url"] = trim($_POST['file']);
   $arrayGetInitialValue[0]["order"] = trim($_POST['order']);
-  $arrayGetInitialValue[0]["status"] = (isset($_POST['status']) ? 1 : $arrayGetInitialValue[0]["status"]);
-
+  $arrayGetInitialValue[0]["status"] = (isset($_POST['status']) && $_POST['status']) == "on" ? 1 : 0;
   if (!count($errorEnd)) {
     $initServer = [
       'server' => 'localhost',

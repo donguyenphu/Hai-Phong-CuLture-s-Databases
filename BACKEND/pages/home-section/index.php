@@ -7,7 +7,7 @@ require_once '../../class/Validate.php';
 require_once '../../define/homeValidate.php';
 require_once '../../class/Pagination.php';
 // two levels up
-$totalItemsPerPages = 2;
+$totalItemsPerPages = 10;
 $pageRange = 4; /// How many pages are rendered and displayed
 $Databases = new Database($initServer);
 $getAll = 'SELECT * FROM ' . $Databases->getTable();
@@ -57,12 +57,13 @@ if (!empty($allElemenets)) {
 
     // RENDER ELEMENTS
     // select from limit
-    if (count($allElemenets) != count($fullArray)) $totalItemsPerPages = 1;
+    if (count($allElemenets) != count($fullArray)) $totalItemsPerPages = 1; 
     $startElement = ($currentPage - 1) * $totalItemsPerPages;
     $htmlData = '';
     $selectQuery = [];
     $selectQuery[] = 'SELECT *';
     $selectQuery[] = 'FROM ' . '`' . $Databases->getTable() . '`';
+    $selectQuery[] = 'ORDER BY `order`';
     $selectQuery[] = 'LIMIT ' . $startElement . ', ' . $totalItemsPerPages;
     $selectQuery = implode(" ", $selectQuery);
 
