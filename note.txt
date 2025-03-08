@@ -30,5 +30,5 @@ true -> bắt buộc nhập và phải đúng extension + size
 false -> không bắt buộc nhập, nếu có nhập thì kiểm tra extension + size
 
 -CHỈNH SỬA PHẦN CREATE - IMG (DONE)
--SEARCH 
+-SEARCH (DONE)
 -CHUYỂN ĐỔI NHANH STATUS Ở INDEX

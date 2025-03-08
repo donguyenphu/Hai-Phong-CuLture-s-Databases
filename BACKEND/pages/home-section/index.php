@@ -7,16 +7,15 @@ require_once '../../class/Validate.php';
 require_once '../../define/homeValidate.php';
 require_once '../../class/Pagination.php';
 // two levels up
-$totalItemsPerPages = 10;
-$pageRange = 4; /// How many pages are rendered and displayed
 $Databases = new Database($initServer);
 $getAll = 'SELECT * FROM ' . $Databases->getTable();
-$fullArray = $Databases->recordQueryResult($getAll);
-$allElemenets = $fullArray;
-// $arrayRender = $allElemenets;
+$allElemenets = $Databases->recordQueryResult($getAll);
+$arrayRender = $allElemenets;
+// allElements: all items
+// arrayRender: query array
 $htmlData = '';
-// PAGINATION AREA
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+$totalItems = count($allElemenets);
 
 
 // SEARCH AREA
@@ -46,31 +45,30 @@ if (isset($_GET['submit'])) {
     }
 }
 $querySearch = implode(' ', $querySearch);
-$allElemenets = $Databases->recordQueryResult($querySearch);
-$totalItems = count($allElemenets);
-$totalPages = floor($totalItems / $totalItemsPerPages) + ($totalItems % $totalItemsPerPages !== 0);
-$newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage);
+$arrayRender = $Databases->recordQueryResult($querySearch);
+// if the query array isn't full -> only render 1 page and page range is 1 only
+if (count($allElemenets) != count($arrayRender)) {
+    $pageRange = 1;
+    $totalItemsPerPages = count($arrayRender);
+    $totalPages = 1;
+}
+else {
+    $totalItemsPerPages = 10;
+    $pageRange = 4;
+    $totalPages = floor($totalItems / $totalItemsPerPages) + ($totalItems % $totalItemsPerPages !== 0);
+}
+
+// start pagination
 $startElement = ($currentPage - 1) * $totalItemsPerPages;
-// insert left
-
-if (!empty($allElemenets)) {
-
+$querySearch .= ' LIMIT ' . $startElement . ', ' . $totalItemsPerPages;
+$arrayRender = $Databases->recordQueryResult($querySearch);
+$newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage);
+if (!empty($arrayRender)) {
     // RENDER ELEMENTS
     // select from limit
-    if (count($allElemenets) != count($fullArray)) $totalItemsPerPages = 1; 
-    $startElement = ($currentPage - 1) * $totalItemsPerPages;
     $htmlData = '';
-    $selectQuery = [];
-    $selectQuery[] = 'SELECT *';
-    $selectQuery[] = 'FROM ' . '`' . $Databases->getTable() . '`';
-    $selectQuery[] = 'ORDER BY `order`';
-    $selectQuery[] = 'LIMIT ' . $startElement . ', ' . $totalItemsPerPages;
-    $selectQuery = implode(" ", $selectQuery);
-
-    $allElemenets = $Databases -> recordQueryResult($selectQuery);
-    
-    if (!empty($allElemenets)) {
-        foreach ($allElemenets as $key => $value) {
+    if (!empty($arrayRender)) {
+        foreach ($arrayRender as $key => $value) {
             $htmlData .= '
                     <tr class="align-middle">
                          <td>' . $value['id'] . '</td>
@@ -92,6 +90,7 @@ if (!empty($allElemenets)) {
         }
     }
 }
+
 ?>
 
 <!doctype html>
@@ -115,7 +114,7 @@ if (!empty($allElemenets)) {
                     <!--begin::Page header-->
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Database - Homepage</h3>
+                            <h3 class="mb-0">Database - Index</h3>
                         </div>
                         <div class="col-sm-6">
                             <a href="./create.php" class="btn btn-primary float-sm-end ms-1">
@@ -226,7 +225,7 @@ if (!empty($allElemenets)) {
                                 <li class="page-item"><a class="page-link" href="#">»</a></li>
                             </ul> -->
                             <?php
-                            echo $newPaginationClass->showPagination();
+                                echo $newPaginationClass->showPagination();
                             ?>
                         </div>
                     </div>
