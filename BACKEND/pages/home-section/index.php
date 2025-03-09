@@ -77,7 +77,6 @@ if (!empty($arrayRender)) {
                          <td>' . $value['url'] . '</td>
                          <td>
                              <input class="form-check-input" type="checkbox" role="switch" id="input-status-' . $value['id'] . '" ' . ($value['status'] ? 'checked' : '') . '>
-                             ' . $value['status'] . '
                          </td>
                          <td>' . $value['order'] . '</td>
                          <td>' . $value['created_at'] . '</td>
@@ -114,7 +113,7 @@ if (!empty($arrayRender)) {
                     <!--begin::Page header-->
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Database - Index</h3>
+                            <h3 class="mb-0">HomeSection - Index</h3>
                         </div>
                         <div class="col-sm-6">
                             <a href="./create.php" class="btn btn-primary float-sm-end ms-1">
@@ -185,14 +184,14 @@ if (!empty($arrayRender)) {
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th style="width: 10px">id</th>
-                                        <th style="width: 20px">name</th>
-                                        <th>image</th>
-                                        <th>url</th>
-                                        <th style="width: 10px">status</th>
-                                        <th style="width: 10px">order</th>
-                                        <th>created_at</th>
-                                        <th>updated_at</th>
+                                        <th style="width: 10px">Id</th>
+                                        <th style="width: 20px">Name</th>
+                                        <th>Image</th>
+                                        <th>Url</th>
+                                        <th style="width: 10px">Status</th>
+                                        <th style="width: 10px">Order</th>
+                                        <th>Created At</th>
+                                        <th>Updated At</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -217,13 +216,6 @@ if (!empty($arrayRender)) {
                             </table>
                         </div>
                         <div class="card-footer clearfix">
-                            <!-- <ul class="pagination pagination-sm m-0 float-end">
-                                <li class="page-item"><a class="page-link" href="#">«</a></li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">»</a></li>
-                            </ul> -->
                             <?php
                                 echo $newPaginationClass->showPagination();
                             ?>

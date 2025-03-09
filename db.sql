@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `home_section` (
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=253 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table hai_phong_culture_database.home_section: ~13 rows (approximately)
+-- Dumping data for table hai_phong_culture_database.home_section: ~12 rows (approximately)
 DELETE FROM `home_section`;
 INSERT INTO `home_section` (`id`, `name`, `image`, `url`, `status`, `order`, `created_at`, `updated_at`) VALUES
 	(4, 'Travel', './image/HaiPhongTravel.jpg', './travel.php', 1, 4, '2025-02-02 09:53:17', '2025-03-01 03:13:49'),
@@ -110,7 +110,6 @@ INSERT INTO `home_section` (`id`, `name`, `image`, `url`, `status`, `order`, `cr
 	(242, 'bro', 'DoSon.jpg', './indexx.php', 0, 27, '2025-02-27 08:28:57', '2025-03-01 03:15:57'),
 	(243, 'bro', 'CatBaLobster.jpg', './indexx.php', 0, 28, '2025-02-27 08:31:04', '2025-03-01 03:16:28'),
 	(244, 'dophu', 'HaiPhongLogo.png', './indexx.php', 0, 1, '2025-02-27 08:34:29', '2025-03-05 00:34:21'),
-	(245, 'Blake Grimes', 'CatBaIsland4.jpg', 'index.php', 1, 12, '2025-03-01 02:34:47', '2025-03-01 03:17:00'),
 	(246, 'History', 'HaiPhongHistory.jpg', './history.php', 1, 3, '2025-03-01 03:15:06', '2025-03-04 05:25:28'),
 	(247, 'Home', 'HaiPhongPeople.jpg', './index.php', 1, 1, '2025-03-04 05:17:07', '2025-03-04 05:22:36'),
 	(248, 'Contact', 'Contact.jpg', 'contact.php', 1, 7, '2025-03-04 05:23:40', '2025-03-04 05:23:59'),
