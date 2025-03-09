@@ -6,6 +6,7 @@ require_once '../../define/databaseConfig.php';
 require_once '../../class/Validate.php';
 require_once '../../define/homeValidate.php';
 require_once '../../class/Pagination.php';
+require_once '../../class/HomeSection.php';
 if (isset($_GET['id'])) {
   $id = $_GET['id'];
   $database = 'hai_phong_culture_database';

@@ -6,87 +6,85 @@ require_once '../../define/databaseConfig.php';
 require_once '../../class/Validate.php';
 require_once '../../define/homeValidate.php';
 require_once '../../class/Pagination.php';
-// two levels up
+require_once '../../class/HomeSection.php';
+
 $Databases = new Database($initServer);
+$params = array_merge($_GET,$_POST);
+$itemsHomeSection = new HomeSection($initServer);
+$items = $itemsHomeSection -> getItems($params);
+
 $getAll = 'SELECT * FROM ' . $Databases->getTable();
 $allElemenets = $Databases->recordQueryResult($getAll);
 $arrayRender = $allElemenets;
-// allElements: all items
-// arrayRender: query array
-$htmlData = '';
+
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
 $totalItems = count($allElemenets);
 
+// $querySearch = [];
+// $querySearch[] = 'SELECT * ';
+// $querySearch[] = 'FROM `' . $Databases->getTable() . '`';
+// if (isset($_GET['submit'])) {
+//     $queryWhere = [];
+//     if (intval($_GET['search']['status']) < 2) {
+//         $queryWhere[] = '`status` = ' . $_GET['search']['status'];
+//     }
+//     if (!empty($_GET['search']['name'])) {
+//         $queryWhere[] = '`name` LIKE "%' . $_GET['search']['name'] . '%"';
+//     }
+//     if (!empty($_GET['search']['url'])) {
+//         $queryWhere[] = '`url` LIKE "%' . $_GET['search']['url'] . '%"';
+//     }
+//     if (!empty($_GET['search']['created_at']['start'])) {
+//         $queryWhere[] = '`created_at` >= ' . $_GET['search']['created_at']['start'];
+//     }
+//     if (!empty($_GET['search']['created_at']['end'])) {
+//         $queryWhere[] = '`created_at` <= ' . $_GET['search']['created_at']['end'];
+//     }
+//     if (!empty($queryWhere)) {
+//         $querySearch[] = 'WHERE ' . implode(' AND ', $queryWhere);
+//     }
+// }
+// $querySearch = implode(' ', $querySearch);
+// $arrayRender = $Databases->recordQueryResult($querySearch);
 
-// SEARCH AREA
-// FIRST: ASSIGN THE ALLELEMENTS ARRAY AS FULL ARRAY -> SEARCH PROCESS -> ASSIGN THE SEARCH 
-$querySearch = [];
-$querySearch[] = 'SELECT * ';
-$querySearch[] = 'FROM `' . $Databases->getTable() . '`';
-if (isset($_GET['submit'])) {
-    $queryWhere = [];
-    if (intval($_GET['search']['status']) < 2) {
-        $queryWhere[] = '`status` = ' . $_GET['search']['status'];
-    }
-    if (!empty($_GET['search']['name'])) {
-        $queryWhere[] = '`name` LIKE "%' . $_GET['search']['name'] . '%"';
-    }
-    if (!empty($_GET['search']['url'])) {
-        $queryWhere[] = '`url` LIKE "%' . $_GET['search']['url'] . '%"';
-    }
-    if (!empty($_GET['search']['created_at']['start'])) {
-        $queryWhere[] = '`created_at` >= ' . $_GET['search']['created_at']['start'];
-    }
-    if (!empty($_GET['search']['created_at']['end'])) {
-        $queryWhere[] = '`created_at` <= ' . $_GET['search']['created_at']['end'];
-    }
-    if (!empty($queryWhere)) {
-        $querySearch[] = 'WHERE ' . implode(' AND ', $queryWhere);
-    }
-}
-$querySearch = implode(' ', $querySearch);
-$arrayRender = $Databases->recordQueryResult($querySearch);
-// if the query array isn't full -> only render 1 page and page range is 1 only
-if (count($allElemenets) != count($arrayRender)) {
-    $pageRange = 1;
-    $totalItemsPerPages = count($arrayRender);
-    $totalPages = 1;
-}
-else {
-    $totalItemsPerPages = 10;
-    $pageRange = 4;
-    $totalPages = floor($totalItems / $totalItemsPerPages) + ($totalItems % $totalItemsPerPages !== 0);
-}
 
-// start pagination
-$startElement = ($currentPage - 1) * $totalItemsPerPages;
-$querySearch .= ' LIMIT ' . $startElement . ', ' . $totalItemsPerPages;
-$arrayRender = $Databases->recordQueryResult($querySearch);
-$newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage);
-if (!empty($arrayRender)) {
-    // RENDER ELEMENTS
-    // select from limit
-    $htmlData = '';
-    if (!empty($arrayRender)) {
-        foreach ($arrayRender as $key => $value) {
-            $htmlData .= '
-                    <tr class="align-middle">
-                         <td>' . $value['id'] . '</td>
-                         <td>' . $value['name'] . '</td>
-                         <td>' . $value['image'] . '</td>
-                         <td>' . $value['url'] . '</td>
-                         <td>
-                             <input class="form-check-input" type="checkbox" role="switch" id="input-status-' . $value['id'] . '" ' . ($value['status'] ? 'checked' : '') . '>
-                         </td>
-                         <td>' . $value['order'] . '</td>
-                         <td>' . $value['created_at'] . '</td>
-                         <td>' . $value['updated_at'] . '</td>
-                         <td>
-                             <a href="edit.php?id=' . $value['id'] . '" class="btn btn-sm btn-primary">Edit</a>
-                             <a href="delete.php?id=' . $value['id'] . '" class="btn btn-sm btn-danger" type="button">Delete</a>
-                         </td>
-                     </tr>';
-        }
+
+// PAGINATION AREA
+// if (count($allElemenets) != count($arrayRender)) {
+//     $pageRange = 1;
+//     $totalItemsPerPages = count($arrayRender);
+//     $totalPages = 1;
+// }
+// else {
+//     $totalItemsPerPages = 10;
+//     $pageRange = 4;
+//     $totalPages = floor($totalItems / $totalItemsPerPages) + ($totalItems % $totalItemsPerPages !== 0);
+// }
+// $startElement = ($currentPage - 1) * $totalItemsPerPages;
+// $querySearch .= ' LIMIT ' . $startElement . ', ' . $totalItemsPerPages;
+// $arrayRender = $Databases->recordQueryResult($querySearch);
+// $newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage);
+
+$htmlData = '';
+if (!empty($items)) {
+    foreach ($items as $key => $value) {
+        $htmlData .= '
+                <tr class="align-middle">
+                        <td>' . $value['id'] . '</td>
+                        <td>' . $value['name'] . '</td>
+                        <td>' . $value['image'] . '</td>
+                        <td>' . $value['url'] . '</td>
+                        <td>
+                            <input class="form-check-input" type="checkbox" role="switch" id="input-status-' . $value['id'] . '" ' . ($value['status'] ? 'checked' : '') . '>
+                        </td>
+                        <td>' . $value['order'] . '</td>
+                        <td>' . $value['created_at'] . '</td>
+                        <td>' . $value['updated_at'] . '</td>
+                        <td>
+                            <a href="edit.php?id=' . $value['id'] . '" class="btn btn-sm btn-primary">Edit</a>
+                            <a href="delete.php?id=' . $value['id'] . '" class="btn btn-sm btn-danger" type="button">Delete</a>
+                        </td>
+                    </tr>';
     }
 }
 
@@ -153,7 +151,6 @@ if (!empty($arrayRender)) {
                                     <div class="mb-3 w-50">
                                         <label for="validationCustom04" class="form-label">Status</label>
                                         <select class="form-select" name="search[status]" id="validationCustom04" required="">
-                                            <!-- <option selected="" disabled="" value="">Choose...</option> -->
                                             <option value="2">Both</option>
                                             <option value="1">Yes</option>
                                             <option value="0">No</option>
@@ -174,7 +171,7 @@ if (!empty($arrayRender)) {
                             </div>
                             <div class="card-footer">
                                 <button class="btn btn-info" type="submit" name="submit">Search</button>
-                                <button class="btn btn-warning" type="submit">Clear</button>
+                                <a class="btn btn-warning" href="index.php">Clear</a>
                             </div>
                         </div>
                     </form>
@@ -184,7 +181,7 @@ if (!empty($arrayRender)) {
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th style="width: 10px">Id</th>
+                                        <th style="width: 10px">ID</th>
                                         <th style="width: 20px">Name</th>
                                         <th>Image</th>
                                         <th>Url</th>
@@ -200,24 +197,11 @@ if (!empty($arrayRender)) {
                                     echo $htmlData;
                                     ?>
                                 </tbody>
-                                <thead>
-                                    <tr>
-                                        <th style="width: 10px">id</th>
-                                        <th style="width: 20px">name</th>
-                                        <th>image</th>
-                                        <th>url</th>
-                                        <th style="width: 10px">status</th>
-                                        <th style="width: 10px">order</th>
-                                        <th>created_at</th>
-                                        <th>updated_at</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
                             </table>
                         </div>
                         <div class="card-footer clearfix">
                             <?php
-                                echo $newPaginationClass->showPagination();
+                                // echo $newPaginationClass->showPagination();
                             ?>
                         </div>
                     </div>
