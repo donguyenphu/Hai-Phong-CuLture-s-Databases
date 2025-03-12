@@ -20,71 +20,71 @@ $arrayRender = $allElemenets;
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
 $totalItems = count($allElemenets);
 
-// $querySearch = [];
-// $querySearch[] = 'SELECT * ';
-// $querySearch[] = 'FROM `' . $Databases->getTable() . '`';
-// if (isset($_GET['submit'])) {
-//     $queryWhere = [];
-//     if (intval($_GET['search']['status']) < 2) {
-//         $queryWhere[] = '`status` = ' . $_GET['search']['status'];
-//     }
-//     if (!empty($_GET['search']['name'])) {
-//         $queryWhere[] = '`name` LIKE "%' . $_GET['search']['name'] . '%"';
-//     }
-//     if (!empty($_GET['search']['url'])) {
-//         $queryWhere[] = '`url` LIKE "%' . $_GET['search']['url'] . '%"';
-//     }
-//     if (!empty($_GET['search']['created_at']['start'])) {
-//         $queryWhere[] = '`created_at` >= ' . $_GET['search']['created_at']['start'];
-//     }
-//     if (!empty($_GET['search']['created_at']['end'])) {
-//         $queryWhere[] = '`created_at` <= ' . $_GET['search']['created_at']['end'];
-//     }
-//     if (!empty($queryWhere)) {
-//         $querySearch[] = 'WHERE ' . implode(' AND ', $queryWhere);
-//     }
-// }
-// $querySearch = implode(' ', $querySearch);
-// $arrayRender = $Databases->recordQueryResult($querySearch);
-
-
+$querySearch = [];
+$querySearch[] = 'SELECT * ';
+$querySearch[] = 'FROM `' . $Databases->getTable() . '`';
+if (isset($_GET['submit'])) {
+    $queryWhere = [];
+    if (intval($_GET['search']['status']) < 2) {
+        $queryWhere[] = '`status` = ' . $_GET['search']['status'];
+    }
+    if (!empty($_GET['search']['name'])) {
+        $queryWhere[] = '`name` LIKE "%' . $_GET['search']['name'] . '%"';
+    }
+    if (!empty($_GET['search']['url'])) {
+        $queryWhere[] = '`url` LIKE "%' . $_GET['search']['url'] . '%"';
+    }
+    if (!empty($_GET['search']['created_at']['start'])) {
+        $queryWhere[] = '`created_at` >= ' . $_GET['search']['created_at']['start'];
+    }
+    if (!empty($_GET['search']['created_at']['end'])) {
+        $queryWhere[] = '`created_at` <= ' . $_GET['search']['created_at']['end'];
+    }
+    if (!empty($queryWhere)) {
+        $querySearch[] = 'WHERE ' . implode(' AND ', $queryWhere);
+    }
+}
+$querySearch = implode(' ', $querySearch);
+$items = $Databases->recordQueryResult($querySearch);
 
 // PAGINATION AREA
-// if (count($allElemenets) != count($arrayRender)) {
-//     $pageRange = 1;
-//     $totalItemsPerPages = count($arrayRender);
-//     $totalPages = 1;
-// }
-// else {
-//     $totalItemsPerPages = 10;
-//     $pageRange = 4;
-//     $totalPages = floor($totalItems / $totalItemsPerPages) + ($totalItems % $totalItemsPerPages !== 0);
-// }
-// $startElement = ($currentPage - 1) * $totalItemsPerPages;
-// $querySearch .= ' LIMIT ' . $startElement . ', ' . $totalItemsPerPages;
-// $arrayRender = $Databases->recordQueryResult($querySearch);
-// $newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage);
+if (count($allElemenets) != count($items)) {
+    $pageRange = 1;
+    $totalItemsPerPages = count($items);
+    $totalPages = 1;
+}
+else {
+    $totalItemsPerPages = 4;
+    $pageRange = 4;
+    $totalPages = floor($totalItems / $totalItemsPerPages) + ($totalItems % $totalItemsPerPages !== 0);
+}
+$startElement = ($currentPage - 1) * $totalItemsPerPages;
+$querySearch .= ' LIMIT ' . $startElement . ', ' . $totalItemsPerPages;
+$items = $Databases->recordQueryResult($querySearch);
+$newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage);
+
+
 
 $htmlData = '';
 if (!empty($items)) {
     foreach ($items as $key => $value) {
         $htmlData .= '
-                <tr class="align-middle">
-                        <td>' . $value['id'] . '</td>
-                        <td>' . $value['name'] . '</td>
-                        <td>' . $value['image'] . '</td>
-                        <td>' . $value['url'] . '</td>
-                        <td>
-                            <input class="form-check-input" type="checkbox" role="switch" id="input-status-' . $value['id'] . '" ' . ($value['status'] ? 'checked' : '') . '>
-                        </td>
-                        <td>' . $value['order'] . '</td>
-                        <td>' . $value['created_at'] . '</td>
-                        <td>' . $value['updated_at'] . '</td>
-                        <td>
-                            <a href="edit.php?id=' . $value['id'] . '" class="btn btn-sm btn-primary">Edit</a>
-                            <a href="delete.php?id=' . $value['id'] . '" class="btn btn-sm btn-danger" type="button">Delete</a>
-                        </td>
-                    </tr>';
+            <tr class="align-middle">
+                <td>' . $value['id'] . '</td>
+                <td>' . $value['name'] . '</td>
+                <td>' . $value['image'] . '</td>
+                <td>' . $value['url'] . '</td>
+                <td>
+                    <input class="form-check-input" type="checkbox" role="switch" id="input-status-' . $value['id'] . '" ' . ($value['status'] ? 'checked' : '') . '>
+                </td>
+                <td>' . $value['order'] . '</td>
+                <td>' . $value['created_at'] . '</td>
+                <td>' . $value['updated_at'] . '</td>
+                <td>
+                    <a href="edit.php?id=' . $value['id'] . '" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="delete.php?id=' . $value['id'] . '" class="btn btn-sm btn-danger" type="button">Delete</a>
+                </td>
+            </tr>';
     }
 }
 
@@ -201,7 +201,7 @@ if (!empty($items)) {
                         </div>
                         <div class="card-footer clearfix">
                             <?php
-                                // echo $newPaginationClass->showPagination();
+                                echo $newPaginationClass->showPagination();
                             ?>
                         </div>
                     </div>

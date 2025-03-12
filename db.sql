@@ -89,7 +89,7 @@ DELETE FROM `cuisine_ingredient_detail`;
 CREATE TABLE IF NOT EXISTS `home_section` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
-  `image` varchar(255) NOT NULL,
+  `image` varchar(255) DEFAULT NULL,
   `url` varchar(255) NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT 1,
   `order` int(11) NOT NULL DEFAULT 1,
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `home_section` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=253 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=271 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table hai_phong_culture_database.home_section: ~12 rows (approximately)
 DELETE FROM `home_section`;
@@ -107,13 +107,13 @@ INSERT INTO `home_section` (`id`, `name`, `image`, `url`, `status`, `order`, `cr
 	(6, 'People', './image/HaiPhongPeople.jpg', './people.php', 1, 6, '2025-02-09 09:53:22', '2025-03-01 03:13:55'),
 	(7, 'dophu3', 'DoSon2.jpg', './index.php', 0, 1, '2025-02-27 07:44:15', '2025-03-05 00:26:32'),
 	(241, 'dophu3', 'DoSon4.png', './indexx.php', 0, 1, '2025-02-27 08:26:11', '2025-03-05 00:26:08'),
-	(242, 'bro', 'DoSon.jpg', './indexx.php', 0, 27, '2025-02-27 08:28:57', '2025-03-01 03:15:57'),
-	(243, 'bro', 'CatBaLobster.jpg', './indexx.php', 0, 28, '2025-02-27 08:31:04', '2025-03-01 03:16:28'),
 	(244, 'dophu', 'HaiPhongLogo.png', './indexx.php', 0, 1, '2025-02-27 08:34:29', '2025-03-05 00:34:21'),
 	(246, 'History', 'HaiPhongHistory.jpg', './history.php', 1, 3, '2025-03-01 03:15:06', '2025-03-04 05:25:28'),
 	(247, 'Home', 'HaiPhongPeople.jpg', './index.php', 1, 1, '2025-03-04 05:17:07', '2025-03-04 05:22:36'),
 	(248, 'Contact', 'Contact.jpg', 'contact.php', 1, 7, '2025-03-04 05:23:40', '2025-03-04 05:23:59'),
-	(249, 'Culture', 'lanHaBay.jpg', 'culture.php', 1, 2, '2025-03-04 05:25:09', '2025-03-04 05:25:18');
+	(249, 'Culture', 'lanHaBay.jpg', 'culture.php', 1, 2, '2025-03-04 05:25:09', '2025-03-04 05:25:18'),
+	(269, 'dophu3333', NULL, 'https://dophu.com', 1, 1, '2025-03-11 03:00:22', NULL),
+	(270, 'dophu3', 'Screenshot_1.png', 'https://dophu.com', 1, 1, '2025-03-11 03:07:51', NULL);
 
 -- Dumping structure for table hai_phong_culture_database.travel
 CREATE TABLE IF NOT EXISTS `travel` (

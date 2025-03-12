@@ -13,11 +13,15 @@ class Validate
     {
         $this->rules = $rules;
     }
-    public function addOneRule($name, $typeData, $min, $max)
+    public function addOneRule($name, $typeData, $min, $max, $required = true)
     {
         $this->rules[$name]['type'] = $typeData;
         $this->rules[$name]['min'] = $min;
         $this->rules[$name]['max'] = $max;
+    }
+    public function isValid()
+    {
+        return empty($errors);
     }
     public function printRules()
     {
@@ -54,18 +58,6 @@ class Validate
     public function run()
     {
         foreach ($this->rules as $element => $value) {
-            // if ($value['type'] == 'int') {
-            //     $this -> validateInt($element, $value['min'], $value['max']);
-            // }
-            // else if ($value['type'] == 'string') {
-            //     $this -> validateString($element, $value['min'], $value['max']);
-            // }
-            // else if ($value['type'] == 'email') {
-            //     $this -> validateEmail($element);
-            // }
-            // else if ($value['type'] == 'url') {
-            //     $this -> validateURL($element);
-            // }
             if ($value['type'] == 'string') {
                 $this->validateString($element, $value['min'], $value['max']);
             } else if ($value['type'] == 'file') {
@@ -97,7 +89,11 @@ class Validate
         $errorAll = '';
         if (!is_string($this->sources[$element])) {
             $errorAll = 'The ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' is not a string';
-        } else if (strlen(trim($this->sources[$element])) < $minRange || strlen(trim($this->sources[$element])) > $maxRange) {
+        }
+        else if (!strlen(trim($this->sources[$element]))) {
+            $errorAll = 'Please fill the '.$element;
+        }
+        else if (strlen(trim($this->sources[$element])) < $minRange || strlen(trim($this->sources[$element])) > $maxRange) {
             if (strlen(trim($this->sources[$element])) < $minRange) $errorAll = 'The ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' is too short';
             else $errorAll = 'The ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' is too long';
         }
@@ -117,10 +113,6 @@ class Validate
             $this->errors[$element] = 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' as URL';
         }
     }
-
-    // goole.com, zendvn.com -> validateURL
-    // goole.com, index.php -> validateURLCustom
-
     public function validateURLCustom($element)
     {
         $extensions = pathinfo($this->sources[$element], PATHINFO_EXTENSION);
@@ -138,14 +130,12 @@ class Validate
         //     $this->errors[$element] = 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' as URL';
         // }
     }
-
     public function validateFile($element)
     {
         if (!file_exists($this->sources[$element])) {
             $this->errors[$element] = 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' as File';
         }
     }
-
     public function validateImage($element, $max_bytes, $extensions)
     {
         $extensions_file = pathinfo($this->sources[$element]["name"], PATHINFO_EXTENSION);
@@ -153,8 +143,7 @@ class Validate
         $fullErrors = '';
         if (intval($this->sources[$element]['size']) == 0) {
             $fullErrors .= 'Please upload an image' . '</br>';
-        }
-        else {
+        } else {
             if (!in_array($extensions_file, $extensions)) {
                 $fullErrors .= 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element]["name"] . '</b>' . ' as Image (extension) </br>';
             }
@@ -165,5 +154,14 @@ class Validate
         if ($fullErrors !== '') {
             $this->errors[$element] = $fullErrors;
         }
+    }
+    public function showErrors()
+    {
+        $errorFix = '<div class="alert alert-danger" role="alert">';
+        foreach ($this -> errors as $element => $value) {
+            $errorFix .= '<li>' . '<strong>' . ucfirst($element) . '</strong>' . ' : ' . $value . '</li>';
+        }
+        $errorFix .= '</div>';
+        return $errorFix;
     }
 }

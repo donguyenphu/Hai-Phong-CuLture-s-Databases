@@ -32,7 +32,7 @@ if (isset($_POST['submit'])) {
 
   $arrayGetInitialValue[0]["name"] = trim($_POST['name']);
   $arrayGetInitialValue[0]["image"] = trim(!empty($_POST['image']['name']) ? $_POST['image']['name'] : $arrayGetInitialValue[0]["image"]);
-  $arrayGetInitialValue[0]["url"] = trim($_POST['file']);
+  $arrayGetInitialValue[0]["url"] = trim($_POST['url']);
   $arrayGetInitialValue[0]["order"] = trim($_POST['order']);
   $arrayGetInitialValue[0]["status"] = (isset($_POST['status']) && $_POST['status']) == "on" ? 1 : 0;
   if (!count($errorEnd)) {
@@ -132,7 +132,7 @@ if (isset($_POST['submit'])) {
               <!-- FILE ATTACHED -->
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">File attached</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo $arrayGetInitialValue[0]["url"]; ?>" name="file">
+                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo $arrayGetInitialValue[0]["url"]; ?>" name="url">
               </div>
               <!-- STATUS -->
               <div class="form-check form-switch mb-3">

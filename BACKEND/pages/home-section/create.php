@@ -6,39 +6,30 @@ require_once '../../define/databaseConfig.php';
 require_once '../../class/Validate.php';
 require_once '../../define/homeValidate.php';
 require_once '../../class/Pagination.php';
+require_once '../../class/HomeSection.php';
 $errorFix = '';
+$objHomeSection =  new HomeSection($initServer);
 if (isset($_POST['submit'])) {
-  $arrayMerge = array_merge($_POST, $_FILES);
-  $validate = new Validate($arrayMerge);
-  $rule = RULE_HOME_SECTION;
-  // unset area
-  unset($rule['order']);
-  unset($rule['image']);
-  // validate process area
-  $validate->addAllRules($rule);
-  $validate->run();
-  $resultEnd = $validate->returnResults();
-  $errorEnd = $validate->returnErrors();
-  if (!count($errorEnd)) {
-    $getAll = 'SELECT * FROM ' . $infoStorage->getTable();
-    $allElemenets = $infoStorage->recordQueryResult($getAll);
-    $data = [
-      'name' => trim($arrayMerge['name']),
-      'image' => trim($arrayMerge['image']["name"]),
-      'url' => trim($arrayMerge['file']),
-      'order' => count($allElemenets) + 1,
-      'status' => ($arrayMerge['status'] == "on" ? 1 : 0),
-      'created_at' => date("Y-m-d H:i:s")
-    ];
-    $infoStorage->insert($data, 'single');
-    header("Location: index.php");
+  $params = array_merge($_POST, $_FILES);
+  // $validate = new Validate($params);
+  // $rule = RULE_HOME_SECTION;
+  // unset($rule['order']);
+  // unset($rule['image']);
+  // $validate->addAllRules($rule);
+  // $validate->run();
+  // $resultEnd = $validate->returnResults();
+  // $errorEnd = $validate->returnErrors();
+  // if (!count($errorEnd)) {
+  //   $status = $objHomeSection -> createItem($params);
+  //   header("Location: index.php");
+  //   exit();
+  // }
+  $status = $objHomeSection -> createItem($params);
+  if ($status['status']) {
+    Header("Location: index.php");
     exit();
   }
-  $errorFix .= '<div class="alert alert-danger" role="alert">';
-  foreach ($errorEnd as $element => $value) {
-    $errorFix .= '<li>' . '<strong>' . ucfirst($element) . '</strong>' . ' : ' . $value . '</li>';
-  }
-  $errorFix .= '</div>';
+  $errorFix = $status['errors'];
 }
 ?>
 
@@ -99,7 +90,7 @@ if (isset($_POST['submit'])) {
               <!-- FILE ATTACHED -->
               <div class="mb-3">
                 <label class="form-label">File attached</label>
-                <input type="text" class="form-control" value="<?php if (isset($_POST['file'])) echo trim($_POST['file']); ?>" name="file">
+                <input type="text" class="form-control" value="<?php if (isset($_POST['url'])) echo trim($_POST['url']); ?>" name="url">
               </div>
               <!-- STATUS -->
               <div class="form-check form-switch">
@@ -116,7 +107,7 @@ if (isset($_POST['submit'])) {
             <!--begin::Footer-->
             <div class="card-footer">
               <input type="submit" class="btn btn-primary" name="submit" value="Submit">
-              <a type="button" class="btn btn-warning" href="./index.php">Cancel</a>
+              <a class="btn btn-warning" href="index.php">Cancel</a>
             </div>
             <!--end::Footer-->
           </form>

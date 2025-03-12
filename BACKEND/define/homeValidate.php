@@ -3,15 +3,20 @@ $RulesHomeSection = array(
     'name' => array(
         'type' => 'string',
         'min' => 1,
-        'max' => 50
+        'max' => 100
     ),
     'order' => array(
         'type' => 'int',
         'min' => 1,
         'max' => 256
     ),
-    'file' => array(
-        'type' => 'url-custom'
+    // 'url' => array(
+    //     'type' => 'url-custom'
+    // ),
+    'url' => array (
+        'type' => 'string',
+        'min' => 5,
+        'max' => 100
     ),
     'image' => array(
         'type' => 'image',
