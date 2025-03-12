@@ -23,7 +23,11 @@ class HomeSection extends Database
         parent::__construct($initServer);
         $this->table = 'home_section';
     }
-
+    public function totalItems($query = null) 
+    {
+        $query = "SELECT COUNT(`id`) AS totalItems FROM `$this->table`";
+        parent::totalItems($query); // override
+    }
     public function getItems($params = [])
     {
         $result = [];
@@ -74,7 +78,6 @@ class HomeSection extends Database
         // chuan bi condition
         // $this->update($data, $contdition);
     }
-
     public function createItems($params = [])
     {
         $this->insert($params);
@@ -107,19 +110,6 @@ class HomeSection extends Database
             'status' => false,
             'errors' => $validateObj -> showErrors()
         ];
-        // $validate = new Validate($params);
-        // $rule = RULE_HOME_SECTION;
-        // unset($rule['order']);
-        // unset($rule['image']);
-        // $validate->addAllRules($rule);
-        // $validate->run();
-        // $resultEnd = $validate->returnResults();
-        // $errorEnd = $validate->returnErrors();
-        // if (!count($errorEnd)) {
-        //     $objHomeSection->createItem($params);
-        //     header("Location: index.php");
-        //     exit();
-        // }
     }
 
     public function deleteItem($id = null) {}

@@ -7,6 +7,7 @@ require_once '../../class/Validate.php';
 require_once '../../define/homeValidate.php';
 require_once '../../class/Pagination.php';
 require_once '../../class/HomeSection.php';
+require_once '../../class/Form.php';
 $errorFix = '';
 $objHomeSection =  new HomeSection($initServer);
 if (isset($_POST['submit'])) {
@@ -73,31 +74,18 @@ if (isset($_POST['submit'])) {
           </div>
           <!-- FORM STARTS -->
           <form action="" method="POST" enctype="multipart/form-data">
-            <!--begin::Body-->
-            <!-- id, name, image, url, status, order, created_at, updated_at -->
-            <!-- if !isset on status => off , isset => on -->
             <div class="card-body">
-              <?php
-              if ($errorFix !== '') {
-                echo $errorFix;
-              }
-              ?>
-              <!-- NAME -->
-              <div class="mb-3">
-                <label class="form-label">Name</label>
-                <input type="text" class="form-control" value="<?php if (isset($_POST['name'])) echo trim($_POST['name']); ?>" name="name">
-              </div>
-              <!-- FILE ATTACHED -->
-              <div class="mb-3">
-                <label class="form-label">File attached</label>
-                <input type="text" class="form-control" value="<?php if (isset($_POST['url'])) echo trim($_POST['url']); ?>" name="url">
-              </div>
-              <!-- STATUS -->
+              <?php if ($errorFix !== '') { echo $errorFix; } ?>
+
+              <?php echo Form::input('text', 'name', 'Name'); ;?>
+
+              <?php echo Form::input('text','url', 'File Attached'); ?>
+              
               <div class="form-check form-switch">
                 <label class="form-check-label" for="switch-status">Status: </label>
                 <input class="form-check-input" type="checkbox" role="switch" id="switch-status" name="status" <?php if (isset($_POST['status'])) echo $_POST['status'] ? 'checked' : ''; ?>>
               </div>
-              <!-- IMAGE UPLOAD -->
+
               <div class="input-group mb-3">
                 <input type="file" class="form-control" id="inputGroupFile02" name="image" value="<?php if (isset($_POST['image'])) echo $_POST['image']; ?>">
                 <label class="input-group-text" for="inputGroupFile02">Upload</label>
@@ -119,11 +107,7 @@ if (isset($_POST['submit'])) {
 
     <?php require_once '../../elements/footer.php'; ?>
   </div>
-  <!--end::App Wrapper-->
-  <!--begin::Script-->
-  <!--begin::Third Party Plugin(OverlayScrollbars)-->
   <?php require_once '../../elements/script.php'; ?>
 </body>
-<!--end::Body-->
 
 </html>

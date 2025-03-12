@@ -6,13 +6,15 @@ class Pagination
     private $pageRange;
     private $totalPages;
     private $currentPage;
-    public function __construct($totalItems, $totalItemsPerPage, $pageRange, $currentPage)
+
+
+    public function __construct($totalItems, $totalItemsPerPage, $pageRange, $currentPage, $totalPages)
     {
         $this->currentPage = $currentPage;
         $this->totalItems = $totalItems;
         $this->totalItemsPerPage = $totalItemsPerPage;
         $this->pageRange = $pageRange;
-        $this->totalPages = floor( $totalItems / $totalItemsPerPage) + ($totalItems % $totalItemsPerPage !== 0);
+        $this->totalPages = $totalPages;
     }
     public function showPagination()
     {

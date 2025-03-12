@@ -1,12 +1,12 @@
 <!-- DATABASE - HOME_SECTION - EDTI -->
 <?php
-require_once '../../elements/functions.php';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
 require_once '../../class/Validate.php';
 require_once '../../define/homeValidate.php';
-require_once '../../class/Pagination.php';
 require_once '../../class/HomeSection.php';
+require_once '../../class/Form.php';
+
 $id = 1;
 $errorFix = '';
 if (isset($_GET['id'])) {
@@ -18,10 +18,9 @@ $queryGetInitialValue = 'SELECT * FROM ' . $infoStorage->getTable() . " WHERE id
 $arrayGetInitialValue = $infoStorage->recordQueryResult($queryGetInitialValue);
 
 if (isset($_POST['submit'])) {
-  $_POST = array_merge($_POST, $_FILES);
+  $params = array_merge($_POST, $_FILES);
 
   $rule = RULE_HOME_SECTION;
-  // unset rules area
   unset($rule['image']);
   // create validate -> add rule -> run -> return Results -> Errors
   $Validate = new Validate($_POST);
@@ -76,43 +75,25 @@ if (isset($_POST['submit'])) {
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-  <!--begin::App Wrapper-->
   <div class="app-wrapper">
-    <!--begin::Header-->
     <?php require_once '../../elements/navbar.php'; ?>
-    <!--end::Header-->
-    <!--begin::Sidebar-->
     <?php require_once '../../elements/sidebar.php'; ?>
     <main class="app-main">
-      <!--begin::App Content Header-->
       <div class="app-content-header">
-        <!--begin::Container-->
         <div class="container-fluid">
-          <!--begin::Row-->
           <div class="row">
             <div class="col-sm-6">
               <h3 class="mb-0">Database - Edit</h3>
             </div>
           </div>
-          <!--end::Row-->
         </div>
-        <!--end::Container-->
       </div>
-      <!--end::App Content Header-->
-      <!--begin::App Content-->
-      <!--end::App Content-->
       <div class="card-body m-3">
         <div class="card card-primary card-outline mb-4">
-          <!--begin::Header-->
           <div class="card-header">
             <div class="card-title">Home section - Edit</div>
           </div>
-          <!--end::Header-->
-          <!--begin::Form-->
           <form action="" method="POST" enctype="multipart/form-data">
-            <!--begin::Body-->
-            <!-- id, name, image, url, status, order, created_at, updated_at -->
-            <!-- if !isset on status => off , isset => on -->
             <div class="card-body">
               <?php
               if ($errorFix !== '') {
@@ -121,39 +102,35 @@ if (isset($_POST['submit'])) {
               ?>
               <!-- NAME -->
               <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Name</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo $arrayGetInitialValue[0]["name"]; ?>" name="name">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" value="<?php echo $arrayGetInitialValue[0]["name"]; ?>" name="name">
               </div>
               <!-- ORDER -->
               <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Order</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo $arrayGetInitialValue[0]["order"]; ?>" name="order">
+                <label class="form-label">Order</label>
+                <input type="text" class="form-control" value="<?php echo $arrayGetInitialValue[0]["order"]; ?>" name="order">
               </div>
               <!-- FILE ATTACHED -->
               <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">File attached</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo $arrayGetInitialValue[0]["url"]; ?>" name="url">
+                <label class="form-label">File attached</label>
+                <input type="text" class="form-control" value="<?php echo $arrayGetInitialValue[0]["url"]; ?>" name="url">
               </div>
               <!-- STATUS -->
               <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" <?php echo $arrayGetInitialValue[0]["status"] ? 'checked' : ''; ?> name="status" >
-                <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" <?php echo $arrayGetInitialValue[0]["status"] ? 'checked' : ''; ?> name="status">
+                <label class="form-check-label">Default switch checkbox input</label>
               </div>
               <!-- IMAGE UPLOAD -->
               <div class="input-group mb-3">
                 <input type="file" class="form-control" id="inputGroupFile02" name="image">
-                <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                <label class="input-group-text">Upload</label>
               </div>
             </div>
-            <!--end::Body-->
-            <!--begin::Footer-->
             <div class="card-footer">
               <input type="submit" class="btn btn-primary" name="submit" value="Submit">
               <a type="button" class="btn btn-warning" href="./index.php">Cancel</a>
             </div>
-            <!--end::Footer-->
           </form>
-          <!--end::Form-->
         </div>
       </div>
     </main>
@@ -162,5 +139,5 @@ if (isset($_POST['submit'])) {
   </div>
   <?php require_once '../../elements/script.php'; ?>
 </body>
-<!--end::Body-->
+
 </html>

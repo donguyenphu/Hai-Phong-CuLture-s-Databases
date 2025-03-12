@@ -8,5 +8,5 @@ $initServer = [
     'table' => 'home_section'
 ];
 
-define("DATABASE_INFO", $initServer);
+define("HOME_SECTION_DATABASE_INFO", $initServer);
 $infoStorage = new Database($initServer);

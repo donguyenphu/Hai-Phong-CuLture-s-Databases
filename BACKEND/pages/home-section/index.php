@@ -3,15 +3,17 @@
 require_once '../../elements/functions.php';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
-require_once '../../class/Validate.php';
 require_once '../../define/homeValidate.php';
 require_once '../../class/Pagination.php';
 require_once '../../class/HomeSection.php';
+require_once '../../class/Form.php';
 
 $Databases = new Database($initServer);
-$params = array_merge($_GET,$_POST);
+$params = array_merge($_GET, $_POST);
+
+
 $itemsHomeSection = new HomeSection($initServer);
-$items = $itemsHomeSection -> getItems($params);
+$items = $itemsHomeSection->getItems($params);
 
 $getAll = 'SELECT * FROM ' . $Databases->getTable();
 $allElemenets = $Databases->recordQueryResult($getAll);
@@ -23,6 +25,7 @@ $totalItems = count($allElemenets);
 $querySearch = [];
 $querySearch[] = 'SELECT * ';
 $querySearch[] = 'FROM `' . $Databases->getTable() . '`';
+
 if (isset($_GET['submit'])) {
     $queryWhere = [];
     if (intval($_GET['search']['status']) < 2) {
@@ -47,21 +50,20 @@ if (isset($_GET['submit'])) {
 $querySearch = implode(' ', $querySearch);
 $items = $Databases->recordQueryResult($querySearch);
 
-// PAGINATION AREA
 if (count($allElemenets) != count($items)) {
     $pageRange = 1;
     $totalItemsPerPages = count($items);
     $totalPages = 1;
-}
-else {
+} else {
     $totalItemsPerPages = 4;
     $pageRange = 4;
     $totalPages = floor($totalItems / $totalItemsPerPages) + ($totalItems % $totalItemsPerPages !== 0);
 }
+
 $startElement = ($currentPage - 1) * $totalItemsPerPages;
 $querySearch .= ' LIMIT ' . $startElement . ', ' . $totalItemsPerPages;
 $items = $Databases->recordQueryResult($querySearch);
-$newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage);
+$newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage, $totalPages);
 
 
 
@@ -98,17 +100,13 @@ if (!empty($items)) {
 </head>
 
 <body class="layout-fixed sidebar-expand-lg sidebar-mini sidebar-collapse bg-body-tertiary app-loaded">
-    <!--begin::App Wrapper-->
     <div class="app-wrapper">
         <?php require_once '../../elements/navbar.php'; ?>
 
         <?php require_once '../../elements/sidebar.php'; ?>
         <main class="app-main">
-            <!--begin::App Content Header-->
             <div class="app-content-header">
-                <!--begin::Container-->
                 <div class="container-fluid">
-                    <!--begin::Page header-->
                     <div class="row">
                         <div class="col-sm-6">
                             <h3 class="mb-0">HomeSection - Index</h3>
@@ -125,47 +123,38 @@ if (!empty($items)) {
 
                         </div>
                     </div>
-                    <!--end::Page header-->
                 </div>
-                <!--end::Container-->
             </div>
-            <!--end::App Content Header-->
             <div class="app-content">
                 <div class="container-fluid">
-                    <!-- Filter & Search -->
                     <form action="" method="GET">
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title fw-bold">Search</h3>
                             </div>
                             <div class="card-body">
-                                <div class="d-flex gap-3">
-                                    <div class="mb-3 w-50">
-                                        <label for="exampleInputPassword1" class="form-label">Name</label>
-                                        <input type="text" class="form-control" id="exampleInputPassword1" name="search[name]">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <?php echo Form::input('text', 'search[name]', 'Name');?>
                                     </div>
-                                    <div class="mb-3 w-50">
-                                        <label for="exampleInputPassword1" class="form-label">URL</label>
-                                        <input type="text" class="form-control" id="exampleInputPassword1" name="search[url]">
+                                    <div class="col-md-4">
+                                        <?php echo Form::input('text', 'search[url]', 'URL'); ?>
                                     </div>
-                                    <div class="mb-3 w-50">
-                                        <label for="validationCustom04" class="form-label">Status</label>
-                                        <select class="form-select" name="search[status]" id="validationCustom04" required="">
-                                            <option value="2">Both</option>
-                                            <option value="1">Yes</option>
-                                            <option value="0">No</option>
-                                        </select>
-                                        <div class="invalid-feedback">Please select a valid state.</div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">Status</label>
+                                            <select class="form-select" name="search[status]" id="validationCustom04">
+                                                <option value="2">Both</option>
+                                                <option value="1">Yes</option>
+                                                <option value="0">No</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="d-flex gap-3">
-                                    <div class="mb-3 w-50">
-                                        <label for="exampleInputPassword1" class="form-label">Start date:</label>
-                                        <input type="date" name="search[created_at][start]" class="form-control" id="exampleInputPassword1">
+                                    <div class="col-sm-6">
+                                        <?php echo Form::input('date', 'search[created_at][start]', 'Start date:'); ?>
                                     </div>
-                                    <div class="mb-3 w-50">
-                                        <label for="exampleInputPassword1" class="form-label">End date:</label>
-                                        <input type="date" name="search[created_at][end]" class="form-control" id="exampleInputPassword1">
+                                    <div class="col-sm-6">
+                                        <?php echo Form::input('date', 'search[created_at][end]', 'End date:'); ?>
                                     </div>
                                 </div>
                             </div>
@@ -175,7 +164,6 @@ if (!empty($items)) {
                             </div>
                         </div>
                     </form>
-                    <!-- List Items -->
                     <div class="card mt-3">
                         <div class="card-body p-0">
                             <table class="table table-striped">
@@ -193,15 +181,13 @@ if (!empty($items)) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    echo $htmlData;
-                                    ?>
+                                    <?php echo $htmlData; ?>
                                 </tbody>
                             </table>
                         </div>
                         <div class="card-footer clearfix">
                             <?php
-                                echo $newPaginationClass->showPagination();
+                            echo $newPaginationClass->showPagination();
                             ?>
                         </div>
                     </div>

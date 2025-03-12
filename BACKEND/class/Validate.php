@@ -94,8 +94,11 @@ class Validate
             $errorAll = 'Please fill the '.$element;
         }
         else if (strlen(trim($this->sources[$element])) < $minRange || strlen(trim($this->sources[$element])) > $maxRange) {
-            if (strlen(trim($this->sources[$element])) < $minRange) $errorAll = 'The ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' is too short';
-            else $errorAll = 'The ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' is too long';
+            if (strlen(trim($this->sources[$element])) < $minRange) {
+                $errorAll = 'The ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' is too short</br>';
+            }
+            else $errorAll = 'The ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' is too long</br>';
+            $errorAll .='The ' . $element . ' must between '.$minRange.' and '.$maxRange;
         }
         if ($errorAll !== '') {
             $this->errors[$element] = $errorAll;
