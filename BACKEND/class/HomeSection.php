@@ -26,7 +26,12 @@ class HomeSection extends Database
     public function totalItems($query = null) 
     {
         $query = "SELECT COUNT(`id`) AS totalItems FROM `$this->table`";
-        parent::totalItems($query); // override
+        parent::recordQueryResult($query); // override
+    }
+    public function totalItemsArray() 
+    {
+        $query = "SELECT * FROM `$this->table`";
+        return parent::recordQueryResult($query); // override
     }
     public function getItems($params = [])
     {

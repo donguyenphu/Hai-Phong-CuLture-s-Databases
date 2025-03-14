@@ -42,8 +42,8 @@ class Database
         $this->table = $table;
     }
     // get total items
-    public function totalItems($query = null) {
-        if ($query) {
+    public function totalItems($query = null) { 
+        if ($query !== '') {
             $resultQuery = $this -> query($query);
             while(mysqli_num_rows($resultQuery) > 0) {
                 $result = mysqli_fetch_assoc($resultQuery);

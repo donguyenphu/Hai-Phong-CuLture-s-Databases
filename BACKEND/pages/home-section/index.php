@@ -1,24 +1,18 @@
 <!-- DATABASE - HOME_SECTION - INDEX -->
 <?php
-require_once '../../elements/functions.php';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
-require_once '../../define/homeValidate.php';
 require_once '../../class/Pagination.php';
 require_once '../../class/HomeSection.php';
 require_once '../../class/Form.php';
 
 $Databases = new Database($initServer);
-
-
 $itemsHomeSection = new HomeSection($initServer);
 
 $params = array_merge($_GET, $_POST);
-
 $items = $itemsHomeSection->getItems($params);
 
-$getAll = 'SELECT * FROM ' . $Databases->getTable();
-$allElemenets = $Databases->recordQueryResult($getAll);
+$allElemenets = $itemsHomeSection->totalItemsArray();
 $arrayRender = $allElemenets;
 
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -28,15 +22,11 @@ $querySearch = [];
 $querySearch[] = 'SELECT * ';
 $querySearch[] = 'FROM `' . $Databases->getTable() . '`';
 
-
 $serverQuery = '';
 if (isset($_GET['submit'])) {
-
     if ($serverQuery === '') {
         $serverQuery = $_SERVER['QUERY_STRING'];
     } 
-
-
     $queryWhere = [];
     if (intval($_GET['search']['status']) < 2) {
         $queryWhere[] = '`status` = ' . $_GET['search']['status'];
@@ -61,6 +51,7 @@ $querySearch = implode(' ', $querySearch);
 $items = $Databases->recordQueryResult($querySearch);
 
 $totalItemsPerPages = 4;
+$totalItems = count($items);
 $totalPages = ceil($totalItems / $totalItemsPerPages);
 $pageRange = min(4, ceil(count($items) / 4));
 

@@ -60,7 +60,7 @@ if (isset($_POST['submit'])) {
               </div>
 
               <div class="input-group mb-3">
-                <input type="file" class="form-control" id="inputGroupFile02" name="image" value="<?php if (isset($_POST['image'])) echo $_POST['image']; ?>">
+                <input type="file" class="form-control" id="inputGroupFile02" name="image">
                 <label class="input-group-text" for="inputGroupFile02">Upload</label>
               </div>
             </div>
