@@ -9,10 +9,12 @@ require_once '../../class/HomeSection.php';
 require_once '../../class/Form.php';
 
 $Databases = new Database($initServer);
-$params = array_merge($_GET, $_POST);
 
 
 $itemsHomeSection = new HomeSection($initServer);
+
+$params = array_merge($_GET, $_POST);
+
 $items = $itemsHomeSection->getItems($params);
 
 $getAll = 'SELECT * FROM ' . $Databases->getTable();
@@ -26,7 +28,15 @@ $querySearch = [];
 $querySearch[] = 'SELECT * ';
 $querySearch[] = 'FROM `' . $Databases->getTable() . '`';
 
+
+$serverQuery = '';
 if (isset($_GET['submit'])) {
+
+    if ($serverQuery === '') {
+        $serverQuery = $_SERVER['QUERY_STRING'];
+    } 
+
+
     $queryWhere = [];
     if (intval($_GET['search']['status']) < 2) {
         $queryWhere[] = '`status` = ' . $_GET['search']['status'];
@@ -50,20 +60,14 @@ if (isset($_GET['submit'])) {
 $querySearch = implode(' ', $querySearch);
 $items = $Databases->recordQueryResult($querySearch);
 
-if (count($allElemenets) != count($items)) {
-    $pageRange = 1;
-    $totalItemsPerPages = count($items);
-    $totalPages = 1;
-} else {
-    $totalItemsPerPages = 4;
-    $pageRange = 4;
-    $totalPages = floor($totalItems / $totalItemsPerPages) + ($totalItems % $totalItemsPerPages !== 0);
-}
+$totalItemsPerPages = 4;
+$totalPages = ceil($totalItems / $totalItemsPerPages);
+$pageRange = min(4, ceil(count($items) / 4));
 
 $startElement = ($currentPage - 1) * $totalItemsPerPages;
 $querySearch .= ' LIMIT ' . $startElement . ', ' . $totalItemsPerPages;
 $items = $Databases->recordQueryResult($querySearch);
-$newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage, $totalPages);
+$newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage, $totalPages, $serverQuery);
 
 
 
@@ -135,26 +139,27 @@ if (!empty($items)) {
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <?php echo Form::input('text', 'search[name]', 'Name');?>
+                                        <?php echo Form::input('text', 'search[name]', 'Name', $_GET, ['name']);?>
                                     </div>
                                     <div class="col-md-4">
-                                        <?php echo Form::input('text', 'search[url]', 'URL'); ?>
+                                        <?php echo Form::input('text', 'search[url]', 'URL', $_GET, ['url']); ?>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label class="form-label">Status</label>
                                             <select class="form-select" name="search[status]" id="validationCustom04">
-                                                <option value="2">Both</option>
-                                                <option value="1">Yes</option>
-                                                <option value="0">No</option>
+                                                <option value="2" <?php echo (isset($_GET['search']) && $_GET['search']['status'] == "2" ? 'selected' : ''); ?>>Both</option>
+                                                <option value="1" <?php echo (isset($_GET['search']) && $_GET['search']['status'] == "1" ? 'selected' : ''); ?>>Yes</option>
+                                                <option value="0" <?php echo (isset($_GET['search']) && $_GET['search']['status'] == "0" ? 'selected' : ''); ?>>No</option>
                                             </select>
                                         </div>
                                     </div>
+                                    <!-- if type date, must be YYYY-MM-DD -->
                                     <div class="col-sm-6">
-                                        <?php echo Form::input('date', 'search[created_at][start]', 'Start date:'); ?>
+                                        <?php echo Form::input('date', 'search[created_at][start]', 'Start date:', $_GET, ['created_at', 'start']); ?>
                                     </div>
                                     <div class="col-sm-6">
-                                        <?php echo Form::input('date', 'search[created_at][end]', 'End date:'); ?>
+                                        <?php echo Form::input('date', 'search[created_at][end]', 'End date:', $_GET, ['created_at', 'end']); ?>
                                     </div>
                                 </div>
                             </div>
@@ -186,9 +191,7 @@ if (!empty($items)) {
                             </table>
                         </div>
                         <div class="card-footer clearfix">
-                            <?php
-                            echo $newPaginationClass->showPagination();
-                            ?>
+                            <?php echo $newPaginationClass->showPagination(); ?>
                         </div>
                     </div>
                 </div>

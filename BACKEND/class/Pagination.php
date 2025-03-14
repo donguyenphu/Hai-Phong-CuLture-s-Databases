@@ -6,15 +6,17 @@ class Pagination
     private $pageRange;
     private $totalPages;
     private $currentPage;
+    private $serverQuery;
 
 
-    public function __construct($totalItems, $totalItemsPerPage, $pageRange, $currentPage, $totalPages)
+    public function __construct($totalItems, $totalItemsPerPage, $pageRange, $currentPage, $totalPages, $serverQuery = null)
     {
         $this->currentPage = $currentPage;
         $this->totalItems = $totalItems;
         $this->totalItemsPerPage = $totalItemsPerPage;
         $this->pageRange = $pageRange;
         $this->totalPages = $totalPages;
+        $this->serverQuery = $serverQuery; 
     }
     public function showPagination()
     {
@@ -56,10 +58,14 @@ class Pagination
         $listPages = '';
 
         for ($i = $startRender; $i <= $endRender; $i++) {
+            $pasteQuery = '';
+            if (!is_null($this->serverQuery)) {
+                $pasteQuery = '&'.$this->serverQuery;
+            }
             if ($i == $this->currentPage) {
-                $listPages.='<li class="page-item active"><a class="page-link" href="index.php?page='.$i.'">' . $i . '</a></li>';
+                $listPages.='<li class="page-item active"><a class="page-link" href="index.php?page='.$i.$pasteQuery.'">' . $i . '</a></li>';
             } else {
-                $listPages.='<li class="page-item"><a class="page-link" href="index.php?page='.$i.'">' . $i . '</a></li>';
+                $listPages.='<li class="page-item"><a class="page-link" href="index.php?page='.$i.$pasteQuery.'">' . $i . '</a></li>';
             }
         }
 

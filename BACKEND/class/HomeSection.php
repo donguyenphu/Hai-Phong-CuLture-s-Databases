@@ -114,6 +114,8 @@ class HomeSection extends Database
 
     public function deleteItem($id = null) {}
 
+    public function search() {}
+    
     private function prepareParams($params = [])
     {
         $fieldsAdded = array_intersect_key($params, array_flip($this->fields));
