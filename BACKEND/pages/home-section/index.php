@@ -10,13 +10,13 @@ $Databases = new Database($initServer);
 $itemsHomeSection = new HomeSection($initServer);
 
 $params = array_merge($_GET, $_POST);
+$searchParams = $params['search'] ?? [];
 $items = $itemsHomeSection->getItems($params);
 
 $allElemenets = $itemsHomeSection->totalItemsArray();
 $arrayRender = $allElemenets;
 
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
-$totalItems = count($allElemenets);
 
 $querySearch = [];
 $querySearch[] = 'SELECT * ';
@@ -53,14 +53,12 @@ $items = $Databases->recordQueryResult($querySearch);
 $totalItemsPerPages = 4;
 $totalItems = count($items);
 $totalPages = ceil($totalItems / $totalItemsPerPages);
-$pageRange = min(4, ceil(count($items) / 4));
+$pageRange = 4;
 
 $startElement = ($currentPage - 1) * $totalItemsPerPages;
 $querySearch .= ' LIMIT ' . $startElement . ', ' . $totalItemsPerPages;
 $items = $Databases->recordQueryResult($querySearch);
 $newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage, $totalPages, $serverQuery);
-
-
 
 $htmlData = '';
 if (!empty($items)) {
@@ -85,15 +83,22 @@ if (!empty($items)) {
     }
 }
 
-?>
 
+
+// SEARCH INPUTS
+$inputSearchName = Form::input('text', 'search[name]', 'Name', $searchParams['name'] ?? '');
+$inputSearchUrl = Form::input('text', 'search[url]', 'URL', $searchParams['url'] ?? '');
+$inputSearchCreatedAtStart = Form::input('date', 'search[created_at][start]', 'Start date:', $searchParams['created_at']['start'] ?? '');
+$inputSearchCreatedAtEnd = Form::input('date', 'search[created_at][end]', 'End date:', $searchParams['created_at']['end'] ?? '');
+$searchStatusValues = [2 => 'Both', 1 => 'Yes', 0 => 'No'];
+$slbSearchStatus = Form::select($searchStatusValues, 'search[status]', 'Status', $searchParams['status'] ?? '');
+
+?>
 <!doctype html>
 <html lang="en">
-
 <head>
     <?php require_once '../../elements/head.php'; ?>
 </head>
-
 <body class="layout-fixed sidebar-expand-lg sidebar-mini sidebar-collapse bg-body-tertiary app-loaded">
     <div class="app-wrapper">
         <?php require_once '../../elements/navbar.php'; ?>
@@ -130,27 +135,19 @@ if (!empty($items)) {
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <?php echo Form::input('text', 'search[name]', 'Name', $_GET, ['name']);?>
+                                        <?php echo $inputSearchName;?>
                                     </div>
                                     <div class="col-md-4">
-                                        <?php echo Form::input('text', 'search[url]', 'URL', $_GET, ['url']); ?>
+                                        <?php echo $inputSearchUrl; ?>
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="mb-3">
-                                            <label class="form-label">Status</label>
-                                            <select class="form-select" name="search[status]" id="validationCustom04">
-                                                <option value="2" <?php echo (isset($_GET['search']) && $_GET['search']['status'] == "2" ? 'selected' : ''); ?>>Both</option>
-                                                <option value="1" <?php echo (isset($_GET['search']) && $_GET['search']['status'] == "1" ? 'selected' : ''); ?>>Yes</option>
-                                                <option value="0" <?php echo (isset($_GET['search']) && $_GET['search']['status'] == "0" ? 'selected' : ''); ?>>No</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <!-- if type date, must be YYYY-MM-DD -->
-                                    <div class="col-sm-6">
-                                        <?php echo Form::input('date', 'search[created_at][start]', 'Start date:', $_GET, ['created_at', 'start']); ?>
+                                        <?php echo $slbSearchStatus; ?>
                                     </div>
                                     <div class="col-sm-6">
-                                        <?php echo Form::input('date', 'search[created_at][end]', 'End date:', $_GET, ['created_at', 'end']); ?>
+                                        <?php echo $inputSearchCreatedAtStart; ?>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <?php echo $inputSearchCreatedAtEnd; ?>
                                     </div>
                                 </div>
                             </div>

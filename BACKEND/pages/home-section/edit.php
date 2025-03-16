@@ -2,69 +2,51 @@
 <?php
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
-require_once '../../class/Validate.php';
 require_once '../../define/homeValidate.php';
 require_once '../../class/HomeSection.php';
 require_once '../../class/Form.php';
 
-$id = 1;
+$id = '';
 $errorFix = '';
+$objHomeSection = new HomeSection($initServer);
+$arrayIDs = $objHomeSection->prepareJsonArray();
+$_GET['id'] = intval($_GET['id']);
 if (isset($_GET['id'])) {
   $id = $_GET['id'];
 }
+if (!isset($_GET['id']) || !in_array($_GET['id'], $arrayIDs)) {
+  Header("Location: index.php");
+  exit();
+}
+
 
 $infoStorage = new Database($initServer);
 $queryGetInitialValue = 'SELECT * FROM ' . $infoStorage->getTable() . " WHERE id = " . $id;
 $arrayGetInitialValue = $infoStorage->recordQueryResult($queryGetInitialValue);
-
+$params = $arrayGetInitialValue[0];
 if (isset($_POST['submit'])) {
   $params = array_merge($_POST, $_FILES);
-
-  $rule = RULE_HOME_SECTION;
-  unset($rule['image']);
-  // create validate -> add rule -> run -> return Results -> Errors
-  $Validate = new Validate($_POST);
-  $Validate->addAllRules($rule);
-  $Validate->run();
-  $resultEnd = $Validate->returnResults();
-  $errorEnd = $Validate->returnErrors();
-
-  $arrayGetInitialValue[0]["name"] = trim($_POST['name']);
-  $arrayGetInitialValue[0]["image"] = trim(!empty($_POST['image']['name']) ? $_POST['image']['name'] : $arrayGetInitialValue[0]["image"]);
-  $arrayGetInitialValue[0]["url"] = trim($_POST['url']);
-  $arrayGetInitialValue[0]["order"] = trim($_POST['order']);
-  $arrayGetInitialValue[0]["status"] = (isset($_POST['status']) && $_POST['status']) == "on" ? 1 : 0;
-  if (!count($errorEnd)) {
-    $initServer = [
-      'server' => 'localhost',
-      'username' => 'root',
-      'password' => '',
-      'database' => 'hai_phong_culture_database',
-      'table' => 'home_section'
-    ];
-    $getAll = 'SELECT * FROM ' . $infoStorage->getTable();
-    $allElemenets = $infoStorage->recordQueryResult($getAll);
-
-    $data = [
-      'id' => $id,
-      'name' => $arrayGetInitialValue[0]["name"],
-      'image' => $arrayGetInitialValue[0]["image"],
-      'url' => $arrayGetInitialValue[0]["url"],
-      'order' => $arrayGetInitialValue[0]["order"],
-      'status' => $arrayGetInitialValue[0]["status"],
-      'updated_at' => date("Y-m-d H:i:s")
-    ];
-
-    $tmp = $infoStorage->updateOnlyOneId($data);
+  echo '<pre style="color: red;font-weight:bold">';
+  print_r($params);
+  echo '</pre>';
+  die();
+  $result = $objHomeSection->updateItem($params, $id);
+  if ($result == true) {
     header("Location: index.php");
     exit();
   }
   $errorFix .= '<div class="alert alert-danger" role="alert">';
-  foreach ($errorEnd as $element => $value) {
+  foreach ($result as $element => $value) {
     $errorFix .= '<li>' . '<strong>' . ucfirst($element) . '</strong>' . ' : ' . $value . '</li>';
   }
   $errorFix .= '</div>';
 }
+
+$editName = Form::input("text", "name", "Name", $params['name'] ?? '');
+$editOrder = Form::input("text", "order", "Order", $params['order'] ?? '');
+$editURL = Form::input("text", "url", "URL", $params['url'] ?? '');
+$editImage = Form::input("file", "image", "Upload", $params['image'] ?? '');
+
 ?>
 
 <!doctype html>
@@ -77,6 +59,7 @@ if (isset($_POST['submit'])) {
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
   <div class="app-wrapper">
     <?php require_once '../../elements/navbar.php'; ?>
+
     <?php require_once '../../elements/sidebar.php'; ?>
     <main class="app-main">
       <div class="app-content-header">
@@ -101,31 +84,26 @@ if (isset($_POST['submit'])) {
               }
               ?>
               <!-- NAME -->
-              <div class="mb-3">
-                <label class="form-label">Name</label>
-                <input type="text" class="form-control" value="<?php echo $arrayGetInitialValue[0]["name"]; ?>" name="name">
-              </div>
+              <?= $editName ?>
               <!-- ORDER -->
-              <div class="mb-3">
-                <label class="form-label">Order</label>
-                <input type="text" class="form-control" value="<?php echo $arrayGetInitialValue[0]["order"]; ?>" name="order">
-              </div>
-              <!-- FILE ATTACHED -->
-              <div class="mb-3">
-                <label class="form-label">File attached</label>
-                <input type="text" class="form-control" value="<?php echo $arrayGetInitialValue[0]["url"]; ?>" name="url">
-              </div>
+              <?= $editOrder ?>
+              <!-- URL -->
+              <?= $editURL ?>
               <!-- STATUS -->
               <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" <?php echo $arrayGetInitialValue[0]["status"] ? 'checked' : ''; ?> name="status">
+                <input class="form-check-input" type="checkbox" role="switch" name="status">
                 <label class="form-check-label">Default switch checkbox input</label>
               </div>
-              <!-- IMAGE UPLOAD -->
-              <div class="input-group mb-3">
-                <input type="file" class="form-control" id="inputGroupFile02" name="image">
-                <label class="input-group-text">Upload</label>
+              <!-- IMAGE -->
+              <div style="margin: 10px 0 10px 0; width: 30%; height: auto;">
+                <img src="" id = "image-display-preview" class="w-100 h-100 rounded">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Upload</label>
+                <input type="file" class="form-control" name="image" id = "input-upload-preview">
               </div>
             </div>
+            <!-- SUBMIT -->
             <div class="card-footer">
               <input type="submit" class="btn btn-primary" name="submit" value="Submit">
               <a type="button" class="btn btn-warning" href="./index.php">Cancel</a>

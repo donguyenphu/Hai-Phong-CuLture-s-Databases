@@ -18,34 +18,33 @@ class Pagination
         $this->totalPages = $totalPages;
         $this->serverQuery = $serverQuery;
     }
-    public function showPagination()
+    public function showPagination($params = [])
     {
         $pasteQuery = '';
         if (!is_null($this->serverQuery)) {
             $pasteQuery = $this->serverQuery;
         }
-        $temporary = $pasteQuery;
-        $temporary = explode('&', $temporary);
-        foreach ($temporary as $key => $value) {
+        $pasteQuery = explode('&', $pasteQuery);
+        foreach ($pasteQuery as $key => $value) {
             /// value
             if (str_contains($value, 'page')) {
-                $temporary = array_values(array_diff($temporary, [$value]));
+                $pasteQuery = array_values(array_diff($pasteQuery, [$value]));
                 break;
             }
         }
-        $temporary = '&' . implode('&', $temporary);
+        $pasteQuery = '&' . implode('&', $pasteQuery);
         $paginaionHTML = '';
         $start     = '<li class="page-item"><a class="page-link" href="#">Start</a></li>';
         $prev     = '<li class="page-item"><a class="page-link" href="#">«</a></li>';
         if ($this->currentPage > 1) {
-            $start     = '<li class="page-item"><a  class="page-link" href="index.php?page=1' . $temporary . '">Start</a></li>';
-            $prev     = '<li class="page-item"><a  class="page-link" href="?page=' . ($this->currentPage - 1) . $temporary . '">«</a></li>';
+            $start     = '<li class="page-item"><a  class="page-link" href="index.php?page=1' . $pasteQuery . '">Start</a></li>';
+            $prev     = '<li class="page-item"><a  class="page-link" href="?page=' . ($this->currentPage - 1) . $pasteQuery . '">«</a></li>';
         }
         $next     = '<li class="page-item"><a class="page-link" href="#">»</a></li>';
         $end     = '<li class="page-item"><a class="page-link" href="#">End</a></li>';
         if ($this->currentPage < $this->totalPages) {
-            $next     = '<li class="page-item"><a class="page-link" href="index.php?page=' . ($this->currentPage + 1) . $temporary . '">»</a></li>';
-            $end     = '<li class="page-item"><a class="page-link" href="index.php?page=' . $this->totalPages . $temporary . '">End</a></li>';
+            $next     = '<li class="page-item"><a class="page-link" href="index.php?page=' . ($this->currentPage + 1) . $pasteQuery . '">»</a></li>';
+            $end     = '<li class="page-item"><a class="page-link" href="index.php?page=' . $this->totalPages . $pasteQuery . '">End</a></li>';
         }
 
         $startRender = $this->currentPage - floor(($this->pageRange - 1) / 2);
@@ -72,9 +71,9 @@ class Pagination
 
         for ($i = $startRender; $i <= $endRender; $i++) {
             if ($i == $this->currentPage) {
-                $listPages .= '<li class="page-item active"><a class="page-link" href="index.php?page=' . $i . $temporary . '">' . $i . '</a></li>';
+                $listPages .= '<li class="page-item active"><a class="page-link" href="index.php?page=' . $i . $pasteQuery . '">' . $i . '</a></li>';
             } else {
-                $listPages .= '<li class="page-item"><a class="page-link" href="index.php?page=' . $i . $temporary . '">' . $i . '</a></li>';
+                $listPages .= '<li class="page-item"><a class="page-link" href="index.php?page=' . $i . $pasteQuery . '">' . $i . '</a></li>';
             }
         }
 

@@ -10,13 +10,23 @@ $objHomeSection =  new HomeSection($initServer);
 $params = [];
 if (isset($_POST['submit'])) {
   $params = array_merge($_POST, $_FILES);
-  $status = $objHomeSection -> createItem($params);
+  $status = $objHomeSection->createItem($params);
   if ($status['status']) {
-    Header("Location: index.php");
-    exit();
+    $arrayIds = $objHomeSection->prepareJsonArray();
+    array_push($arrayIds, $status['lastID']);
+    if ($objHomeSection->convertBackJsonArray($arrayIds)) {
+      Header("Location: index.php");
+      exit();
+    }
   }
   $errorFix = $status['errors'];
 }
+
+// CREATE FORM STARTS
+$createName = Form::input('text', 'name', 'Name', $params['name'] ?? '');
+$createURL = Form::input('text', 'url', 'File Attached', $params['url'] ?? '');
+$createStatus = $params['status'] ?? '';
+
 ?>
 
 <!doctype html>
@@ -48,20 +58,25 @@ if (isset($_POST['submit'])) {
           </div>
           <form action="" method="POST" enctype="multipart/form-data">
             <div class="card-body">
-              <?php if ($errorFix !== '') { echo $errorFix; } ?>
-
-              <?php echo Form::input('text', 'name', 'Name',$params,['name']); ;?>
-
-              <?php echo Form::input('text','url', 'File Attached', $params, ['name']); ?>
-              
+              <?php if ($errorFix !== '') {
+                echo $errorFix;
+              } ?>
+              <!-- NAME -->
+              <?= $createName ?>
+              <!-- URL -->
+              <?= $createURL ?>
+              <!-- STATUS -->
               <div class="form-check form-switch">
                 <label class="form-check-label" for="switch-status">Status: </label>
-                <input class="form-check-input" type="checkbox" role="switch" id="switch-status" name="status" <?php if (isset($_POST['status'])) echo $_POST['status'] ? 'checked' : ''; ?>>
+                <input class="form-check-input" type="checkbox" role="switch" id="switch-status" name="status" <?= $createStatus ?>>
               </div>
-
-              <div class="input-group mb-3">
-                <input type="file" class="form-control" id="inputGroupFile02" name="image">
-                <label class="input-group-text" for="inputGroupFile02">Upload</label>
+              <!-- IMAGE -->
+              <div style="margin: 10px 0 10px 0; width: 30%; height: auto;">
+                <img src="" id = "image-display-preview" class="w-100 h-100 rounded">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Upload</label>
+                <input type="file" class="form-control" name="image" id = "input-upload-preview">
               </div>
             </div>
             <div class="card-footer">

@@ -6,7 +6,6 @@ class Database
     protected $databaseName;
     protected $table;
     protected $resultQuery;
-    protected array $IDs;
     // init & connect database
     public function __construct($initServer)
     {
@@ -42,10 +41,11 @@ class Database
         $this->table = $table;
     }
     // get total items
-    public function totalItems($query = null) { 
+    public function totalItems($query = null)
+    {
         if ($query !== '') {
-            $resultQuery = $this -> query($query);
-            while(mysqli_num_rows($resultQuery) > 0) {
+            $resultQuery = $this->query($query);
+            while (mysqli_num_rows($resultQuery) > 0) {
                 $result = mysqli_fetch_assoc($resultQuery);
             }
             mysqli_free_result($resultQuery);
@@ -94,7 +94,7 @@ class Database
         $this->resultQuery = mysqli_query($this->connect, $stringQuery);
         return $this->resultQuery;
     }
-    // UPDATE
+    // UPDATE DATA WITH MULTI CONDITIONS
     public function update($data, $condition)
     {
         $newAssign = $this->createAssignUpdate($data);
@@ -103,7 +103,7 @@ class Database
         $result = mysqli_query($this->connect, $stringToQuery);
         return "UPDATE `" . $this->table . "` SET " . $newAssign . "WHERE " . $newCondition . "";
     }
-    // UPDATE ONLY ONE ID
+    // UPDATE ONLY THE ID IS THE CONDITION
     public function updateOnlyOneId($data)
     {
         $newAssign = $this->createAssignUpdate($data);

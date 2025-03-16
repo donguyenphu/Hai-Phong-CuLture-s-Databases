@@ -7,6 +7,5 @@ $initServer = [
     'database' => 'hai_phong_culture_database',
     'table' => 'home_section'
 ];
-
 define("HOME_SECTION_DATABASE_INFO", $initServer);
 $infoStorage = new Database($initServer);

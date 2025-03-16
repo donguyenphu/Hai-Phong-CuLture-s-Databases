@@ -27,3 +27,4 @@
     crossorigin="anonymous" />
 <link rel="stylesheet" href="../../assets/css/adminlte.css" />
 <link rel="stylesheet" href="../../assets/css/custom.css">
+<link rel="stylesheet" href="../../assets/css/imageDisplay.css">
