@@ -18,11 +18,14 @@ if (isset($_GET['id'])) {
   ];
   $user = new Database($initServer);
   $delQuery = "DELETE FROM " . "`" . $user->getTable() . "`" . " WHERE `id` = " . "'" . $id . "'";
+  $getQuery = "SELECT * FROM " . "`" . $user->getTable() . "`" . " WHERE `id` = " . "'" . $id . "'";
+  $arrayID = ($user->recordQueryResult($getQuery))[0];
   $arr = $user->query($delQuery);
-
-  $arrayIDs = $objHomeSection->prepareJsonArray();
-  $arrayIDs = array_values(array_diff($arrayIDs, [$id]));
-
+  $imageName = $arrayID['image'] ?? '';
+  $arrayIDs = array_values(array_diff($objHomeSection->prepareJsonArray(), [$id]));
+  if ($imageName !== '') {
+    @unlink('../../assets/images/home-section/'.$imageName);
+  }
   if ($objHomeSection->convertBackJsonArray($arrayIDs)) {
     header("Location: index.php");
     exit();

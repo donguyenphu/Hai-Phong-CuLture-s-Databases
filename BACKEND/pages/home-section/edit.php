@@ -26,12 +26,17 @@ $arrayGetInitialValue = $infoStorage->recordQueryResult($queryGetInitialValue);
 $params = $arrayGetInitialValue[0];
 if (isset($_POST['submit'])) {
   $params = array_merge($_POST, $_FILES);
-  echo '<pre style="color: red;font-weight:bold">';
-  print_r($params);
-  echo '</pre>';
-  die();
+  $oldImage = $arrayGetInitialValue[0]['image'] ?? '';
   $result = $objHomeSection->updateItem($params, $id);
-  if ($result == true) {
+  if ($result['status']  == true) {
+    if ($oldImage !== '') {
+      $realPath = "../../assets/images/home-section/".$oldImage;
+      @unlink($realPath);
+    }
+    if ($result['image'] !== '') {
+      $realPath = '../../assets/images/home-section/'.$result['image'];
+      @move_uploaded_file($result['tmp_name'], $realPath);
+    }
     header("Location: index.php");
     exit();
   }
