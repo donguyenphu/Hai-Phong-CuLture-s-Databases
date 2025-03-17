@@ -8,6 +8,8 @@ class HomeSection extends Database
 
     protected $table;
 
+    public $imageFolderName;
+
     protected $fields = [
         'name',
         'image',
@@ -24,6 +26,7 @@ class HomeSection extends Database
     {
         parent::__construct($initServer);
         $this->table = 'home_section';
+        $this->imageFolderName = 'home-section';
         $this->jsonIDSfilePath = '../../assets/json/home-section-ids.json';
     }
     public function prepareJsonArray()
@@ -129,6 +132,8 @@ class HomeSection extends Database
         if (!empty($fieldsAdded)) {
             $validateObj = new Validate($fieldsAdded);
             $rule = RULE_HOME_SECTION;
+            $tmp_file_name = $fieldsAdded['tmp_name'];
+            unset($fieldsAdded['tmp_name']);
             unset($rule['order']);
             unset($rule['image']);
             $validateObj->addAllRules($rule);
@@ -139,7 +144,9 @@ class HomeSection extends Database
                 $lastId = $this->insert($fieldsAdded, 'single');
                 return [
                     'status' => true,
-                    'lastID' => $lastId
+                    'lastID' => $lastId,
+                    'image' => $fieldsAdded['image'] ?? '',
+                    'tmp_name' => $tmp_file_name ?? ''
                 ];
             }
         }
@@ -160,10 +167,12 @@ class HomeSection extends Database
         $temporaryVar = '';
         if (isset($fieldsAdded['image']['name']) && !empty($fieldsAdded['image']['name'])) {
             $temporaryVar = $fieldsAdded['image']['name'];
+            $tmp_file_name = $fieldsAdded['image']['tmp_name'];
         }
         unset($fieldsAdded['image']);
         if ($temporaryVar) {
             $fieldsAdded['image'] = $temporaryVar;
+            $fieldsAdded['tmp_name'] = $tmp_file_name;
         }
         $fieldsAdded = array_map(function ($value) {
             return is_array($value) ? $value : trim((string)$value);

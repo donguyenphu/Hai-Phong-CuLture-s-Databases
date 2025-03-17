@@ -97,28 +97,20 @@ CREATE TABLE IF NOT EXISTS `home_section` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=300 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=315 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table hai_phong_culture_database.home_section: ~17 rows (approximately)
+-- Dumping data for table hai_phong_culture_database.home_section: ~4 rows (approximately)
 DELETE FROM `home_section`;
 INSERT INTO `home_section` (`id`, `name`, `image`, `url`, `status`, `order`, `created_at`, `updated_at`) VALUES
-	(4, 'Travel', './image/HaiPhongTravel.jpg', './travel.php', 1, 5, '2025-02-02 09:53:17', '2025-03-01 03:13:49'),
-	(5, 'Cuisines', './image/HaiPhongCuisines.jpg', './cuisine.php', 0, 6, '2025-02-04 09:53:20', '2025-03-01 03:13:52'),
-	(6, 'People', './image/HaiPhongPeople.jpg', './people.php', 1, 6, '2025-02-09 09:53:22', '2025-03-01 03:13:55'),
-	(241, 'dophu3', 'DoSon4.png', './indexx.php', 0, 8, '2025-02-27 08:26:11', '2025-03-05 00:26:08'),
-	(244, 'dophu', 'HaiPhongLogo.png', './indexx.php', 0, 8, '2025-02-27 08:34:29', '2025-03-05 00:34:21'),
-	(246, 'History', 'HaiPhongHistory.jpg', './history.php', 1, 1, '2025-03-01 03:15:06', '2025-03-04 05:25:28'),
-	(247, 'Home', 'HaiPhongPeople.jpg', './index.php', 1, 2, '2025-03-04 05:17:07', '2025-03-04 05:22:36'),
-	(248, 'Contact', 'Contact.jpg', 'contact.php', 1, 3, '2025-03-04 05:23:40', '2025-03-04 05:23:59'),
-	(249, 'Culture', 'lanHaBay.jpg', 'culture.php', 1, 4, '2025-03-04 05:25:09', '2025-03-04 05:25:18'),
-	(292, 'dophu3', 'Screenshot_3.png', './index.php', 1, 1, '2025-03-15 12:42:45', NULL),
-	(293, 'dophu3344', 'Screenshot_2.png', 'ddddd', 1, 1, '2025-03-15 12:43:06', NULL),
 	(294, 'dophubro', NULL, './index.php', 1, 1, '2025-03-15 12:43:22', NULL),
 	(295, 'dophu222222', NULL, './index.php', 0, 1, '2025-03-15 20:59:12', NULL),
 	(296, 'Ray Mclean', NULL, 'Dolorem cupiditate d', 1, 1, '2025-03-16 00:09:07', NULL),
-	(297, 'Jada Madden', NULL, 'Cumque perferendis n', 1, 1, '2025-03-16 00:09:28', NULL),
-	(298, 'Charity Houston', 'Screenshot_3.png', 'Mollitia velit reici', 1, 1, '2025-03-16 00:12:13', NULL),
-	(299, 'Prescott Lindsey', 'Screenshot_1.png', 'Quia id consectetur', 1, 1, '2025-03-16 14:15:39', NULL);
+	(307, 'Stone Ratliff', NULL, 'Ipsam aut unde quae', 0, 1, '2025-03-17 02:59:45', NULL),
+	(309, 'Erich Strong', 'Screenshot_3.png', 'Debitis ut sint off', 0, 1, '2025-03-17 03:00:11', NULL),
+	(310, 'Erich Strong', 'Screenshot_3.png', 'Debitis ut sint off', 0, 1, '2025-03-17 03:01:55', NULL),
+	(311, 'Erich Strong', 'Screenshot_3.png', 'Debitis ut sint off', 0, 1, '2025-03-17 03:04:11', NULL),
+	(313, 'Ginger Lancaster', 'Screenshot_5.png', 'Provident aperiam i', 1, 1, '2025-03-17 03:06:37', NULL),
+	(314, 'Ginger Lancaster', 'Screenshot_5.png', 'Provident aperiam i', 1, 1, '2025-03-17 03:06:57', NULL);
 
 -- Dumping structure for table hai_phong_culture_database.travel
 CREATE TABLE IF NOT EXISTS `travel` (
