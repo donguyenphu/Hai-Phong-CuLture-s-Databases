@@ -17,7 +17,7 @@ if (isset($_POST['submit'])) {
     if ($objHomeSection->convertBackJsonArray($arrayIds)) {
       if ($status['tmp_name'] !== '') {
         @move_uploaded_file($status['tmp_name'], '../../assets/images/home-section/'.$status['image']);
-        @move_uploaded_file($status['tmp_name'], '../../assets/images/home-section/'.'home-section'.$status['image']);
+        @move_uploaded_file($status['tmp_name'], '../../assets/images/home-section/'.$status['image']);
       }
       Header("Location: index.php");
       exit();
