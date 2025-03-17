@@ -143,6 +143,7 @@ class HomeSection extends Database
             $validateObj = new Validate($fieldsAdded);
             $rule = RULE_HOME_SECTION;
             $tmp_file_name = $fieldsAdded['tmp_name'] ?? '';
+            $tmp_file_name = $fieldsAdded['tmp_name'];
             unset($fieldsAdded['tmp_name']);
             unset($rule['order']);
             unset($rule['image']);
