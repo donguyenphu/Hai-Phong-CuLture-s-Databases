@@ -99,18 +99,17 @@ CREATE TABLE IF NOT EXISTS `home_section` (
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=315 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table hai_phong_culture_database.home_section: ~4 rows (approximately)
+-- Dumping data for table hai_phong_culture_database.home_section: ~8 rows (approximately)
 DELETE FROM `home_section`;
 INSERT INTO `home_section` (`id`, `name`, `image`, `url`, `status`, `order`, `created_at`, `updated_at`) VALUES
-	(294, 'dophubro', NULL, './index.php', 1, 1, '2025-03-15 12:43:22', NULL),
 	(295, 'dophu222222', NULL, './index.php', 0, 1, '2025-03-15 20:59:12', NULL),
 	(296, 'Ray Mclean', NULL, 'Dolorem cupiditate d', 1, 1, '2025-03-16 00:09:07', NULL),
 	(307, 'Stone Ratliff', NULL, 'Ipsam aut unde quae', 0, 1, '2025-03-17 02:59:45', NULL),
-	(309, 'Erich Strong', 'Screenshot_3.png', 'Debitis ut sint off', 0, 1, '2025-03-17 03:00:11', NULL),
-	(310, 'Erich Strong', 'Screenshot_3.png', 'Debitis ut sint off', 0, 1, '2025-03-17 03:01:55', NULL),
-	(311, 'Erich Strong', 'Screenshot_3.png', 'Debitis ut sint off', 0, 1, '2025-03-17 03:04:11', NULL),
-	(313, 'Ginger Lancaster', 'Screenshot_5.png', 'Provident aperiam i', 1, 1, '2025-03-17 03:06:37', NULL),
-	(314, 'Ginger Lancaster', 'Screenshot_5.png', 'Provident aperiam i', 1, 1, '2025-03-17 03:06:57', NULL);
+	(323, 'Joseph Owens', 'Screenshot_2.png', 'Sunt odit ea sed qu', 0, 1, '2025-03-17 05:42:44', '2025-03-17 05:43:23'),
+	(324, 'Reece Carlson', 'Screenshot_5.png', 'Omnis cumque vel lib', 1, 1, '2025-03-17 06:11:52', NULL),
+	(325, 'Uriel Kennedy', 'z6407075823568_1c23f531010e7e935653b4431c8390d5.jpg', 'Consequatur Dolorum', 0, 1, '2025-03-17 06:12:07', NULL),
+	(326, 'Zorita Wiggins', NULL, 'Facilis est magni un', 0, 1, '2025-03-17 06:13:05', NULL),
+	(327, 'Dominique Hodges', 'Screenshot_4.png', 'Fugiat non consecte', 1, 1, '2025-03-17 06:13:14', NULL);
 
 -- Dumping structure for table hai_phong_culture_database.travel
 CREATE TABLE IF NOT EXISTS `travel` (
