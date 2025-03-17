@@ -102,14 +102,11 @@ CREATE TABLE IF NOT EXISTS `home_section` (
 -- Dumping data for table hai_phong_culture_database.home_section: ~8 rows (approximately)
 DELETE FROM `home_section`;
 INSERT INTO `home_section` (`id`, `name`, `image`, `url`, `status`, `order`, `created_at`, `updated_at`) VALUES
-	(295, 'dophu222222', NULL, './index.php', 0, 1, '2025-03-15 20:59:12', NULL),
-	(296, 'Ray Mclean', NULL, 'Dolorem cupiditate d', 1, 1, '2025-03-16 00:09:07', NULL),
-	(307, 'Stone Ratliff', NULL, 'Ipsam aut unde quae', 0, 1, '2025-03-17 02:59:45', NULL),
-	(323, 'Joseph Owens', 'Screenshot_2.png', 'Sunt odit ea sed qu', 0, 1, '2025-03-17 05:42:44', '2025-03-17 05:43:23'),
-	(324, 'Reece Carlson', 'Screenshot_5.png', 'Omnis cumque vel lib', 1, 1, '2025-03-17 06:11:52', NULL),
-	(325, 'Uriel Kennedy', 'z6407075823568_1c23f531010e7e935653b4431c8390d5.jpg', 'Consequatur Dolorum', 0, 1, '2025-03-17 06:12:07', NULL),
-	(326, 'Zorita Wiggins', NULL, 'Facilis est magni un', 0, 1, '2025-03-17 06:13:05', NULL),
-	(327, 'Dominique Hodges', 'Screenshot_4.png', 'Fugiat non consecte', 1, 1, '2025-03-17 06:13:14', NULL);
+	(337, 'Kuame Pope', 'wdtl6Screenshot_5.png', 'Ut tempora iusto non', 1, 1, '2025-03-17 10:24:09', NULL),
+	(338, 'Octavia Hoover', 'Kd4QnScreenshot_3.png', 'Nulla doloremque ill', 1, 1, '2025-03-17 10:24:17', NULL),
+	(339, 'Imogene Maddox', 'bFVMDScreenshot_4.png', 'Autem nisi ex verita', 1, 1, '2025-03-17 10:24:26', NULL),
+	(340, 'Michael Alvarado', 'xJlecScreenshot_7.png', 'Dolorum in praesenti', 1, 1, '2025-03-17 10:24:39', NULL),
+	(341, 'Benjamin Weeks', 'aG8iVScreenshot_6.png', 'Aut quos qui et aut', 1, 1, '2025-03-17 10:24:50', NULL);
 
 -- Dumping structure for table hai_phong_culture_database.travel
 CREATE TABLE IF NOT EXISTS `travel` (

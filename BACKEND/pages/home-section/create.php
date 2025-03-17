@@ -1,5 +1,6 @@
 <!-- DATABASE - HOME_SECTION - ADD -->
 <?php
+require_once '../../elements/functions.php';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
 require_once '../../class/HomeSection.php';
@@ -12,16 +13,20 @@ if (isset($_POST['submit'])) {
   $params = array_merge($_POST, $_FILES);
   $status = $objHomeSection->createItem($params);
   if ($status['status']) {
+
     $arrayIds = $objHomeSection->prepareJsonArray();
     array_push($arrayIds, $status['lastID']);
+
     if ($objHomeSection->convertBackJsonArray($arrayIds)) {
+
       if ($status['tmp_name'] !== '') {
         @move_uploaded_file($status['tmp_name'], '../../assets/images/home-section/'.$status['image']);
-        @move_uploaded_file($status['tmp_name'], '../../assets/images/home-section/'.$status['image']);
       }
+
       Header("Location: index.php");
       exit();
     }
+    
   }
   $errorFix = $status['errors'];
 }

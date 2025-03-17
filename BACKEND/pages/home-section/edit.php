@@ -1,5 +1,6 @@
 <!-- DATABASE - HOME_SECTION - EDTI -->
 <?php
+require_once '../../elements/functions.php';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
 require_once '../../define/homeValidate.php';
@@ -34,7 +35,7 @@ if (isset($_POST['submit'])) {
       @unlink($realPath);
     }
     if ($result['image'] !== '') {
-      $realPath = '../../assets/images/home-section/'.$result['image'];
+      $realPath = "../../assets/images/home-section/".$result['image'];
       @move_uploaded_file($result['tmp_name'], $realPath);
     }
     header("Location: index.php");
@@ -96,7 +97,7 @@ $editImage = Form::input("file", "image", "Upload", $params['image'] ?? '');
               <?= $editURL ?>
               <!-- STATUS -->
               <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" role="switch" name="status">
+                <input class="form-check-input" type="checkbox" role="switch" name="status" <?= $params['status'] ? 'checked' : '' ?>>
                 <label class="form-check-label">Default switch checkbox input</label>
               </div>
               <!-- IMAGE -->

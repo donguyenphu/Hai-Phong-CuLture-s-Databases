@@ -2,6 +2,7 @@
 require_once 'Database.php';
 require_once 'Validate.php';
 require_once '../../define/homeValidate.php';
+require_once '../../elements/functions.php';
 
 class HomeSection extends Database
 {
@@ -119,7 +120,7 @@ class HomeSection extends Database
             $this->updateOnlyOneId($fieldsModified);
             return [
                 'status' => true,
-                'image' => $image_name,
+                'image' => randomString(5) . $image_name,
                 'tmp_name' => $tmp_file_name
             ];
         }
@@ -130,7 +131,7 @@ class HomeSection extends Database
     }
     public function createItems($params = [])
     {
-        $this->insert($params);
+        $this->insert($params, 'multi');
     }
     public function createItem($params = [])
     {
@@ -167,7 +168,22 @@ class HomeSection extends Database
         ];
     }
 
-    public function deleteItem($id = null) {}
+    public function deleteItem($id)
+    {
+        $delQuery = "DELETE FROM " . "`" . parent::getTable() . "`" . " WHERE `id` = " . "'" . $id . "'";
+        $getQuery = "SELECT * FROM " . "`" . parent::getTable() . "`" . " WHERE `id` = " . "'" . $id . "'";
+        $arrayID = (parent::recordQueryResult($getQuery))[0];
+        $arr = parent::query($delQuery);
+        $imageName = $arrayID['image'] ?? '';
+        $arrayIDs = array_values(array_diff($this->prepareJsonArray(), [$id]));
+        if ($imageName !== '') {
+            @unlink('../../assets/images/home-section/' . $imageName);
+        }
+        if ($this->convertBackJsonArray($arrayIDs)) {
+            return true;
+        }
+        return false;
+    }
 
     public function search() {}
 
@@ -182,7 +198,7 @@ class HomeSection extends Database
         }
         unset($fieldsAdded['image']);
         if ($temporaryVar) {
-            $fieldsAdded['image'] = $temporaryVar;
+            $fieldsAdded['image'] = randomString(5) . $temporaryVar;
             $fieldsAdded['tmp_name'] = $tmp_file_name;
         }
         $fieldsAdded = array_map(function ($value) {
