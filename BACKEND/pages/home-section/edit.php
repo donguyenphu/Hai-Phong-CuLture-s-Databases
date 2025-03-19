@@ -10,26 +10,30 @@ require_once '../../class/Form.php';
 $id = '';
 $errorFix = '';
 $objHomeSection = new HomeSection($initServer);
-$arrayIDs = $objHomeSection->prepareJsonArray();
 $_GET['id'] = intval($_GET['id']);
 if (isset($_GET['id'])) {
   $id = $_GET['id'];
-}
-if (!isset($_GET['id']) || !in_array($_GET['id'], $arrayIDs)) {
-  Header("Location: index.php");
-  exit();
 }
 
 
 $infoStorage = new Database($initServer);
 $queryGetInitialValue = 'SELECT * FROM ' . $infoStorage->getTable() . " WHERE id = " . $id;
-$arrayGetInitialValue = $infoStorage->recordQueryResult($queryGetInitialValue);
-$params = $arrayGetInitialValue[0];
+$arrayGetInitialValue = $infoStorage->recordSingleRowResult($queryGetInitialValue);
+$params = $arrayGetInitialValue;
+
+
+
+
+if (empty($params)) {
+  Header("Location: index.php");
+  exit();
+}
 if (isset($_POST['submit'])) {
   $params = array_merge($_POST, $_FILES);
-  $oldImage = $arrayGetInitialValue[0]['image'] ?? '';
+  $oldImage = $arrayGetInitialValue['image'] ?? '';
   $result = $objHomeSection->updateItem($params, $id);
-  if ($result['status']  == true) {
+  
+  if ($result['status']  == 1) {
     if ($oldImage !== '') {
       $realPath = "../../assets/images/home-section/".$oldImage;
       @unlink($realPath);
@@ -42,7 +46,7 @@ if (isset($_POST['submit'])) {
     exit();
   }
   $errorFix .= '<div class="alert alert-danger" role="alert">';
-  foreach ($result as $element => $value) {
+  foreach ($result['errors'] as $element => $value) {
     $errorFix .= '<li>' . '<strong>' . ucfirst($element) . '</strong>' . ' : ' . $value . '</li>';
   }
   $errorFix .= '</div>';
@@ -51,7 +55,6 @@ if (isset($_POST['submit'])) {
 $editName = Form::input("text", "name", "Name", $params['name'] ?? '');
 $editOrder = Form::input("text", "order", "Order", $params['order'] ?? '');
 $editURL = Form::input("text", "url", "URL", $params['url'] ?? '');
-$editImage = Form::input("file", "image", "Upload", $params['image'] ?? '');
 
 ?>
 
@@ -89,15 +92,15 @@ $editImage = Form::input("file", "image", "Upload", $params['image'] ?? '');
                 echo $errorFix;
               }
               ?>
-              <!-- NAME -->
+
               <?= $editName ?>
-              <!-- ORDER -->
+
               <?= $editOrder ?>
-              <!-- URL -->
+
               <?= $editURL ?>
-              <!-- STATUS -->
+
               <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" role="switch" name="status" <?= $params['status'] ? 'checked' : '' ?>>
+                <input class="form-check-input" type="checkbox" role="switch" name="status" <?= isset($params['status']) ? 'checked' : '' ?>>
                 <label class="form-check-label">Default switch checkbox input</label>
               </div>
               <!-- IMAGE -->

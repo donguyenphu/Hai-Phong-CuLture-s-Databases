@@ -6,59 +6,16 @@ require_once '../../class/Pagination.php';
 require_once '../../class/HomeSection.php';
 require_once '../../class/Form.php';
 
-$Databases = new Database($initServer);
 $itemsHomeSection = new HomeSection($initServer);
-
 $params = array_merge($_GET, $_POST);
-$searchParams = $params['search'] ?? [];
+$params['page'] = $params['page'] ?? 1;
 $items = $itemsHomeSection->getItems($params);
+$searchParams = $params['search'] ?? [];
 
-$allElemenets = $itemsHomeSection->totalItemsArray();
-$arrayRender = $allElemenets;
-
-$currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
-
-$querySearch = [];
-$querySearch[] = 'SELECT * ';
-$querySearch[] = 'FROM `' . $Databases->getTable() . '`';
-
-$serverQuery = '';
-if (isset($_GET['submit'])) {
-    if ($serverQuery === '') {
-        $serverQuery = $_SERVER['QUERY_STRING'];
-    } 
-    $queryWhere = [];
-    if (intval($_GET['search']['status']) < 2) {
-        $queryWhere[] = '`status` = ' . $_GET['search']['status'];
-    }
-    if (!empty($_GET['search']['name'])) {
-        $queryWhere[] = '`name` LIKE "%' . $_GET['search']['name'] . '%"';
-    }
-    if (!empty($_GET['search']['url'])) {
-        $queryWhere[] = '`url` LIKE "%' . $_GET['search']['url'] . '%"';
-    }
-    if (!empty($_GET['search']['created_at']['start'])) {
-        $queryWhere[] = '`created_at` >= ' . $_GET['search']['created_at']['start'];
-    }
-    if (!empty($_GET['search']['created_at']['end'])) {
-        $queryWhere[] = '`created_at` <= ' . $_GET['search']['created_at']['end'];
-    }
-    if (!empty($queryWhere)) {
-        $querySearch[] = 'WHERE ' . implode(' AND ', $queryWhere);
-    }
-}
-$querySearch = implode(' ', $querySearch);
-$items = $Databases->recordQueryResult($querySearch);
-
-$totalItemsPerPages = 4;
-$totalItems = count($items);
-$totalPages = ceil($totalItems / $totalItemsPerPages);
-$pageRange = 4;
-
-$startElement = ($currentPage - 1) * $totalItemsPerPages;
-$querySearch .= ' LIMIT ' . $startElement . ', ' . $totalItemsPerPages;
-$items = $Databases->recordQueryResult($querySearch);
-$newPaginationClass = new Pagination($totalItems, $totalItemsPerPages, $pageRange, $currentPage, $totalPages, $serverQuery);
+$totalItems = $itemsHomeSection->totalItem($params);
+$totalPages = ceil($totalItems / $itemsHomeSection->totalItemsPerPage);
+$newPaginationClass = new Pagination($totalItems, $itemsHomeSection->totalItemsPerPage, $itemsHomeSection->pageRange, $params['page'], $totalPages);
+$paginationHTML = $newPaginationClass->showPagination($params);
 
 $htmlData = '';
 if (!empty($items)) {
@@ -165,7 +122,7 @@ $slbSearchStatus = Form::select($searchStatusValues, 'search[status]', 'Status',
                                         <th style="width: 10px">ID</th>
                                         <th style="width: 20px">Name</th>
                                         <th>Image</th>
-                                        <th>Url</th>
+                                        <th>URL</th>
                                         <th style="width: 10px">Status</th>
                                         <th style="width: 10px">Order</th>
                                         <th>Created At</th>
@@ -179,7 +136,7 @@ $slbSearchStatus = Form::select($searchStatusValues, 'search[status]', 'Status',
                             </table>
                         </div>
                         <div class="card-footer clearfix">
-                            <?php echo $newPaginationClass->showPagination(); ?>
+                            <?= $paginationHTML; ?>
                         </div>
                     </div>
                 </div>

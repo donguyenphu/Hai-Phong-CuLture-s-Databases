@@ -12,22 +12,6 @@ $params = [];
 if (isset($_POST['submit'])) {
   $params = array_merge($_POST, $_FILES);
   $status = $objHomeSection->createItem($params);
-  if ($status['status']) {
-
-    $arrayIds = $objHomeSection->prepareJsonArray();
-    array_push($arrayIds, $status['lastID']);
-
-    if ($objHomeSection->convertBackJsonArray($arrayIds)) {
-
-      if ($status['tmp_name'] !== '') {
-        @move_uploaded_file($status['tmp_name'], '../../assets/images/home-section/'.$status['image']);
-      }
-
-      Header("Location: index.php");
-      exit();
-    }
-    
-  }
   $errorFix = $status['errors'];
 }
 
@@ -81,11 +65,11 @@ $createStatus = $params['status'] ?? '';
               </div>
               <!-- IMAGE -->
               <div style="margin: 10px 0 10px 0; width: 30%; height: auto;">
-                <img src="" id = "image-display-preview" class="w-100 h-100 rounded">
+                <img src="" id="image-display-preview" class="w-100 h-100 rounded">
               </div>
               <div class="mb-3">
                 <label class="form-label">Upload</label>
-                <input type="file" class="form-control" name="image" id = "input-upload-preview">
+                <input type="file" class="form-control" name="image" id="input-upload-preview">
               </div>
             </div>
             <div class="card-footer">

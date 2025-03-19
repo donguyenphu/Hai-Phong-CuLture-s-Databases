@@ -6,33 +6,23 @@ class Pagination
     private $pageRange;
     private $totalPages;
     private $currentPage;
-    private $serverQuery;
 
 
-    public function __construct($totalItems, $totalItemsPerPage, $pageRange, $currentPage, $totalPages, $serverQuery = '')
+    public function __construct($totalItems, $totalItemsPerPage, $pageRange, $currentPage, $totalPages)
     {
         $this->currentPage = $currentPage;
         $this->totalItems = $totalItems;
         $this->totalItemsPerPage = $totalItemsPerPage;
         $this->pageRange = $pageRange;
-        $this->totalPages = $totalPages;
-        $this->serverQuery = $serverQuery;
+        $this->totalPages = $totalPages = ceil($totalItems / $totalItemsPerPage);
     }
     public function showPagination($params = [])
     {
-        $pasteQuery = '';
-        if (!is_null($this->serverQuery)) {
-            $pasteQuery = $this->serverQuery;
-        }
-        $pasteQuery = explode('&', $pasteQuery);
-        foreach ($pasteQuery as $key => $value) {
-            /// value
-            if (str_contains($value, 'page')) {
-                $pasteQuery = array_values(array_diff($pasteQuery, [$value]));
-                break;
-            }
-        }
-        $pasteQuery = '&' . implode('&', $pasteQuery);
+        if (isset($params['page'])) unset($params['page']); /// avoid many page=?
+        $pasteQuery = http_build_query($params);
+        if (!empty($pasteQuery)) $pasteQuery = '&' . $pasteQuery;
+
+        
         $paginaionHTML = '';
         $start     = '<li class="page-item"><a class="page-link" href="#">Start</a></li>';
         $prev     = '<li class="page-item"><a class="page-link" href="#">«</a></li>';
