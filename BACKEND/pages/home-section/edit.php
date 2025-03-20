@@ -17,8 +17,7 @@ if (isset($_GET['id'])) {
 
 
 $infoStorage = new Database($initServer);
-$queryGetInitialValue = 'SELECT * FROM ' . $infoStorage->getTable() . " WHERE id = " . $id;
-$arrayGetInitialValue = $infoStorage->recordSingleRowResult($queryGetInitialValue);
+$arrayGetInitialValue = $objHomeSection->getItem($id);
 $params = $arrayGetInitialValue;
 
 
@@ -28,28 +27,15 @@ if (empty($params)) {
   Header("Location: index.php");
   exit();
 }
+
 if (isset($_POST['submit'])) {
   $params = array_merge($_POST, $_FILES);
-  $oldImage = $arrayGetInitialValue['image'] ?? '';
-  $result = $objHomeSection->updateItem($params, $id);
-  
-  if ($result['status']  == 1) {
-    if ($oldImage !== '') {
-      $realPath = "../../assets/images/home-section/".$oldImage;
-      @unlink($realPath);
-    }
-    if ($result['image'] !== '') {
-      $realPath = "../../assets/images/home-section/".$result['image'];
-      @move_uploaded_file($result['tmp_name'], $realPath);
-    }
+  $result = $objHomeSection->updateItem($id, $params);
+  $errorFix =  $result['errors'];
+  if ($result == true) {
     header("Location: index.php");
     exit();
   }
-  $errorFix .= '<div class="alert alert-danger" role="alert">';
-  foreach ($result['errors'] as $element => $value) {
-    $errorFix .= '<li>' . '<strong>' . ucfirst($element) . '</strong>' . ' : ' . $value . '</li>';
-  }
-  $errorFix .= '</div>';
 }
 
 $editName = Form::input("text", "name", "Name", $params['name'] ?? '');

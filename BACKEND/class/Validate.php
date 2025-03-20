@@ -1,144 +1,116 @@
 <?php
 class Validate
 {
-    private $sources = array();
-    private $rules = array();
-    private $errors = array();
-    private $result = array();
-    public function __construct($inputData)
+
+    // Error array
+    private $errors    = array();
+
+    // sources array
+    private $sources    = array();
+
+    // Rules array
+    private $rules    = array();
+
+    // Result array
+    private $result    = array();
+
+    // Contrucst
+    public function __construct($sources)
     {
-        $this->sources = $inputData;
+        $this->sources = $sources;
     }
+
+    // Add rules
+    public function addRules($rules)
+    {
+        $this->rules = array_merge($rules, $this->rules);
+    }
+
+    // Get error
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    // Set error
+    public function setError($element, $message)
+    {
+        $this->errors[$element] = '<b>' . ucfirst($element) . ':</b> ' . $message;
+    }
+
+    // Get result
+    public function getResults()
+    {
+        return $this->result;
+    }
+
+    // Add rule
+    public function addRule($element, $type, $options = null, $required = true)
+    {
+        $this->rules[$element] = array('type' => $type, 'options' => $options, 'required' => $required);
+        return $this;
+    }
+    //Add all rule
     public function addAllRules($rules)
     {
         $this->rules = $rules;
     }
-    public function addOneRule($name, $typeData, $min, $max, $required = true)
-    {
-        $this->rules[$name]['type'] = $typeData;
-        $this->rules[$name]['min'] = $min;
-        $this->rules[$name]['max'] = $max;
-    }
-    public function isValid()
-    {
-        return empty($errors);
-    }
-    public function printRules()
-    {
-        echo '<pre style="color: red;font-weight:bold">';
-        print_r($this->rules);
-        echo '</pre>';
-    }
-    public function printErrors()
-    {
-        echo '<pre style="color: red;font-weight:bold">';
-        print_r($this->errors);
-        echo '</pre>';
-    }
-    public function printResults()
-    {
-        echo '<pre style="color: red;font-weight:bold">';
-        print_r($this->result);
-        echo '</pre>';
-    }
-    public function returnResults()
-    {
-        return $this->result;
-    }
-    public function returnErrors()
-    {
-        return $this->errors;
-    }
-    public function printSources()
-    {
-        echo '<pre style="color: red;font-weight:bold">';
-        print_r($this->sources);
-        echo '</pre>';
-    }
+
+    // Run
     public function run()
     {
         foreach ($this->rules as $element => $value) {
-            if ($value['type'] == 'string') {
-                $this->validateString($element, $value['min'], $value['max']);
-            } else if ($value['type'] == 'file') {
-                $this->validateFile($element);
-            } else if ($value['type'] == 'url') {
-                $this->validateURL($element);
-            } else if ($value['type'] == 'url-custom') {
-                $this->validateURLCustom($element);
-            } else if ($value['type'] == 'int') {
-                $this->validateInt($element, $value['min'], $value['max']);
-            } else if ($value['type'] == 'image') {
-                $this->validateImage($element, $value['max_bytes'], $value['extensions']);
+       
+                switch ($value['type']) {
+                    case 'int':
+                        $this->validateInt($element, $value['min'], $value['max']);
+                        break;
+                    case 'string':
+                        $this->validateString($element, $value['min'], $value['max']);
+                        break;
+                    case 'url':
+                        $this->validateUrl($element);
+                        break;
+                    case 'email':
+                        $this->validateEmail($element);
+                        break;
+                    case 'status':
+                        $this->validateStatus($element);
+                        break;
+                    case 'group':
+                        $this->validateGroupID($element);
+                        break;
+                    case 'image':
+                        $this->validateImage($element, $value['max_bytes'], $value['extensions']);
+                        break;
+                    case 'password':
+                        $this->validatePassword($element, $value['options']);
+                        break;
+                    case 'date':
+                        $this->validateDate($element, $value['options']['start'], $value['options']['end']);
+                        break;
+                    case 'existRecord':
+                        $this->validateExistRecord($element, $value['options']);
+                        break;
+                }
+            
+            if (!array_key_exists($element, $this->errors)) {
+                $this->result[$element] = $this->sources[$element];
             }
-            if (!array_key_exists($element, $this->errors)) $this->result[$element] = $this->sources[$element];
         }
+        $eleNotValidate = array_diff_key($this->sources, $this->errors);
+        $this->result    = array_merge($this->result, $eleNotValidate);
     }
-    // VALIDATE INPUT
-    public function validateInt($element, $minRange, $maxRange)
+
+    // Validate Integer
+    private function validateInt($element, $min = 0, $max = 0)
     {
-        if (!filter_var($this->sources[$element], FILTER_VALIDATE_INT, array("options" => array(
-            "min_range" => $minRange,
-            "max_range" => $maxRange
-        )))) {
-            $this->errors[$element] = 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' as int';
+        if (!filter_var($this->sources[$element], FILTER_VALIDATE_INT, array("options" => array("min_range" => $min, "max_range" => $max)))) {
+            $this->setError($element, 'is an invalid number');
         }
     }
-    public function validateString($element, $minRange, $maxRange)
-    {
-        $errorAll = '';
-        if (!is_string($this->sources[$element])) {
-            $errorAll = 'The ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' is not a string';
-        }
-        else if (!strlen(trim($this->sources[$element]))) {
-            $errorAll = 'Please fill the '.$element;
-        }
-        else if (strlen(trim($this->sources[$element])) < $minRange || strlen(trim($this->sources[$element])) > $maxRange) {
-            if (strlen(trim($this->sources[$element])) < $minRange) {
-                $errorAll = 'The ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' is too short</br>';
-            }
-            else $errorAll = 'The ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' is too long</br>';
-            $errorAll .='The ' . $element . ' must between '.$minRange.' and '.$maxRange;
-        }
-        if ($errorAll !== '') {
-            $this->errors[$element] = $errorAll;
-        }
-    }
-    public function validateEmail($element)
-    {
-        if (!filter_var($this->sources[$element], FILTER_VALIDATE_EMAIL)) {
-            $this->errors[$element] = 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' as email';
-        }
-    }
-    public function validateURL($element)
-    {
-        if (!filter_var($this->sources[$element], FILTER_VALIDATE_URL)) {
-            $this->errors[$element] = 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' as URL';
-        }
-    }
-    public function validateURLCustom($element)
-    {
-        $extensions = pathinfo($this->sources[$element], PATHINFO_EXTENSION);
-        if (filter_var($this->sources[$element], FILTER_VALIDATE_URL)) {
-            return;
-        } else if ($extensions == 'php') {
-            return;
-        } else if ($extensions == 'html') {
-            return;
-        } else if ($extensions == 'com') {
-            return;
-        }
-        $this->errors[$element] = 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' as URL';
-        // if (!filter_var($this->sources[$element], FILTER_VALIDATE_URL)) {
-        //     $this->errors[$element] = 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' as URL';
-        // }
-    }
-    public function validateFile($element)
-    {
-        if (!file_exists($this->sources[$element])) {
-            $this->errors[$element] = 'Invalid ' . $element . ' ' . '<b>' . $this->sources[$element] . '</b>' . ' as File';
-        }
-    }
+
+    //Validate Image
     public function validateImage($element, $max_bytes, $extensions)
     {
         $extensions_file = pathinfo($this->sources[$element]["name"], PATHINFO_EXTENSION);
@@ -158,13 +130,107 @@ class Validate
             $this->errors[$element] = $fullErrors;
         }
     }
+
+    // Validate String
+    private function validateString($element, $min = 0, $max = 0)
+    {
+        $length = strlen($this->sources[$element]);
+        if ($length < $min) {
+            $this->setError($element, 'is too short');
+        } elseif ($length > $max) {
+            $this->setError($element, 'is too long');
+        } elseif (!is_string($this->sources[$element])) {
+            $this->setError($element, 'is an invalid string');
+        }
+    }
+
+    // Validate URL
+    private function validateURL($element)
+    {
+        if (!filter_var($this->sources[$element], FILTER_VALIDATE_URL)) {
+            $this->setError($element, 'is an invalid url');
+        }
+    }
+
+    // Validate Email
+    private function validateEmail($element)
+    {
+        if (!filter_var($this->sources[$element], FILTER_VALIDATE_EMAIL)) {
+            $this->setError($element, 'is an invalid email');
+        }
+    }
+
     public function showErrors()
     {
         $errorFix = '<div class="alert alert-danger" role="alert">';
-        foreach ($this -> errors as $element => $value) {
+        foreach ($this->errors as $element => $value) {
             $errorFix .= '<li>' . '<strong>' . ucfirst($element) . '</strong>' . ' : ' . $value . '</li>';
         }
         $errorFix .= '</div>';
         return $errorFix;
+    }
+
+    public function isValid()
+    {
+        if (count($this->errors) > 0) return false;
+        return true;
+    }
+
+    // Validate Status
+    private function validateStatus($element)
+    {
+        if ($this->sources[$element] < 0 || $this->sources[$element] > 1) {
+            $this->setError($element, 'Select status');
+        }
+    }
+
+    // Validate GroupID
+    private function validateGroupID($element)
+    {
+        if ($this->sources[$element] == 0) {
+            $this->setError($element, 'Select group');
+        }
+    }
+
+    // Validate Password
+    private function validatePassword($element, $options)
+    {
+        if ($options['action'] == 'add' || ($options['action'] == 'edit' && $this->sources[$element])) {
+            $pattern = '#^(?=.*\d)(?=.*[A-Z])(?=.*\W).{8,8}$#';    // Php4567!
+            if (!preg_match($pattern, $this->sources[$element])) {
+                $this->setError($element, 'is an invalid password');
+            };
+        }
+    }
+
+    // Validate Date
+    private function validateDate($element, $start, $end)
+    {
+        // Start
+        $arrDateStart     = date_parse_from_format('d/m/Y', $start);
+        $tsStart        = mktime(0, 0, 0, $arrDateStart['month'], $arrDateStart['day'], $arrDateStart['year']);
+
+        // End
+        $arrDateEnd     = date_parse_from_format('d/m/Y', $end);
+        $tsEnd            = mktime(0, 0, 0, $arrDateEnd['month'], $arrDateEnd['day'], $arrDateEnd['year']);
+
+        // Current
+        $arrDateCurrent    = date_parse_from_format('d/m/Y', $this->sources[$element]);
+        $tsCurrent        = mktime(0, 0, 0, $arrDateCurrent['month'], $arrDateCurrent['day'], $arrDateCurrent['year']);
+
+        if ($tsCurrent < $tsStart || $tsCurrent > $tsEnd) {
+            $this->setError($element, 'is an invalid date');
+        }
+    }
+
+    // Validate Exist record
+    private function validateExistRecord($element, $options)
+    {
+        $database = $options['database'];
+
+        $query      = $options['query'];
+        if ($database->isExist($query)) {
+            $this->setError($element, 'record is exist');
+        }
     }
 }

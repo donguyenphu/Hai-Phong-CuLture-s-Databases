@@ -13,8 +13,7 @@ $items = $itemsHomeSection->getItems($params);
 $searchParams = $params['search'] ?? [];
 
 $totalItems = $itemsHomeSection->totalItem($params);
-$totalPages = ceil($totalItems / $itemsHomeSection->totalItemsPerPage);
-$newPaginationClass = new Pagination($totalItems, $itemsHomeSection->totalItemsPerPage, $itemsHomeSection->pageRange, $params['page'], $totalPages);
+$newPaginationClass = new Pagination($totalItems, $itemsHomeSection->totalItemsPerPage, $itemsHomeSection->pageRange, $params['page']);
 $paginationHTML = $newPaginationClass->showPagination($params);
 
 $htmlData = '';

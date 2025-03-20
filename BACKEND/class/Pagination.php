@@ -8,7 +8,7 @@ class Pagination
     private $currentPage;
 
 
-    public function __construct($totalItems, $totalItemsPerPage, $pageRange, $currentPage, $totalPages)
+    public function __construct($totalItems, $totalItemsPerPage, $pageRange, $currentPage, $totalPages = '')
     {
         $this->currentPage = $currentPage;
         $this->totalItems = $totalItems;
@@ -24,14 +24,14 @@ class Pagination
 
         
         $paginaionHTML = '';
-        $start     = '<li class="page-item"><a class="page-link" href="#">Start</a></li>';
-        $prev     = '<li class="page-item"><a class="page-link" href="#">«</a></li>';
+        $start     = '<li class="page-item"><a class="btn-link disabled page-link" href="#">Start</a></li>';
+        $prev     = '<li class="page-item"><a class="btn-link disabled page-link" href="#">«</a></li>';
         if ($this->currentPage > 1) {
             $start     = '<li class="page-item"><a  class="page-link" href="index.php?page=1' . $pasteQuery . '">Start</a></li>';
             $prev     = '<li class="page-item"><a  class="page-link" href="?page=' . ($this->currentPage - 1) . $pasteQuery . '">«</a></li>';
         }
-        $next     = '<li class="page-item"><a class="page-link" href="#">»</a></li>';
-        $end     = '<li class="page-item"><a class="page-link" href="#">End</a></li>';
+        $next     = '<li class="page-item"><a class="btn-link disabled page-link" href="#">»</a></li>';
+        $end     = '<li class="page-item"><a class="btn-link disabled page-link" href="#">End</a></li>';
         if ($this->currentPage < $this->totalPages) {
             $next     = '<li class="page-item"><a class="page-link" href="index.php?page=' . ($this->currentPage + 1) . $pasteQuery . '">»</a></li>';
             $end     = '<li class="page-item"><a class="page-link" href="index.php?page=' . $this->totalPages . $pasteQuery . '">End</a></li>';

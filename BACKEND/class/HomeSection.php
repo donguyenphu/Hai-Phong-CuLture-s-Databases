@@ -34,7 +34,7 @@ class HomeSection extends Database
         $query = "SELECT COUNT(`id`) AS totalItems FROM `$this->table`";
         return parent::recordSingleRowResult($query)['totalItems'];
     }
-    public function createFilterQuery($params = [], $queryString)
+    public function createFilterQuery($queryString, $params = [])
     {
         $queryWhere = [];
         if (isset($params['search'])) {
@@ -70,7 +70,7 @@ class HomeSection extends Database
     {
         $queryString = "SELECT COUNT('id') AS totalItem FROM `$this->table`";
 
-        $queryString = $this->createFilterQuery($params, $queryString);
+        $queryString = $this->createFilterQuery($queryString, $params);
 
         return parent::recordSingleRowResult($queryString)['totalItem'];
     }
@@ -78,7 +78,7 @@ class HomeSection extends Database
     {
         $queryString = "SELECT * FROM `$this->table`";
 
-        $queryString = $this->createFilterQuery($params, $queryString);
+        $queryString = $this->createFilterQuery($queryString, $params);
 
         $startElement = ($params['page'] - 1) * $this->totalItemsPerPage;
         $queryString .= ' LIMIT ' . $startElement . ', ' . $this->totalItemsPerPage;
@@ -89,39 +89,49 @@ class HomeSection extends Database
     public function getItem($id = null)
     {
         // null does nothing
-        $getQuery = 'SELECT * FROM' . $this->table . 'WHERE `id` = ' . $id;
-        $arrayResult = parent::recordQueryResult($getQuery);
+        $getQuery = 'SELECT * FROM ' . $this->table . ' WHERE `id` = ' . $id;
+        $arrayResult = parent::recordSingleRowResult($getQuery);
         return $arrayResult;
     }
-    public function updateItem($params = [], $id)
+    public function updateItem($id, $params = [])
     {
         // bien doi va chuandata
         // chuan bi condition
         // $this->update($data, $contdition);
+        $oldImage = !empty(($this->getItem($id))['image']) ?? '';
         $rule = RULE_HOME_SECTION;
         unset($rule['image']);
         $fieldsModified = $this->prepareParams($params);
         $Validate = new Validate($params);
         $Validate->addAllRules($rule);
         $Validate->run();
-        $resultEnd = $Validate->returnResults();
-        $errorEnd = $Validate->returnErrors();
+        $resultEnd = $Validate->getResults();
+        $errorEnd = $Validate->getErrors();
+
         if (!count($errorEnd)) {
+
             $fieldsModified['id'] = $id;
             $fieldsModified['updated_at'] = date("Y-m-d H:i:s");
             $tmp_file_name = $fieldsModified['tmp_name'] ?? '';
             $image_name = isset($fieldsModified['image']) ? randomString(5) . "." . pathinfo($fieldsModified['image'], PATHINFO_EXTENSION) : '';
             unset($fieldsModified['tmp_name']);
             $this->updateOnlyOneId($fieldsModified);
-            return [
-                'status' => 1,
-                'image' => $image_name,
-                'tmp_name' => $tmp_file_name
-            ];
+
+            if ($oldImage !== '') {
+                $oldPath = "../../assets/images/home-section/" . $oldImage;
+                @unlink($oldPath);
+            }
+
+            if ($image_name !== '') {
+                $realPath = "../../assets/images/home-section/" . $image_name;
+                @move_uploaded_file($tmp_file_name, $realPath);
+            }
+            return true;
         }
+
         return [
             'status' => 0,
-            'errors' => $errorEnd
+            'errors' => $Validate->showErrors()
         ];
     }
     public function createItems($params = [])
@@ -134,23 +144,25 @@ class HomeSection extends Database
         $fieldsAdded['created_at'] = date("Y-m-d H:i:s");
 
         if (!empty($fieldsAdded)) {
-            $validateObj = new Validate($fieldsAdded);
             $rule = RULE_HOME_SECTION;
             $tmp_file_name = $fieldsAdded['tmp_name'] ?? '';
             unset($fieldsAdded['tmp_name']);
             unset($rule['order']);
             unset($rule['image']);
+            $validateObj = new Validate($fieldsAdded);
             $validateObj->addAllRules($rule);
             $validateObj->run();
-            $result = $validateObj->returnResults();
-            $errors = $validateObj->returnErrors();
+            $result = $validateObj->getResults();
+            $errors = $validateObj->getErrors();
             if (empty($errors)) {
                 $lastId = $this->insert($fieldsAdded, 'single');
                 if ($tmp_file_name !== '') {
-                    @move_uploaded_file($tmp_file_name, '../../assets/images/home-section/' . randomString(5) . "." . pathinfo($fieldsAdded['image'], PATHINFO_EXTENSION));
+                    $imageName = randomString(5) . "." . pathinfo($fieldsAdded['image'], PATHINFO_EXTENSION);
+                    if (move_uploaded_file($tmp_file_name, '../../assets/images/home-section/' . $imageName)) {
+                        Header("Location: index.php");
+                        exit();
+                    }
                 }
-                Header("Location: index.php");
-                exit();
             }
         }
         return [
