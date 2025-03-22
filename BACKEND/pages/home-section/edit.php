@@ -31,8 +31,8 @@ if (empty($params)) {
 if (isset($_POST['submit'])) {
   $params = array_merge($_POST, $_FILES);
   $result = $objHomeSection->updateItem($id, $params);
-  $errorFix =  $result['errors'];
-  if ($result == true) {
+  $errorFix =  $result;
+  if ($result === true) {
     header("Location: index.php");
     exit();
   }

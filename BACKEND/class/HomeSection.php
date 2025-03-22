@@ -93,6 +93,25 @@ class HomeSection extends Database
         $arrayResult = parent::recordSingleRowResult($getQuery);
         return $arrayResult;
     }
+    public function patchName($id, $newValue) {
+        $data = [
+            'name' => $newValue
+        ];
+        $Validate = new Validate($data);
+        $options = array(
+            'type' => 'string',
+            'min' => 1,
+            'max' => 100
+        );
+        $Validate->addRule('name', 'string', $options);
+        $Validate->run();
+        $errorEnd = $Validate->getErrors();
+        if (!count($errorEnd)) {
+            parent::updateOnlyOneId($_GET);
+            return true;
+        }
+        return $errorEnd;
+    }
     public function updateItem($id, $params = [])
     {
         // bien doi va chuandata
@@ -129,10 +148,7 @@ class HomeSection extends Database
             return true;
         }
 
-        return [
-            'status' => 0,
-            'errors' => $Validate->showErrors()
-        ];
+        return $Validate->showErrors();
     }
     public function createItems($params = [])
     {

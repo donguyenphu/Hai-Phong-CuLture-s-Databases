@@ -97,17 +97,12 @@ CREATE TABLE IF NOT EXISTS `home_section` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=315 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=393 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table hai_phong_culture_database.home_section: ~5 rows (approximately)
+-- Dumping data for table hai_phong_culture_database.home_section: ~1 rows (approximately)
 DELETE FROM `home_section`;
 INSERT INTO `home_section` (`id`, `name`, `image`, `url`, `status`, `order`, `created_at`, `updated_at`) VALUES
-	(337, 'Kuame Pope', 'wdtl6Screenshot_5.png', 'Ut tempora iusto non', 1, 1, '2025-03-17 10:24:09', NULL),
-	(338, 'Octavia Hoover', 'Kd4QnScreenshot_3.png', 'Nulla doloremque ill', 1, 1, '2025-03-17 10:24:17', NULL),
-	(339, 'Imogene Maddox', 'bFVMDScreenshot_4.png', 'Autem nisi ex verita', 1, 1, '2025-03-17 10:24:26', NULL),
-	(340, 'Michael Alvarado', 'xJlecScreenshot_7.png', 'Dolorum in praesenti', 1, 1, '2025-03-17 10:24:39', NULL),
-	(341, 'Benjamin Weeks', 'aG8iVScreenshot_6.png', 'Aut quos qui et aut', 1, 1, '2025-03-17 10:24:50', '2025-03-17 10:46:22'),
-	(344, 'Cadman Hickman', 'pBCJbScreenshot_1.png', 'Assumenda et eos nul', 1, 1, '2025-03-17 10:45:58', '2025-03-17 10:46:28');
+	(392, 'Claudia Langgggggg', '3rAHP.png', 'Temporibus ad sequi', 1, 2, '2025-03-20 06:45:52', '2025-03-21 21:43:49');
 
 -- Dumping structure for table hai_phong_culture_database.travel
 CREATE TABLE IF NOT EXISTS `travel` (

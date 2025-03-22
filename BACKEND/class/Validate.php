@@ -47,7 +47,7 @@ class Validate
     // Add rule
     public function addRule($element, $type, $options = null, $required = true)
     {
-        $this->rules[$element] = array('type' => $type, 'options' => $options, 'required' => $required);
+        $this->rules[$element] = $options;
         return $this;
     }
     //Add all rule
@@ -60,40 +60,40 @@ class Validate
     public function run()
     {
         foreach ($this->rules as $element => $value) {
-       
-                switch ($value['type']) {
-                    case 'int':
-                        $this->validateInt($element, $value['min'], $value['max']);
-                        break;
-                    case 'string':
-                        $this->validateString($element, $value['min'], $value['max']);
-                        break;
-                    case 'url':
-                        $this->validateUrl($element);
-                        break;
-                    case 'email':
-                        $this->validateEmail($element);
-                        break;
-                    case 'status':
-                        $this->validateStatus($element);
-                        break;
-                    case 'group':
-                        $this->validateGroupID($element);
-                        break;
-                    case 'image':
-                        $this->validateImage($element, $value['max_bytes'], $value['extensions']);
-                        break;
-                    case 'password':
-                        $this->validatePassword($element, $value['options']);
-                        break;
-                    case 'date':
-                        $this->validateDate($element, $value['options']['start'], $value['options']['end']);
-                        break;
-                    case 'existRecord':
-                        $this->validateExistRecord($element, $value['options']);
-                        break;
-                }
-            
+
+            switch ($value['type']) {
+                case 'int':
+                    $this->validateInt($element, $value['min'], $value['max']);
+                    break;
+                case 'string':
+                    $this->validateString($element, $value['min'], $value['max']);
+                    break;
+                case 'url':
+                    $this->validateUrl($element);
+                    break;
+                case 'email':
+                    $this->validateEmail($element);
+                    break;
+                case 'status':
+                    $this->validateStatus($element);
+                    break;
+                case 'group':
+                    $this->validateGroupID($element);
+                    break;
+                case 'image':
+                    $this->validateImage($element, $value['max_bytes'], $value['extensions']);
+                    break;
+                case 'password':
+                    $this->validatePassword($element, $value['options']);
+                    break;
+                case 'date':
+                    $this->validateDate($element, $value['options']['start'], $value['options']['end']);
+                    break;
+                case 'existRecord':
+                    $this->validateExistRecord($element, $value['options']);
+                    break;
+            }
+
             if (!array_key_exists($element, $this->errors)) {
                 $this->result[$element] = $this->sources[$element];
             }
@@ -103,9 +103,10 @@ class Validate
     }
 
     // Validate Integer
-    private function validateInt($element, $min = 0, $max = 0)
+    public function validateInt($element, $min = 0, $max = 0)
     {
-        if (!filter_var($this->sources[$element], FILTER_VALIDATE_INT, array("options" => array("min_range" => $min, "max_range" => $max)))) {
+        $condititon = array("options" => array("min_range" => $min, "max_range" => $max));
+        if (!filter_var($this->sources[$element], FILTER_VALIDATE_INT, $condititon)) {
             $this->setError($element, 'is an invalid number');
         }
     }
@@ -132,10 +133,12 @@ class Validate
     }
 
     // Validate String
-    private function validateString($element, $min = 0, $max = 0)
+    public function validateString($element, $min = 0, $max = 0)
     {
         $length = strlen($this->sources[$element]);
-        if ($length < $min) {
+        if ($length === 0) {
+            $this->setError($element, 'has to be filled');
+        } else if ($length < $min) {
             $this->setError($element, 'is too short');
         } elseif ($length > $max) {
             $this->setError($element, 'is too long');
@@ -145,7 +148,7 @@ class Validate
     }
 
     // Validate URL
-    private function validateURL($element)
+    public function validateURL($element)
     {
         if (!filter_var($this->sources[$element], FILTER_VALIDATE_URL)) {
             $this->setError($element, 'is an invalid url');
@@ -153,7 +156,7 @@ class Validate
     }
 
     // Validate Email
-    private function validateEmail($element)
+    public function validateEmail($element)
     {
         if (!filter_var($this->sources[$element], FILTER_VALIDATE_EMAIL)) {
             $this->setError($element, 'is an invalid email');
@@ -177,7 +180,7 @@ class Validate
     }
 
     // Validate Status
-    private function validateStatus($element)
+    public function validateStatus($element)
     {
         if ($this->sources[$element] < 0 || $this->sources[$element] > 1) {
             $this->setError($element, 'Select status');
@@ -185,7 +188,7 @@ class Validate
     }
 
     // Validate GroupID
-    private function validateGroupID($element)
+    public function validateGroupID($element)
     {
         if ($this->sources[$element] == 0) {
             $this->setError($element, 'Select group');
@@ -193,7 +196,7 @@ class Validate
     }
 
     // Validate Password
-    private function validatePassword($element, $options)
+    public function validatePassword($element, $options)
     {
         if ($options['action'] == 'add' || ($options['action'] == 'edit' && $this->sources[$element])) {
             $pattern = '#^(?=.*\d)(?=.*[A-Z])(?=.*\W).{8,8}$#';    // Php4567!
@@ -204,7 +207,7 @@ class Validate
     }
 
     // Validate Date
-    private function validateDate($element, $start, $end)
+    public function validateDate($element, $start, $end)
     {
         // Start
         $arrDateStart     = date_parse_from_format('d/m/Y', $start);
@@ -224,7 +227,7 @@ class Validate
     }
 
     // Validate Exist record
-    private function validateExistRecord($element, $options)
+    public function validateExistRecord($element, $options)
     {
         $database = $options['database'];
 

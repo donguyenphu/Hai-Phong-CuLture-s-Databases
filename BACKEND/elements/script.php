@@ -13,6 +13,7 @@
     crossorigin="anonymous"></script>
 <script src="../../assets/js/adminlte.js"></script>
 <script src="../../assets/js/imageDisplay.js"></script>
+<script src="../../assets/js/changeName.js"></script>
 <script>
     const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
     const Default = {

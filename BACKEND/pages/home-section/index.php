@@ -22,11 +22,13 @@ if (!empty($items)) {
         $htmlData .= '
             <tr class="align-middle">
                 <td>' . $value['id'] . '</td>
-                <td>' . $value['name'] . '</td>
+                <td>
+                    <input class="form-control ajax-name" value="' . $value['name'] . '" data-id = "' . $value['id'] . '"/>
+                </td>
                 <td>' . $value['image'] . '</td>
                 <td>' . $value['url'] . '</td>
                 <td>
-                    <input class="form-check-input" type="checkbox" role="switch" id="input-status-' . $value['id'] . '" ' . ($value['status'] ? 'checked' : '') . '>
+                    <input class="form-check-input ajax-status" type="checkbox" role="switch" id="input-status-' . $value['id'] . '" ' . ($value['status'] ? 'checked' : '') . '>
                 </td>
                 <td>' . $value['order'] . '</td>
                 <td>' . $value['created_at'] . '</td>
@@ -39,8 +41,6 @@ if (!empty($items)) {
     }
 }
 
-
-
 // SEARCH INPUTS
 $inputSearchName = Form::input('text', 'search[name]', 'Name', $searchParams['name'] ?? '');
 $inputSearchUrl = Form::input('text', 'search[url]', 'URL', $searchParams['url'] ?? '');
@@ -52,9 +52,11 @@ $slbSearchStatus = Form::select($searchStatusValues, 'search[status]', 'Status',
 ?>
 <!doctype html>
 <html lang="en">
+
 <head>
     <?php require_once '../../elements/head.php'; ?>
 </head>
+
 <body class="layout-fixed sidebar-expand-lg sidebar-mini sidebar-collapse bg-body-tertiary app-loaded">
     <div class="app-wrapper">
         <?php require_once '../../elements/navbar.php'; ?>
@@ -91,7 +93,7 @@ $slbSearchStatus = Form::select($searchStatusValues, 'search[status]', 'Status',
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <?php echo $inputSearchName;?>
+                                        <?php echo $inputSearchName; ?>
                                     </div>
                                     <div class="col-md-4">
                                         <?php echo $inputSearchUrl; ?>
@@ -118,12 +120,12 @@ $slbSearchStatus = Form::select($searchStatusValues, 'search[status]', 'Status',
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th style="width: 10px">ID</th>
-                                        <th style="width: 20px">Name</th>
+                                        <th>ID</th>
+                                        <th>Name</th>
                                         <th>Image</th>
                                         <th>URL</th>
-                                        <th style="width: 10px">Status</th>
-                                        <th style="width: 10px">Order</th>
+                                        <th>Status</th>
+                                        <th>Order</th>
                                         <th>Created At</th>
                                         <th>Updated At</th>
                                         <th>Actions</th>
