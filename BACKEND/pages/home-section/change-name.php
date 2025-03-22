@@ -6,18 +6,11 @@
    require_once '../../define/homeValidate.php';
 
    $objHomeSection = new HomeSection($initServer);
+   $_GET = array_map(function($element) {
+      return trim($element);
+   }, $_GET);
 
-   $id = $_GET['id'];
-   $newValue = $_GET['name'];
+   $status = $objHomeSection->patchName($_GET['id'], $_GET['name']);
 
-   $status = $objHomeSection->patchName($id, $newValue);
-
-   if ($status === true) {
-      echo 'success';
-   }
-   else {
-      echo 'fail';
-   }
-   die();
    header("Location: index.php");
 ?>

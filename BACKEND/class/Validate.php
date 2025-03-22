@@ -60,7 +60,6 @@ class Validate
     public function run()
     {
         foreach ($this->rules as $element => $value) {
-
             switch ($value['type']) {
                 case 'int':
                     $this->validateInt($element, $value['min'], $value['max']);
@@ -93,7 +92,6 @@ class Validate
                     $this->validateExistRecord($element, $value['options']);
                     break;
             }
-
             if (!array_key_exists($element, $this->errors)) {
                 $this->result[$element] = $this->sources[$element];
             }

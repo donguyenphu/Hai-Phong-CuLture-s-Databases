@@ -2,7 +2,7 @@
 $RulesHomeSection = array(
     'name' => array(
         'type' => 'string',
-        'min' => 1,
+        'min' => 2,
         'max' => 100
     ),
     'order' => array(

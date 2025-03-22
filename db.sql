@@ -97,12 +97,21 @@ CREATE TABLE IF NOT EXISTS `home_section` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=393 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=433 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table hai_phong_culture_database.home_section: ~1 rows (approximately)
+-- Dumping data for table hai_phong_culture_database.home_section: ~10 rows (approximately)
 DELETE FROM `home_section`;
 INSERT INTO `home_section` (`id`, `name`, `image`, `url`, `status`, `order`, `created_at`, `updated_at`) VALUES
-	(392, 'Claudia Langgggggg', '3rAHP.png', 'Temporibus ad sequi', 1, 2, '2025-03-20 06:45:52', '2025-03-21 21:43:49');
+	(409, 'Georgia Boston', 'B1QVj.png', 'Nisi voluptatem volu', 0, 1, '2025-03-22 01:05:04', '2025-03-22 01:10:29'),
+	(418, 'Tatiana Hahn', 'iWzPV.png', 'Omnis velit qui in q', 1, 2, '2025-03-22 01:14:39', '2025-03-22 01:30:03'),
+	(422, 'Chase Chaney', 'EOfCg.png', 'Quis ut vel laboris', 1, 3, '2025-03-22 01:18:59', '2025-03-22 03:37:05'),
+	(423, 'Carlos Mccarty', 'B8LwT.png', 'Rerum ea voluptatum', 1, 33, '2025-03-22 01:19:02', '2025-03-22 03:37:33'),
+	(424, 'Chase Chaney', 'wzNMt.png', 'Quis ut vel laboris', 1, 1, '2025-03-22 01:19:02', '2025-03-22 03:36:02'),
+	(426, 'Scarlett Berry', 'BcG81.png', 'Sint ea voluptatibus', 1, 1, '2025-03-22 01:19:12', '2025-03-22 03:36:16'),
+	(427, 'Madeson Burks', 'pUB1M.png', 'Quos deserunt fugiat', 1, 1, '2025-03-22 01:19:26', '2025-03-22 03:36:25'),
+	(428, 'Madeson Burks', 'LKpDu.png', 'Quos deserunt fugiat', 0, 1, '2025-03-22 01:19:36', NULL),
+	(429, 'Illiana Gentry', 'UMSqi.png', 'Non pariatur Irure', 1, 1, '2025-03-22 01:19:46', '2025-03-22 03:36:34'),
+	(432, 'Devin Schroeder', '2FX8Y.png', 'Deserunt quos volupt', 1, 1, '2025-03-22 01:25:21', '2025-03-22 03:36:57');
 
 -- Dumping structure for table hai_phong_culture_database.travel
 CREATE TABLE IF NOT EXISTS `travel` (

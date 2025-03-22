@@ -12,6 +12,9 @@ $params = [];
 if (isset($_POST['submit'])) {
   $params = array_merge($_POST, $_FILES);
   $status = $objHomeSection->createItem($params);
+  if ($status === true) {
+    header("Location: index.php");
+  }
   $errorFix = $status['errors'];
 }
 

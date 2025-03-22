@@ -20,7 +20,6 @@ class HomeSection extends Database
         'created_at',
         'updated_at'
     ];
-
     public function __construct($initServer)
     {
         parent::__construct($initServer);
@@ -81,8 +80,8 @@ class HomeSection extends Database
         $queryString = $this->createFilterQuery($queryString, $params);
 
         $startElement = ($params['page'] - 1) * $this->totalItemsPerPage;
+        $queryString .= ' ORDER BY `order`';
         $queryString .= ' LIMIT ' . $startElement . ', ' . $this->totalItemsPerPage;
-
         $items = $this->recordQueryResult($queryString);
         return $items;
     }
@@ -93,8 +92,10 @@ class HomeSection extends Database
         $arrayResult = parent::recordSingleRowResult($getQuery);
         return $arrayResult;
     }
-    public function patchName($id, $newValue) {
+    public function patchName($id, $newValue)
+    {
         $data = [
+            'id' => $id,
             'name' => $newValue
         ];
         $Validate = new Validate($data);
@@ -107,17 +108,47 @@ class HomeSection extends Database
         $Validate->run();
         $errorEnd = $Validate->getErrors();
         if (!count($errorEnd)) {
-            parent::updateOnlyOneId($_GET);
+            parent::updateOnlyOneId($data);
             return true;
         }
         return $errorEnd;
+    }
+    public function patchStatus($id, $newStatusValue) {
+        $data = [
+            'id' => $id,
+            'status' => $newStatusValue
+        ];
+        return parent::updateOnlyOneId($data);
+    }
+    public function patchOrder($id, $newOrderValue) {
+        $data = [
+            'id' => $id,
+            'order' => $newOrderValue
+        ];
+        $ruleOrder = [
+            'type' => 'int',
+            'min' => 1,
+            'max' => 256
+        ];
+        $Validate = new Validate($data);
+        $Validate->addRule('order', 'int', $ruleOrder);
+        $Validate->run();
+        $result = $Validate->getResults();
+        $errorEnd = $Validate->getErrors();
+
+        if (!count($errorEnd)) {
+            parent::updateOnlyOneId($data);
+            return true;
+        }
+        return $Validate->showErrors();
     }
     public function updateItem($id, $params = [])
     {
         // bien doi va chuandata
         // chuan bi condition
         // $this->update($data, $contdition);
-        $oldImage = !empty(($this->getItem($id))['image']) ?? '';
+        $arrayID = $this->getItem($id);
+        $oldImage = (isset($arrayID['image']) && !empty($arrayID['image'])) ? $arrayID['image'] : '';
         $rule = RULE_HOME_SECTION;
         unset($rule['image']);
         $fieldsModified = $this->prepareParams($params);
@@ -132,16 +163,15 @@ class HomeSection extends Database
             $fieldsModified['id'] = $id;
             $fieldsModified['updated_at'] = date("Y-m-d H:i:s");
             $tmp_file_name = $fieldsModified['tmp_name'] ?? '';
-            $image_name = isset($fieldsModified['image']) ? randomString(5) . "." . pathinfo($fieldsModified['image'], PATHINFO_EXTENSION) : '';
+            $image_name = (isset($fieldsModified['image']) && !empty($fieldsModified['image'])) ? $fieldsModified['image'] : '';
             unset($fieldsModified['tmp_name']);
             $this->updateOnlyOneId($fieldsModified);
 
-            if ($oldImage !== '') {
-                $oldPath = "../../assets/images/home-section/" . $oldImage;
-                @unlink($oldPath);
-            }
-
             if ($image_name !== '') {
+                if ($oldImage !== '') {
+                    $oldPath = "../../assets/images/home-section/" . $oldImage;
+                    @unlink($oldPath);
+                }
                 $realPath = "../../assets/images/home-section/" . $image_name;
                 @move_uploaded_file($tmp_file_name, $realPath);
             }
@@ -158,7 +188,6 @@ class HomeSection extends Database
     {
         $fieldsAdded = $this->prepareParams($params);
         $fieldsAdded['created_at'] = date("Y-m-d H:i:s");
-
         if (!empty($fieldsAdded)) {
             $rule = RULE_HOME_SECTION;
             $tmp_file_name = $fieldsAdded['tmp_name'] ?? '';
@@ -170,15 +199,13 @@ class HomeSection extends Database
             $validateObj->run();
             $result = $validateObj->getResults();
             $errors = $validateObj->getErrors();
-            if (empty($errors)) {
+            if (!count($errors)) {
                 $lastId = $this->insert($fieldsAdded, 'single');
                 if ($tmp_file_name !== '') {
-                    $imageName = randomString(5) . "." . pathinfo($fieldsAdded['image'], PATHINFO_EXTENSION);
-                    if (move_uploaded_file($tmp_file_name, '../../assets/images/home-section/' . $imageName)) {
-                        Header("Location: index.php");
-                        exit();
-                    }
+                    $destination = '../../assets/images/home-section/' . $fieldsAdded['image'];
+                    if (move_uploaded_file($tmp_file_name, $destination)) return true;
                 }
+                return true;
             }
         }
         return [

@@ -28,3 +28,4 @@
 <link rel="stylesheet" href="../../assets/css/adminlte.css" />
 <link rel="stylesheet" href="../../assets/css/custom.css">
 <link rel="stylesheet" href="../../assets/css/imageDisplay.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">

@@ -14,6 +14,9 @@
 <script src="../../assets/js/adminlte.js"></script>
 <script src="../../assets/js/imageDisplay.js"></script>
 <script src="../../assets/js/changeName.js"></script>
+<script src="../../assets/js/changeStatus.js"></script>
+<script src="../../assets/js/changeOrder.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
     const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
     const Default = {
