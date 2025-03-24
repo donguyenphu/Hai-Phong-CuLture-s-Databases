@@ -10,6 +10,5 @@ $(document).ready(function() {
                 id: id
             }
         });
-        window.location.reload(); /// reload the page
     });
 })

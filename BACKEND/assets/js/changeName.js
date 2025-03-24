@@ -10,6 +10,5 @@ $(document).ready(function() {
                 name: newValue
             }
         });
-        window.location.reload(); /// reload the page
     })
 })

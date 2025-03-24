@@ -9,6 +9,7 @@ class HomeSection extends Database
 
     protected $table;
     public $imageFolderName;
+    public $imageFolderPath;
     public $totalItemsPerPage;
     public $pageRange;
     protected $fields = [
@@ -27,6 +28,7 @@ class HomeSection extends Database
         $this->totalItemsPerPage = 4;
         $this->pageRange = 4;
         $this->imageFolderName = 'home-section';
+        $this->imageFolderPath = '../../assets/images/' . $this->imageFolderName . '/';
     }
     public function totalItems($query = null)
     {
@@ -113,14 +115,16 @@ class HomeSection extends Database
         }
         return $errorEnd;
     }
-    public function patchStatus($id, $newStatusValue) {
+    public function patchStatus($id, $newStatusValue)
+    {
         $data = [
             'id' => $id,
             'status' => $newStatusValue
         ];
         return parent::updateOnlyOneId($data);
     }
-    public function patchOrder($id, $newOrderValue) {
+    public function patchOrder($id, $newOrderValue)
+    {
         $data = [
             'id' => $id,
             'order' => $newOrderValue
@@ -147,38 +151,30 @@ class HomeSection extends Database
         // bien doi va chuandata
         // chuan bi condition
         // $this->update($data, $contdition);
-        $arrayID = $this->getItem($id);
-        $oldImage = (isset($arrayID['image']) && !empty($arrayID['image'])) ? $arrayID['image'] : '';
+        $oldData = $this->getItem($id);
+        $oldImage = !empty($oldData['image']) ? $oldData['image'] : '';
         $rule = RULE_HOME_SECTION;
-        unset($rule['image']);
         $fieldsModified = $this->prepareParams($params);
-        $Validate = new Validate($params);
-        $Validate->addAllRules($rule);
-        $Validate->run();
-        $resultEnd = $Validate->getResults();
-        $errorEnd = $Validate->getErrors();
-
-        if (!count($errorEnd)) {
-
-            $fieldsModified['id'] = $id;
-            $fieldsModified['updated_at'] = date("Y-m-d H:i:s");
-            $tmp_file_name = $fieldsModified['tmp_name'] ?? '';
-            $image_name = (isset($fieldsModified['image']) && !empty($fieldsModified['image'])) ? $fieldsModified['image'] : '';
-            unset($fieldsModified['tmp_name']);
-            $this->updateOnlyOneId($fieldsModified);
-
-            if ($image_name !== '') {
-                if ($oldImage !== '') {
-                    $oldPath = "../../assets/images/home-section/" . $oldImage;
-                    @unlink($oldPath);
-                }
-                $realPath = "../../assets/images/home-section/" . $image_name;
-                @move_uploaded_file($tmp_file_name, $realPath);
+        if (empty($fieldsModified['image']['name'])) unset($rule['image']);
+        $validate = new Validate($fieldsModified);
+        $validate->addAllRules($rule);
+        $validate->run();
+        $result = $validate->getResults();
+        $errors = $validate->getErrors();
+        if (!count($errors)) {
+            $result['id'] = $id;
+            $result['updated_at'] = date("Y-m-d H:i:s");
+            if (!empty($result['image']['name'])) {
+                $fileName = $this->uploadFile($result['image']);
+                $result['image'] = $fileName;
+                $this->deleteFile($oldImage);
+            } else {
+                $result['image'] = $oldImage;
             }
+            $this->updateOnlyOneId($result);
             return true;
         }
-
-        return $Validate->showErrors();
+        return $validate->showErrors();
     }
     public function createItems($params = [])
     {
@@ -187,24 +183,22 @@ class HomeSection extends Database
     public function createItem($params = [])
     {
         $fieldsAdded = $this->prepareParams($params);
+        $fieldsAdded['order'] = 1;
         $fieldsAdded['created_at'] = date("Y-m-d H:i:s");
+        // upload ảnh -> có được tên ảnh -> set phần fieldAdded['image'] = tên ảnh
+        // insert dữ liệu vào database
+        // order default is 1
+        $validateObj = new Validate($fieldsAdded);
         if (!empty($fieldsAdded)) {
             $rule = RULE_HOME_SECTION;
-            $tmp_file_name = $fieldsAdded['tmp_name'] ?? '';
-            unset($fieldsAdded['tmp_name']);
-            unset($rule['order']);
-            unset($rule['image']);
-            $validateObj = new Validate($fieldsAdded);
+            // unset($rule['image']);
             $validateObj->addAllRules($rule);
             $validateObj->run();
             $result = $validateObj->getResults();
             $errors = $validateObj->getErrors();
             if (!count($errors)) {
-                $lastId = $this->insert($fieldsAdded, 'single');
-                if ($tmp_file_name !== '') {
-                    $destination = '../../assets/images/home-section/' . $fieldsAdded['image'];
-                    if (move_uploaded_file($tmp_file_name, $destination)) return true;
-                }
+                $result['image'] = $this->uploadFile($fieldsAdded['image']);
+                $lastId = $this->insert($result, 'single');
                 return true;
             }
         }
@@ -229,19 +223,27 @@ class HomeSection extends Database
     {
         $fieldsAdded = array_intersect_key($params, array_flip($this->fields));
         $fieldsAdded['status'] = (isset($params['status']) && $params['status'] == "on") ? 1 : 0;
-        $temporaryVar = '';
-        if (isset($fieldsAdded['image']['name']) && !empty($fieldsAdded['image']['name'])) {
-            $temporaryVar = $fieldsAdded['image']['name'];
-            $tmp_file_name = $fieldsAdded['image']['tmp_name'];
-        }
-        unset($fieldsAdded['image']);
-        if ($temporaryVar) {
-            $fieldsAdded['image'] = randomString(5) . "." . pathinfo($temporaryVar, PATHINFO_EXTENSION);
-            $fieldsAdded['tmp_name'] = $tmp_file_name;
-        }
         $fieldsAdded = array_map(function ($value) {
             return is_array($value) ? $value : trim((string)$value);
         }, $fieldsAdded);
         return $fieldsAdded;
+    }
+    private function uploadFile($file)
+    {
+        // $file is the array $fieldAdded['image']
+        if (!empty($file)) {
+            $fileName = randomString(5) . "." . pathinfo($file['name'], PATHINFO_EXTENSION);
+            $tmpName = $file['tmp_name'];
+            $destination = $this->imageFolderPath . $fileName;
+            if (move_uploaded_file($tmpName, $destination)) {
+                return $fileName;
+            }
+        }
+        return ''; // return nothing when the array is empty
+    }
+    private function deleteFile($file)
+    {
+        $oldPath = $this->imageFolderPath . $file;
+        @unlink($oldPath);
     }
 }

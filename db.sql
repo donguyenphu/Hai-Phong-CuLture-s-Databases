@@ -97,21 +97,26 @@ CREATE TABLE IF NOT EXISTS `home_section` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=433 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=438 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table hai_phong_culture_database.home_section: ~10 rows (approximately)
+-- Dumping data for table hai_phong_culture_database.home_section: ~15 rows (approximately)
 DELETE FROM `home_section`;
 INSERT INTO `home_section` (`id`, `name`, `image`, `url`, `status`, `order`, `created_at`, `updated_at`) VALUES
-	(409, 'Georgia Boston', 'B1QVj.png', 'Nisi voluptatem volu', 0, 1, '2025-03-22 01:05:04', '2025-03-22 01:10:29'),
+	(409, 'Georgia Boston', 'Array', 'Nisi voluptatem volu', 1, 1, '2025-03-24 10:33:02', '2025-03-24 10:33:02'),
 	(418, 'Tatiana Hahn', 'iWzPV.png', 'Omnis velit qui in q', 1, 2, '2025-03-22 01:14:39', '2025-03-22 01:30:03'),
-	(422, 'Chase Chaney', 'EOfCg.png', 'Quis ut vel laboris', 1, 3, '2025-03-22 01:18:59', '2025-03-22 03:37:05'),
+	(422, 'Chase Chaney', 'EOfCg.png', 'Quis ut vel laboris', 0, 3, '2025-03-22 01:18:59', '2025-03-22 03:37:05'),
 	(423, 'Carlos Mccarty', 'B8LwT.png', 'Rerum ea voluptatum', 1, 33, '2025-03-22 01:19:02', '2025-03-22 03:37:33'),
-	(424, 'Chase Chaney', 'wzNMt.png', 'Quis ut vel laboris', 1, 1, '2025-03-22 01:19:02', '2025-03-22 03:36:02'),
+	(424, 'Chase Chaney', 'wzNMt.png', 'Quis ut vel laboris', 1, 2, '2025-03-22 01:19:02', '2025-03-22 03:36:02'),
 	(426, 'Scarlett Berry', 'BcG81.png', 'Sint ea voluptatibus', 1, 1, '2025-03-22 01:19:12', '2025-03-22 03:36:16'),
 	(427, 'Madeson Burks', 'pUB1M.png', 'Quos deserunt fugiat', 1, 1, '2025-03-22 01:19:26', '2025-03-22 03:36:25'),
 	(428, 'Madeson Burks', 'LKpDu.png', 'Quos deserunt fugiat', 0, 1, '2025-03-22 01:19:36', NULL),
 	(429, 'Illiana Gentry', 'UMSqi.png', 'Non pariatur Irure', 1, 1, '2025-03-22 01:19:46', '2025-03-22 03:36:34'),
-	(432, 'Devin Schroeder', '2FX8Y.png', 'Deserunt quos volupt', 1, 1, '2025-03-22 01:25:21', '2025-03-22 03:36:57');
+	(432, 'Devin Schroeder', '2FX8Y.png', 'Deserunt quos volupt', 1, 1, '2025-03-22 01:25:21', '2025-03-22 03:36:57'),
+	(433, 'April Calderon', NULL, 'Voluptate sapiente i', 1, 1, '2025-03-24 09:19:48', NULL),
+	(434, 'Craig Hester', 'e8a3C.png', 'Sunt doloribus imped', 1, 1, '2025-03-24 09:20:28', NULL),
+	(435, 'Demetria Thomas', '', 'Ea dolor quae aperia', 1, 1, '2025-03-24 10:17:12', NULL),
+	(436, 'Mariam Rich', '', 'Temporibus at pariat', 1, 1, '2025-03-24 10:33:06', NULL),
+	(437, 'Neil Hoover', '', 'Aut exercitationem u', 0, 1, '2025-03-24 10:33:43', NULL);
 
 -- Dumping structure for table hai_phong_culture_database.travel
 CREATE TABLE IF NOT EXISTS `travel` (

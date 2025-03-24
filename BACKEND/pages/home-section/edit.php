@@ -20,9 +20,6 @@ $infoStorage = new Database($initServer);
 $arrayGetInitialValue = $objHomeSection->getItem($id);
 $params = $arrayGetInitialValue;
 
-
-
-
 if (empty($params)) {
   Header("Location: index.php");
   exit();
@@ -40,7 +37,9 @@ if (isset($_POST['submit'])) {
 
 $editName = Form::input("text", "name", "Name", $params['name'] ?? '');
 $editOrder = Form::input("text", "order", "Order", $params['order'] ?? '');
-$editURL = Form::input("text", "url", "URL", $params['url'] ?? '');
+$editURL = Form::input("text", "url", "File Attached", $params['url'] ?? '');
+
+$leadPath = $params['image'] ? '../../assets/images/home-section/'.$params['image'] : '';
 
 ?>
 
@@ -73,11 +72,8 @@ $editURL = Form::input("text", "url", "URL", $params['url'] ?? '');
           </div>
           <form action="" method="POST" enctype="multipart/form-data">
             <div class="card-body">
-              <?php
-              if ($errorFix !== '') {
-                echo $errorFix;
-              }
-              ?>
+
+              <?= $errorFix ?? '' ?>
 
               <?= $editName ?>
 
@@ -86,16 +82,16 @@ $editURL = Form::input("text", "url", "URL", $params['url'] ?? '');
               <?= $editURL ?>
 
               <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" role="switch" name="status" <?= isset($params['status']) ? 'checked' : '' ?>>
-                <label class="form-check-label">Default switch checkbox input</label>
+                <label class="form-check-label" for="switch-status">Status: </label>
+                <input class="form-check-input" type="checkbox" role="switch" name="status" <?= $params['status'] ? 'checked' : '' ?>>
               </div>
               <!-- IMAGE -->
               <div style="margin: 10px 0 10px 0; width: 30%; height: auto;">
-                <img src="" id = "image-display-preview" class="w-100 h-100 rounded">
+                <img src="<?= $leadPath ?>" id="image-display-preview" class="w-100 h-100 rounded">
               </div>
               <div class="mb-3">
                 <label class="form-label">Upload</label>
-                <input type="file" class="form-control" name="image" id = "input-upload-preview">
+                <input type="file" class="form-control" name="image" id="input-upload-preview">
               </div>
             </div>
             <!-- SUBMIT -->
