@@ -113,7 +113,7 @@ class HomeSection extends Database
             parent::updateOnlyOneId($data);
             return true;
         }
-        return $errorEnd;
+        return false;
     }
     public function patchStatus($id, $newStatusValue)
     {
@@ -144,7 +144,7 @@ class HomeSection extends Database
             parent::updateOnlyOneId($data);
             return true;
         }
-        return $Validate->showErrors();
+        return false;
     }
     public function updateItem($id, $params = [])
     {
@@ -191,7 +191,7 @@ class HomeSection extends Database
         $validateObj = new Validate($fieldsAdded);
         if (!empty($fieldsAdded)) {
             $rule = RULE_HOME_SECTION;
-            // unset($rule['image']);
+            if (empty($fieldsAdded['image']['name'])) unset($rule['image']);
             $validateObj->addAllRules($rule);
             $validateObj->run();
             $result = $validateObj->getResults();
@@ -218,7 +218,8 @@ class HomeSection extends Database
         }
         return true;
     }
-    public function search() {}
+    public function search() 
+    {}
     private function prepareParams($params = [])
     {
         $fieldsAdded = array_intersect_key($params, array_flip($this->fields));

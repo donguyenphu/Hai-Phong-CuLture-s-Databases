@@ -10,7 +10,7 @@
       return trim($element);
    }, $_GET);
 
-   $status = $objHomeSection->patchName($_GET['id'], $_GET['name']);
+   $status = $objHomeSection->patchName($_GET['id'], $_GET['name']) ? 'success' : 'fail';
 
    header("Location: index.php");
 ?>

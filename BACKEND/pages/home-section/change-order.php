@@ -10,7 +10,7 @@
         return trim($element);
     }, $_GET);
 
-    $objHomeSection->patchOrder($_GET['id'], $_GET['order']);
+    $status = $objHomeSection->patchOrder($_GET['id'], $_GET['order']) ? 'success' : 'fail';
 
-    header("Location: index.php");
+    header("Location: index.php?message=".$status);
 ?>

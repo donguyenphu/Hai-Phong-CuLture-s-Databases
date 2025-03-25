@@ -9,5 +9,5 @@
 
     $queryUpdate = $objHomeSection->patchStatus($_GET['id'], $_GET['status']);
 
-    header("Location: index.php");
+    header("Location: index.php?message=success");
 ?>
