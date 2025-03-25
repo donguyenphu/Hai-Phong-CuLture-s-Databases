@@ -9,8 +9,8 @@ $(document).ready(function () {
                 id: id,
                 order: newOrder
             },
-            success: function(data) {
-                setTimeout(function() {
+            success: function (data) {
+                if (data === 'success') {
                     Toastify({
                         text: "✅ Operation Successful!",
                         duration: 3000,
@@ -24,10 +24,10 @@ $(document).ready(function () {
                             padding: "10px 20px"
                         }
                     }).showToast();
-                }, 100);
-            },
-            error: function(xhr, status,  error) {
-                setTimeout(function() {
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 1000);
+                } else if (data === 'fail') {
                     Toastify({
                         text: "❌ Operation Failed!",
                         duration: 3000,
@@ -42,10 +42,11 @@ $(document).ready(function () {
                             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)"
                         }
                     }).showToast();
-                }, 100);
+
+                }
             }
         });
-        window.location.reload(); /// reload the page 
+        //    window.location.reload(); /// reload the page 
     });
 
 })

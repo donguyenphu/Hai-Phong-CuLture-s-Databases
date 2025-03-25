@@ -12,5 +12,6 @@
 
     $status = $objHomeSection->patchOrder($_GET['id'], $_GET['order']) ? 'success' : 'fail';
 
-    header("Location: index.php?message=".$status);
+    echo $status;
+    // header("Location: index.php?message=".$status);
 ?>

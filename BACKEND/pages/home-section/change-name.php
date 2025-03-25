@@ -12,5 +12,6 @@
 
    $status = $objHomeSection->patchName($_GET['id'], $_GET['name']) ? 'success' : 'fail';
 
-   header("Location: index.php");
+   echo $status;
+   // header("Location: index.php");
 ?>
