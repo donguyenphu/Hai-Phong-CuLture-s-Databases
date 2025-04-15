@@ -7,42 +7,10 @@ require_once '../../class/HomeSection.php';
 require_once '../../class/Form.php';
 
 
-// echo '<script>
-//      setTimeout(function() {
-//         Toastify({
-//             text: "✅ Operation Successful!",
-//             duration: 3000,
-//             gravity: "top", // "top" or "bottom"
-//             position: "right", // "left", "center", "right"
-//             style: {
-//                 background: "linear-gradient(to right, #00b09b, #96c93d)",
-//                 color: "#fff",
-//                 fontSize: "16px",
-//                 borderRadius: "8px",
-//                 padding: "10px 20px"
-//             }
-//         }).showToast();
-//     }, 100);
-// </script>'.'</br>';
-
-// echo '<script>
-//     setTimeout(function() {
-//         Toastify({
-//             text: "❌ Operation Failed!",
-//             duration: 3000,
-//             gravity: "top", // "top" or "bottom"
-//             position: "right", // "left", "center", "right"
-//             style: {
-//                 background: "linear-gradient(to right, #ff5f6d, #ffc371)",
-//                 color: "#fff",
-//                 fontSize: "16px",
-//                 borderRadius: "8px",
-//                 padding: "10px 20px",
-//                 boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)"
-//             }
-//         }).showToast();
-//     }, 100);
-// </script>';
+if (isset($_GET['message'])) {
+    if ($_GET['message'] == 'success') echo SUCCESS_TEXT;
+    else echo FAIL_TEXT;
+}
 
 $itemsHomeSection = new HomeSection($initServer);
 $params = array_merge($_GET, $_POST);
@@ -63,13 +31,14 @@ if (!empty($items)) {
                 <td>
                     <input class="form-control ajax-name" value="' . $value['name'] . '" data-id = "' . $value['id'] . '"/>
                 </td>
-                <td>' . $value['image'] . '</td>
-                <td>' . $value['url'] . '</td>
-                <td>
-                    <input class="form-check-input ajax-status" type="checkbox" role="switch" ' . ($value['status'] ? 'checked' : '') . ' data-id="' . $value['id'] . '">
-                </td>
                 <td>
                     <input class="form-control ajax-order" value="' . $value['order'] . '" data-id = "' . $value['id'] . '"/>
+                </td>
+                    <td>
+                        <input class="form-control ajax-order" value="' . $value['order'] . '" data-id = "' . $value['id'] . '"/>
+                    </td>
+                <td>
+                    <input class="form-check-input ajax-status" type="checkbox" role="switch" ' . ($value['status'] ? 'checked' : '') . ' data-id="' . $value['id'] . '">
                 </td>
                 <td>' . $value['created_at'] . '</td>
                 <td>' . $value['updated_at'] . '</td>
@@ -107,7 +76,7 @@ $slbSearchStatus = Form::select($searchStatusValues, 'search[status]', 'Status',
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">HomeSection - Index</h3>
+                            <h3 class="mb-0">HomeSection - Cuisine Ingredient</h3>
                         </div>
                         <div class="col-sm-6">
                             <a href="./create.php" class="btn btn-primary float-sm-end ms-1">
@@ -162,13 +131,11 @@ $slbSearchStatus = Form::select($searchStatusValues, 'search[status]', 'Status',
                                     <tr>
                                         <th>ID</th>
                                         <th>Name</th>
-                                        <th>Image</th>
-                                        <th>URL</th>
-                                        <th>Status</th>
                                         <th>Order</th>
+                                        <th>Cuisine_id</th>
+                                        <th>Status</th>
                                         <th>Created At</th>
                                         <th>Updated At</th>
-                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>

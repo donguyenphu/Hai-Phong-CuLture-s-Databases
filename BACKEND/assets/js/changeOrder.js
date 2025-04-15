@@ -46,7 +46,5 @@ $(document).ready(function () {
                 }
             }
         });
-        //    window.location.reload(); /// reload the page 
     });
-
 })

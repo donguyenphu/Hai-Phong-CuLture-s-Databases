@@ -24,9 +24,6 @@ $(document).ready(function() {
                             padding: "10px 20px"
                         }
                     }).showToast();
-                    setTimeout(function () {
-                        window.location.reload();
-                    }, 1000);
                 } else if (data === 'fail') {
                     Toastify({
                         text: "❌ Operation Failed!",

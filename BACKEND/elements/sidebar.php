@@ -8,7 +8,7 @@
             <span class="brand-text fw-light">AdminLTE 4</span>
         </a>
     </div>
-    
+
     <div class="sidebar-wrapper">
         <nav class="mt-2">
             <ul
@@ -16,83 +16,143 @@
                 data-lte-toggle="treeview"
                 role="menu"
                 data-accordion="false">
-                <li class="nav-header">HOME_SECTION</li>
                 <li class="nav-item">
-                    <a href="./index.php" class="nav-link">
-                        <i class="nav-icon bi bi-palette"></i>
-                        <p>Home</p>
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-edit"></i>
+                        <p>
+                            HOME_SECTION
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="index.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Home</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="create.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Add</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="./create.php" class="nav-link">
-                        <i class="nav-icon bi bi-palette"></i>
-                        <p>Add</p>
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-edit"></i>
+                        <p>
+                            TRAVEL
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
                     </a>
-                </li>
-                <li class="nav-header">TRAVEL</li>
-                <li class="nav-item">
-                    <a href="./index.php" class="nav-link">
-                        <i class="nav-icon bi bi-palette"></i>
-                        <p>Home</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="./create.php" class="nav-link">
-                        <i class="nav-icon bi bi-palette"></i>
-                        <p>Add</p>
-                    </a>
-                </li>
-                <li class="nav-header">HISTORY</li>
-                <li class="nav-item">
-                    <a href="./index.php" class="nav-link">
-                        <i class="nav-icon bi bi-palette"></i>
-                        <p>Home</p>
-                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="index.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Home</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="create.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Add</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="./create.php" class="nav-link">
-                        <i class="nav-icon bi bi-palette"></i>
-                        <p>Add</p>
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-edit"></i>
+                        <p>
+                            HISTORY
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
                     </a>
-                </li>
-                <li class="nav-header">CULTURE</li>
-                <li class="nav-item">
-                    <a href="./index.php" class="nav-link">
-                        <i class="nav-icon bi bi-palette"></i>
-                        <p>Home</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="./create.php" class="nav-link">
-                        <i class="nav-icon bi bi-palette"></i>
-                        <p>Add</p>
-                    </a>
-                </li>
-                <li class="nav-header">CUISINE-ADDRESS</li>
-                <li class="nav-item">
-                    <a href="./index.php" class="nav-link">
-                        <i class="nav-icon bi bi-palette"></i>
-                        <p>Home</p>
-                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="index.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Home</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="create.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Add</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="./create.php" class="nav-link">
-                        <i class="nav-icon bi bi-palette"></i>
-                        <p>Add</p>
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-edit"></i>
+                        <p>
+                            CULTURE
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="index.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Home</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="create.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Add</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li class="nav-header">CUISINE</li>
                 <li class="nav-item">
-                    <a href="./index.php" class="nav-link">
-                        <i class="nav-icon bi bi-palette"></i>
-                        <p>Home</p>
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-edit"></i>
+                        <p>
+                            CUISINE
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="index.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Home</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="create.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Add</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="./create.php" class="nav-link">
-                        <i class="nav-icon bi bi-palette"></i>
-                        <p>Add</p>
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-edit"></i>
+                        <p>
+                            CUISINE_ADDRESS
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="index.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Home</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="create.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Add</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </nav>
