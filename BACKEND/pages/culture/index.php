@@ -1,11 +1,12 @@
 <!-- DATABASE - HOME_SECTION - INDEX -->
 <?php
-$currentTable =  'travel';
+$currentTable = 'home_section';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
 require_once '../../class/Pagination.php';
 require_once '../../class/HomeSection.php';
 require_once '../../class/Form.php';
+
 
 if (isset($_GET['message'])) {
     if ($_GET['message'] == 'success') echo SUCCESS_TEXT;
@@ -17,6 +18,7 @@ $params = array_merge($_GET, $_POST);
 $params['page'] = $params['page'] ?? 1;
 $items = $itemsHomeSection->getItems($params);
 $searchParams = $params['search'] ?? [];
+
 
 $totalItems = $itemsHomeSection->totalItem($params);
 $newPaginationClass = new Pagination($totalItems, $itemsHomeSection->totalItemsPerPage, $itemsHomeSection->pageRange, $params['page']);
@@ -75,7 +77,7 @@ $slbSearchStatus = Form::select($searchStatusValues, 'search[status]', 'Status',
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Travel - Index</h3>
+                            <h3 class="mb-0">Culture - Index</h3>
                         </div>
                         <div class="col-sm-6">
                             <a href="./create.php" class="btn btn-primary float-sm-end ms-1">

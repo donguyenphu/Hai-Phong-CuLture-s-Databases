@@ -1,5 +1,6 @@
 <!-- DATABASE - HOME_SECTION - DELETE -->
 <?php
+$currentTable = 'cuisine_address';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
 require_once '../../class/HomeSection.php';

@@ -1,5 +1,6 @@
 <!-- DATABASE - HOME_SECTION - INDEX -->
 <?php
+$currentTable = 'cuisine_ingredient';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
 require_once '../../class/Pagination.php';
@@ -76,7 +77,7 @@ $slbSearchStatus = Form::select($searchStatusValues, 'search[status]', 'Status',
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">HomeSection - Cuisine Ingredient</h3>
+                            <h3 class="mb-0">CuisineIngredient - Index</h3>
                         </div>
                         <div class="col-sm-6">
                             <a href="./create.php" class="btn btn-primary float-sm-end ms-1">

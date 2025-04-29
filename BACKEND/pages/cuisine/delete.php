@@ -1,10 +1,11 @@
-<!-- DATABASE - HOME_SECTION - DELETE -->
+<!-- DATABASE - CUISINE - DELETE -->
 <?php
+$currentTable = 'cuisine';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
-require_once '../../class/HomeSection.php';
+require_once '../../class/Cuisine.php';
 
-$objHomeSection = new HomeSection($initServer);
+$objHomeSection = new Cuisine($initServer);
 
 if (!isset($_GET['id']) || empty($objHomeSection->getItem($_GET['id']))) {
   header("Location: index.php");

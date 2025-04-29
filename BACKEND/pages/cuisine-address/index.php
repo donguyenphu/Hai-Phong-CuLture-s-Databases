@@ -1,48 +1,11 @@
 <!-- DATABASE - HOME_SECTION - INDEX -->
 <?php
+$currentTable = 'cuisine_address';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
 require_once '../../class/Pagination.php';
 require_once '../../class/HomeSection.php';
 require_once '../../class/Form.php';
-
-
-// echo '<script>
-//      setTimeout(function() {
-//         Toastify({
-//             text: "✅ Operation Successful!",
-//             duration: 3000,
-//             gravity: "top", // "top" or "bottom"
-//             position: "right", // "left", "center", "right"
-//             style: {
-//                 background: "linear-gradient(to right, #00b09b, #96c93d)",
-//                 color: "#fff",
-//                 fontSize: "16px",
-//                 borderRadius: "8px",
-//                 padding: "10px 20px"
-//             }
-//         }).showToast();
-//     }, 100);
-// </script>'.'</br>';
-
-// echo '<script>
-//     setTimeout(function() {
-//         Toastify({
-//             text: "❌ Operation Failed!",
-//             duration: 3000,
-//             gravity: "top", // "top" or "bottom"
-//             position: "right", // "left", "center", "right"
-//             style: {
-//                 background: "linear-gradient(to right, #ff5f6d, #ffc371)",
-//                 color: "#fff",
-//                 fontSize: "16px",
-//                 borderRadius: "8px",
-//                 padding: "10px 20px",
-//                 boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)"
-//             }
-//         }).showToast();
-//     }, 100);
-// </script>';
 
 $itemsHomeSection = new HomeSection($initServer);
 $params = array_merge($_GET, $_POST);
@@ -107,7 +70,7 @@ $slbSearchStatus = Form::select($searchStatusValues, 'search[status]', 'Status',
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">HomeSection - Index</h3>
+                            <h3 class="mb-0">CuisineAddress - Index</h3>
                         </div>
                         <div class="col-sm-6">
                             <a href="./create.php" class="btn btn-primary float-sm-end ms-1">

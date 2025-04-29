@@ -1,5 +1,6 @@
 <!-- DATABASE - HOME_SECTION - ADD -->
 <?php
+$currentTable = 'cuisine_ingredient';
 require_once '../../elements/functions.php';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
@@ -42,16 +43,13 @@ $createStatus = $params['status'] ?? '';
         <div class="container-fluid">
           <div class="row">
             <div class="col-sm-6">
-              <h3 class="mb-0">Database - Add</h3>
+              <h3 class="mb-0">CuisineIngredient - Add</h3>
             </div>
           </div>
         </div>
       </div>
       <div class="card-body m-3">
         <div class="card card-primary card-outline mb-4">
-          <div class="card-header">
-            <div class="card-title"><strong class="text-default">Home section - Add</strong></div>
-          </div>
           <form action="" method="POST" enctype="multipart/form-data">
             <div class="card-body">
               <?php if ($errorFix !== '') {

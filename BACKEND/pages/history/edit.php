@@ -1,28 +1,46 @@
-<!-- DATABASE - HOME_SECTION - ADD -->
+<!-- DATABASE - HOME_SECTION - EDTI -->
 <?php
-$currentTable =  'travel';
+$currentTable = 'home_section';
 require_once '../../elements/functions.php';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
+require_once '../../define/homeValidate.php';
 require_once '../../class/HomeSection.php';
 require_once '../../class/Form.php';
 
+$id = '';
 $errorFix = '';
-$objHomeSection =  new HomeSection($initServer);
-$params = [];
-if (isset($_POST['submit'])) {
-  $params = array_merge($_POST, $_FILES);
-  $status = $objHomeSection->createItem($params);
-  if ($status === true) {
-    header("Location: index.php");
-  }
-  $errorFix = $status['errors'];
+$objHomeSection = new HomeSection($initServer);
+$_GET['id'] = intval($_GET['id']);
+if (isset($_GET['id'])) {
+  $id = $_GET['id'];
 }
 
-// CREATE FORM STARTS
-$createName = Form::input('text', 'name', 'Name', $params['name'] ?? '');
-$createURL = Form::input('text', 'url', 'File Attached', $params['url'] ?? '');
-$createStatus = $params['status'] ?? '';
+
+$infoStorage = new Database($initServer);
+$arrayGetInitialValue = $objHomeSection->getItem($id);
+$params = $arrayGetInitialValue;
+
+if (empty($params)) {
+  Header("Location: index.php");
+  exit();
+}
+
+if (isset($_POST['submit'])) {
+  $params = array_merge($_POST, $_FILES);
+  $result = $objHomeSection->updateItem($id, $params);
+  $errorFix =  $result;
+  if ($result === true) {
+    header("Location: index.php");
+    exit();
+  }
+}
+
+$editName = Form::input("text", "name", "Name", $params['name'] ?? '');
+$editOrder = Form::input("text", "order", "Order", $params['order'] ?? '');
+$editURL = Form::input("text", "url", "URL", $params['url'] ?? '');
+
+$leadPath = $params['image'] ? '../../assets/images/home-section/'.$params['image'] : '';
 
 ?>
 
@@ -43,47 +61,45 @@ $createStatus = $params['status'] ?? '';
         <div class="container-fluid">
           <div class="row">
             <div class="col-sm-6">
-              <h3 class="mb-0">TravelocationInfo - Add</h3>
+              <h3 class="mb-0">History - Edit</h3>
             </div>
           </div>
         </div>
       </div>
       <div class="card-body m-3">
         <div class="card card-primary card-outline mb-4">
-          <div class="card-header">
-            <div class="card-title"><strong class="text-default">Home section - Add</strong></div>
-          </div>
           <form action="" method="POST" enctype="multipart/form-data">
             <div class="card-body">
-              <?php if ($errorFix !== '') {
-                echo $errorFix;
-              } ?>
-              <!-- NAME -->
-              <?= $createName ?>
-              <!-- URL -->
-              <?= $createURL ?>
-              <!-- STATUS -->
-              <div class="form-check form-switch">
+
+              <?= $errorFix ?? '' ?>
+
+              <?= $editName ?>
+
+              <?= $editOrder ?>
+
+              <?= $editURL ?>
+
+              <div class="form-check form-switch mb-3">
                 <label class="form-check-label" for="switch-status">Status: </label>
-                <input class="form-check-input" type="checkbox" role="switch" id="switch-status" name="status" <?= $createStatus ?>>
+                <input class="form-check-input" type="checkbox" role="switch" name="status" <?= $params['status'] ? 'checked' : '' ?>>
               </div>
               <!-- IMAGE -->
               <div style="margin: 10px 0 10px 0; width: 30%; height: auto;">
-                <img src="" id="image-display-preview" class="w-100 h-100 rounded">
+                <img src="<?= $leadPath ?>" id="image-display-preview" class="w-100 h-100 rounded">
               </div>
               <div class="mb-3">
                 <label class="form-label">Upload</label>
                 <input type="file" class="form-control" name="image" id="input-upload-preview">
               </div>
             </div>
+            <!-- SUBMIT -->
             <div class="card-footer">
               <input type="submit" class="btn btn-primary" name="submit" value="Submit">
-              <a class="btn btn-warning" href="index.php">Cancel</a>
+              <a type="button" class="btn btn-warning" href="./index.php">Cancel</a>
             </div>
           </form>
         </div>
       </div>
-
     </main>
 
     <?php require_once '../../elements/footer.php'; ?>

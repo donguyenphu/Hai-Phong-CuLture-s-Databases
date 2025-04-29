@@ -1,5 +1,6 @@
 <!-- DATABASE - HOME_SECTION - EDTI -->
 <?php
+$currentTable = 'cuisine_ingredient';
 require_once '../../elements/functions.php';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
@@ -60,16 +61,13 @@ $leadPath = $params['image'] ? '../../assets/images/home-section/'.$params['imag
         <div class="container-fluid">
           <div class="row">
             <div class="col-sm-6">
-              <h3 class="mb-0">Database - Edit</h3>
+              <h3 class="mb-0">CuisineIngredient - Edit</h3>
             </div>
           </div>
         </div>
       </div>
       <div class="card-body m-3">
         <div class="card card-primary card-outline mb-4">
-          <div class="card-header">
-            <div class="card-title">Home section - Edit</div>
-          </div>
           <form action="" method="POST" enctype="multipart/form-data">
             <div class="card-body">
 

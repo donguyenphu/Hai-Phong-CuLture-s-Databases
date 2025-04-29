@@ -1,5 +1,6 @@
 <!-- DATABASE - HOME_SECTION - INDEX -->
 <?php
+$currentTable = 'home_section';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
 require_once '../../class/Pagination.php';
@@ -17,6 +18,7 @@ $params = array_merge($_GET, $_POST);
 $params['page'] = $params['page'] ?? 1;
 $items = $itemsHomeSection->getItems($params);
 $searchParams = $params['search'] ?? [];
+
 
 $totalItems = $itemsHomeSection->totalItem($params);
 $newPaginationClass = new Pagination($totalItems, $itemsHomeSection->totalItemsPerPage, $itemsHomeSection->pageRange, $params['page']);

@@ -5,11 +5,10 @@ $initServer = [
     'username' => 'root',
     'password' => '',
     'database' => 'hai_phong_culture_database',
-    'table' => 'home_section'
+    'table' => $currentTable
 ];
 define("HOME_SECTION_DATABASE_INFO", $initServer);
 $infoStorage = new Database($initServer);
-
 
 $successfulText = '<script>
      setTimeout(function() {

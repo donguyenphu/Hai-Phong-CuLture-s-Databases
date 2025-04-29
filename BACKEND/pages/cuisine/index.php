@@ -1,54 +1,18 @@
-<!-- DATABASE - HOME_SECTION - INDEX -->
+<!-- DATABASE - CUISINE - INDEX -->
 <?php
+$currentTable = 'cuisine';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
 require_once '../../class/Pagination.php';
-require_once '../../class/HomeSection.php';
+require_once '../../class/Cuisine.php';
 require_once '../../class/Form.php';
 
-
-// echo '<script>
-//      setTimeout(function() {
-//         Toastify({
-//             text: "✅ Operation Successful!",
-//             duration: 3000,
-//             gravity: "top", // "top" or "bottom"
-//             position: "right", // "left", "center", "right"
-//             style: {
-//                 background: "linear-gradient(to right, #00b09b, #96c93d)",
-//                 color: "#fff",
-//                 fontSize: "16px",
-//                 borderRadius: "8px",
-//                 padding: "10px 20px"
-//             }
-//         }).showToast();
-//     }, 100);
-// </script>'.'</br>';
-
-// echo '<script>
-//     setTimeout(function() {
-//         Toastify({
-//             text: "❌ Operation Failed!",
-//             duration: 3000,
-//             gravity: "top", // "top" or "bottom"
-//             position: "right", // "left", "center", "right"
-//             style: {
-//                 background: "linear-gradient(to right, #ff5f6d, #ffc371)",
-//                 color: "#fff",
-//                 fontSize: "16px",
-//                 borderRadius: "8px",
-//                 padding: "10px 20px",
-//                 boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)"
-//             }
-//         }).showToast();
-//     }, 100);
-// </script>';
-
-$itemsHomeSection = new HomeSection($initServer);
+$itemsHomeSection = new Cuisine($initServer);
 $params = array_merge($_GET, $_POST);
 $params['page'] = $params['page'] ?? 1;
 $items = $itemsHomeSection->getItems($params);
 $searchParams = $params['search'] ?? [];
+
 
 $totalItems = $itemsHomeSection->totalItem($params);
 $newPaginationClass = new Pagination($totalItems, $itemsHomeSection->totalItemsPerPage, $itemsHomeSection->pageRange, $params['page']);
@@ -64,7 +28,7 @@ if (!empty($items)) {
                     <input class="form-control ajax-name" value="' . $value['name'] . '" data-id = "' . $value['id'] . '"/>
                 </td>
                 <td>' . $value['image'] . '</td>
-                <td>' . $value['url'] . '</td>
+                <td>' . $value['description'] . '</td>
                 <td>
                     <input class="form-check-input ajax-status" type="checkbox" role="switch" ' . ($value['status'] ? 'checked' : '') . ' data-id="' . $value['id'] . '">
                 </td>
@@ -73,6 +37,7 @@ if (!empty($items)) {
                 </td>
                 <td>' . $value['created_at'] . '</td>
                 <td>' . $value['updated_at'] . '</td>
+                <td>' . $value['travel_location_id'] . '</td>
                 <td>
                     <a href="edit.php?id=' . $value['id'] . '" class="btn btn-sm btn-primary">Edit</a>
                     <a href="delete.php?id=' . $value['id'] . '" class="btn btn-sm btn-danger" type="button">Delete</a>
@@ -107,7 +72,7 @@ $slbSearchStatus = Form::select($searchStatusValues, 'search[status]', 'Status',
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">HomeSection - Index</h3>
+                            <h3 class="mb-0">Cuisine - Index</h3>
                         </div>
                         <div class="col-sm-6">
                             <a href="./create.php" class="btn btn-primary float-sm-end ms-1">
@@ -163,12 +128,12 @@ $slbSearchStatus = Form::select($searchStatusValues, 'search[status]', 'Status',
                                         <th>ID</th>
                                         <th>Name</th>
                                         <th>Image</th>
-                                        <th>URL</th>
+                                        <th>Description</th>
                                         <th>Status</th>
                                         <th>Order</th>
                                         <th>Created At</th>
                                         <th>Updated At</th>
-                                        <th>Actions</th>
+                                        <th>Travel Location ID</th>
                                     </tr>
                                 </thead>
                                 <tbody>

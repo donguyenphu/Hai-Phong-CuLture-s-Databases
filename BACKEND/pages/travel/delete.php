@@ -1,5 +1,6 @@
 <!-- DATABASE - HOME_SECTION - DELETE -->
 <?php
+$currentTable =  'travel';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
 require_once '../../class/HomeSection.php';

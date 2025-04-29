@@ -1,27 +1,24 @@
-<!-- DATABASE - HOME_SECTION - EDTI -->
+<!-- DATABASE - HOME_SECTION - EDIT -->
 <?php
+$currentTable = 'cuisine';
 require_once '../../elements/functions.php';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
 require_once '../../define/homeValidate.php';
-require_once '../../class/HomeSection.php';
+require_once '../../class/Cuisine.php';
 require_once '../../class/Form.php';
 
 $id = '';
 $errorFix = '';
-$objHomeSection = new HomeSection($initServer);
+$objHomeSection = new Cuisine($initServer);
 $_GET['id'] = intval($_GET['id']);
 if (isset($_GET['id'])) {
   $id = $_GET['id'];
 }
 
-
 $infoStorage = new Database($initServer);
 $arrayGetInitialValue = $objHomeSection->getItem($id);
 $params = $arrayGetInitialValue;
-
-
-
 
 if (empty($params)) {
   Header("Location: index.php");
@@ -61,16 +58,13 @@ $editURL = Form::input("text", "url", "URL", $params['url'] ?? '');
         <div class="container-fluid">
           <div class="row">
             <div class="col-sm-6">
-              <h3 class="mb-0">Database - Edit</h3>
+              <h3 class="mb-0">Cuisine - Edit</h3>
             </div>
           </div>
         </div>
       </div>
       <div class="card-body m-3">
         <div class="card card-primary card-outline mb-4">
-          <div class="card-header">
-            <div class="card-title">Home section - Edit</div>
-          </div>
           <form action="" method="POST" enctype="multipart/form-data">
             <div class="card-body">
               <?php

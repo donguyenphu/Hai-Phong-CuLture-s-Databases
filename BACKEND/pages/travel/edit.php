@@ -1,5 +1,6 @@
 <!-- DATABASE - HOME_SECTION - EDTI -->
 <?php
+$currentTable =  'travel';
 require_once '../../elements/functions.php';
 require_once '../../class/Database.php';
 require_once '../../define/databaseConfig.php';
@@ -61,7 +62,7 @@ $editURL = Form::input("text", "url", "URL", $params['url'] ?? '');
         <div class="container-fluid">
           <div class="row">
             <div class="col-sm-6">
-              <h3 class="mb-0">Database - Edit</h3>
+              <h3 class="mb-0">Travel - Edit</h3>
             </div>
           </div>
         </div>

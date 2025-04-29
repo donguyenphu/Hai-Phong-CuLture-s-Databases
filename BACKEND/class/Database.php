@@ -1,7 +1,6 @@
 <?php
 class Database
 {
-
     protected $connect;
     protected $databaseName;
     protected $table;
@@ -18,8 +17,8 @@ class Database
             $this->table = $initServer['table'];
             $this->setDatabase($initServer['database']);
             // SET FONT & CHARACTER FONT
-            $this->query("SET NAMES 'utf8'");
-            $this->query("SET CHARACTER SET 'utf8'");
+            // $this->query("SET NAMES 'utf8'");
+            // $this->query("SET CHARACTER SET 'utf8'");
         }
     }
     // set connect
